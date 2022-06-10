@@ -1,3 +1,19 @@
+# TODO
+
+ - [ ] Color Text
+ - [ ] Bold
+ - [ ] Italic
+ - [ ] Underline
+ - [ ] Strikethrough
+ - [ ] Heading (1,2...5)
+ - [ ] Code
+ - [ ] Ordered List
+ - [ ] Unordered List
+ - [ ] Checklist
+ - [ ] Nested List
+ - [ ] Indent (Increase, Decrease)
+  
+
 # TSDX React w/ Storybook User Guide
 
 Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
