@@ -1,10 +1,10 @@
 # TODO
 
- - [ ] Color Text
- - [ ] Bold
- - [ ] Italic
- - [ ] Underline
- - [ ] Strikethrough
+ - [x] Color Text
+ - [x] Bold
+ - [x] Italic
+ - [x] Underline
+ - [x] Strikethrough
  - [ ] Heading (1,2...5)
  - [ ] Code
  - [ ] Ordered List
