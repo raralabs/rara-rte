@@ -19,3 +19,14 @@
 .rte-marker-item.active img{
     filter: invert(0%) sepia(0%) saturate(7469%) hue-rotate(144deg) brightness(94%) contrast(98%);    fill:rebeccapurple !important;
 }
+
+.rte-toolbar{
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; 
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    height: 20px;
+    align-items: center;
+}

@@ -5,6 +5,7 @@
  - [x] Italic
  - [x] Underline
  - [x] Strikethrough
+ - [x] Quote
  - [ ] Heading (1,2...5)
  - [ ] Code
  - [ ] Ordered List

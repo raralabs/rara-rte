@@ -11,15 +11,13 @@ import {
 import { withHistory } from 'slate-history';
 import { BaseEditor } from 'slate'
 import { HistoryEditor } from 'slate-history'
-import { RaraEditorProps } from '../../types';
+import { ChecklistElement, ColoredElement, CustomElement, CustomTextElement, ParagraphElement, RaraEditorProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
 import { IconButton } from '../IconButton';
 import { Toolbar } from '../Toolbar';
-import { ColorPicker } from '../ColorPicker';
 import './styles.css';
-import { isMarkActive, toggleMark } from '../../lib/functions';
-import { Markers } from '../Toolbar/Markers';
-import { Divider } from '../Toolbar/Divider';
+import { isMarkActive, toggleMark,isBlockActive, toggleBlock } from '../../lib/functions';
+
 
 // const HOTKEYS = {
 //     'mod+b': 'bold',
@@ -144,17 +142,12 @@ const Leaf = ({ attributes, children, leaf }: LeafProps) => {
     return <span {...attributes}>{children}</span>
 }
 
-export type ParagraphElement = {
-    type?: 'paragraph',
-    align?: string,
-    color?: string,
-    children: CustomText[]
-}
+
 
 export type HeadingElement = {
     type?: 'heading'
     level?: number
-    children: CustomText[]
+    children: CustomTextElement[]
 }
 
 // enum formatType {
@@ -164,23 +157,18 @@ export type HeadingElement = {
 //     bold = 'bod'
 //   }
 
-type CustomElement = ParagraphElement | HeadingElement
-type CustomText = { text: string; bold?: true, italic?: true };
+//  ParagraphElement | HeadingElement
+// type CustomText = { text: string; bold?: true, italic?: true };
 
 declare module 'slate' {
     interface CustomTypes {
         Editor: BaseEditor & ReactEditor & HistoryEditor
         Element: CustomElement
-        Text: CustomText
+        Text: CustomTextElement
     }
 }
 
 
-const getColorForSelection = (editor: BaseEditor & ReactEditor & HistoryEditor, format: string) => {
-    const marks: { [index: string]: any } = Editor.marks(editor) ?? {};
-    console.log("getColorForSelection", marks);
-    return marks ? marks[format] : null;
-}
 
 
 
@@ -240,11 +228,11 @@ const RaraEditor = (props: RaraEditorProps) => {
             <Toolbar
                 items={
                     [
-                        <ColorPickerButton
-                        />,
-                        <Divider/>,
-                        <Markers />,
-                        <Divider/>,
+                        // <ColorPickerButton
+                        // />,
+                        // <Divider/>,
+                        // <Markers />,
+                        // <Divider/>,
                         // <input type="color" id="colorpicker" onChange={(e)=>{
                         //     console.log(e.target.value);
                         //     toggleMark(editor,'color',e.target.value);
@@ -325,18 +313,7 @@ const RaraEditor = (props: RaraEditorProps) => {
 }
 
 
-const ColorPickerButton = () => {
-    const editor = useSlate()
-    return (
-        <ColorPicker
-            color={getColorForSelection(editor, 'color')}
-            onChange={(color: string,e:any) => {
-                e.preventDefault();
-                toggleMark(editor, 'color', color);
-            }}
-        />
-    )
-}
+
 interface MarkButtonProps {
     format: string,
     label: string,
@@ -360,24 +337,7 @@ interface BlockButtonProps {
     format: string,
     label: string
 }
-const isBlockActive = (editor: BaseEditor & ReactEditor & HistoryEditor, format: any, blockType: string = 'type') => {
-    const { selection } = editor
-    if (!selection) return false
 
-    const [match] = Array.from(
-        Editor.nodes(editor, {
-            at: Editor.unhangRange(editor, selection),
-            match: (n: { [index: string]: any }) => {
-                return !Editor.isEditor(n) &&
-                    SlateElement.isElement(n) &&
-                    // n.type!=null &&
-                    n[blockType] === format;
-            }
-        }
-        ));
-
-    return !!match
-}
 
 const checkListAndRemoveIfExist = (editor: BaseEditor & ReactEditor & HistoryEditor) => {
     LIST_TYPES.map((format: any) => {
@@ -440,41 +400,7 @@ const checkListAndRemoveIfExist = (editor: BaseEditor & ReactEditor & HistoryEdi
 
     })
 }
-const toggleBlock = (editor: BaseEditor & ReactEditor & HistoryEditor, format: any) => {
-    const isActive = isBlockActive(
-        editor,
-        format,
-        TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-    )
-    const isList = LIST_TYPES.includes(format)
 
-    Transforms.unwrapNodes(editor, {
-        match: n =>
-            !Editor.isEditor(n) &&
-            SlateElement.isElement(n) &&
-            n.type != null &&
-            LIST_TYPES.includes(n.type) &&
-            // n.type == 'paragraph' &&
-            !TEXT_ALIGN_TYPES.includes(format),
-        split: true,
-    })
-    let newProperties: Partial<SlateElement>
-    if (TEXT_ALIGN_TYPES.includes(format)) {
-        newProperties = {
-            align: isActive ? undefined : format,
-        }
-    } else {
-        newProperties = {
-            type: isActive ? 'paragraph' : isList ? 'list-item' : format,
-        }
-    }
-    Transforms.setNodes<SlateElement>(editor, newProperties)
-
-    if (!isActive && isList) {
-        const block: CustomElement = { type: format, children: [] }
-        Transforms.wrapNodes(editor, block)
-    }
-}
 
 
 const BlockButton = ({ format, label }: BlockButtonProps) => {

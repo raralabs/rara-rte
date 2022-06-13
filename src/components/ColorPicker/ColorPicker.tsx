@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
+import { useSlate } from 'slate-react';
+import { getColorForSelection, toggleMark } from '../../lib/functions';
 import './styles.css';
 interface ColorPickerProps {
     defaultColor?: string,
-    color?: string,
+    // color?: string,
     onChange?: (color: string,e:any) => void
 }
 
 const LIST_COLORS = ["black", "#450CA3", "#4361EE", "#4CC9F0", "#219653", "#AACC00", "#FDC500", "#FB8500", "#FF006E", "#D90429", "#6A040F"];
 const COLOR_ITEM_SIZE=20;
+
 const ColorPicker = (props: ColorPickerProps) => {
     const {
         defaultColor = "black",
-        color,
+        // color,
         onChange
     } = props;
-
-    const [isVisible, setVisible] = useState(false);
+    const editor = useSlate();
+    const color=getColorForSelection(editor,'color');
 
     return <div className='parent-color-picker' style={{
         position: 'relative'
@@ -67,8 +70,8 @@ const ColorPicker = (props: ColorPickerProps) => {
                 return <div
                     onClick={(e) => {
                         // e.preventDefault();
-                        setVisible(false);
-                        onChange && onChange(colorValue,e);
+                        // onChange && onChange(colorValue,e);
+                        toggleMark(editor, 'color', color);
                     }}
                     style={{
                         backgroundColor: colorValue,

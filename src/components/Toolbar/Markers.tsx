@@ -11,22 +11,22 @@ export const Markers = ({ }: MarkerProps) => {
     const options = [
         {
             format: 'bold',
-            icon: 'bold',
+            icon: 'bold.svg',
             name: "Bold",
         },
         {
             format: 'italic',
-            icon: "italic",
+            icon: "italic.svg",
             name: "Italic"
         },
         {
             format: 'underline',
-            icon: "underline",
+            icon: "underline.svg",
             name: "Underline"
         },
         {
             format: 'strike',
-            icon: "strike",
+            icon: "strike.svg",
             name: "Strike Through"
         }
     ];
@@ -57,17 +57,14 @@ interface MarkerItemProps {
     icon?: any
 }
 
-const MarkerItem = (props: MarkerItemProps) => {
-    const { onMouseDown, active, icon, name } = props;
+export const MarkerItem = (props: MarkerItemProps) => {
+    const { onMouseDown, active, icon, name } = props??{};
     console.log(name,active);
     return <div
         className={`rte-marker-item rte-toolbar-btn ${active ? 'active' : ''}`}
         onMouseDown={onMouseDown}
         title={name}
         style={{
-            color: active ? 'red' : 'black',
-            // border:'1px solid gray',
-            // padding: '4px',
             cursor: 'pointer'
         }}>
         {/* <svg>
@@ -76,6 +73,6 @@ const MarkerItem = (props: MarkerItemProps) => {
                 // "--color_fill":"#000"
             }}></use>
         </svg> */}
-        <img src={require('../../assets/' + icon + ".svg")} alt={name} />
+        <img src={require('../../assets/' + icon)} alt={name} />
     </div>
 }
