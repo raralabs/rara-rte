@@ -18,7 +18,6 @@ import { Toolbar } from '../Toolbar';
 import './styles.css';
 import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from '../../lib/functions';
 
-
 // const HOTKEYS = {
 //     'mod+b': 'bold',
 //     'mod+i': 'italic',
@@ -92,7 +91,7 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                 </ol>
             )
         case 'code':
-            return <pre {...attributes}>{children}</pre>;
+            return <pre className='rte-pre' {...attributes}>{children}</pre>;
         case 'link':
             return (
                 <a href={element.url} {...attributes}>
@@ -101,7 +100,7 @@ const Element = ({ attributes, children, element }: ElementProps) => {
             );
         default:
             return (
-                <p style={style} {...attributes}>
+                <p className='rte-paragraph' style={style} {...attributes}>
                     {children}
                 </p>
             )
@@ -222,6 +221,7 @@ const RaraEditor = (props: RaraEditorProps) => {
 
         <h1>Rara Editor {props.value}</h1>
         <Slate
+        
             onChange={change => {
                 //TO check if the values are changed or not
                 const isAstChange = editor.operations.some(

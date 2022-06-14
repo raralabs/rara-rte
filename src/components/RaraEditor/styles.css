@@ -9,3 +9,17 @@ blockquote {
     line-height: 1.6;
     margin: 24px 0;
 }
+
+.rte-pre{
+    background-color: #959595;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 2px 0px;
+    
+}
+.rte-pre span{
+    color: black !important;
+}
+
+.rte-paragraph{
+    margin: 4px 0px;
+}

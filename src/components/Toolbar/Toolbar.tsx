@@ -29,8 +29,18 @@ export const Toolbar = ({ items }: ToolbarProps) => {
                 }}
                 active={isBlockActive(editor, 'block-quote')}
             />
-            <Divider/>
-            <Headings/>
+            <Divider />
+            <Headings />
+            <Divider />
+            <MarkerItem
+                icon={'code.svg'}
+                name="Code"
+                active={isBlockActive(editor, 'code')}
+                onMouseDown={(e) => {
+                    e.preventDefault();
+                    toggleBlock(editor, 'code');
+                }}
+            />
         </div>
     )
 }
