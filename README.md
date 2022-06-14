@@ -7,12 +7,13 @@
  - [x] Strikethrough
  - [x] Quote
  - [x] Heading (1,2...5)
- - [ ] Code
+ - [x] Code
+ - [ ] Hashtag
+ - [ ] Checklist
  - [ ] Ordered List
  - [ ] Unordered List
- - [ ] Checklist
  - [ ] Mention
- - [ ] Hashtag
+
  - [ ] Nested List
  - [ ] Indent (Increase, Decrease)
   

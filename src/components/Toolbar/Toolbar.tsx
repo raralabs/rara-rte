@@ -41,6 +41,16 @@ export const Toolbar = ({ items }: ToolbarProps) => {
                     toggleBlock(editor, 'code');
                 }}
             />
+            <Divider />
+            <MarkerItem
+                icon={'clist.svg'}
+                name="Checklist"
+                active={isBlockActive(editor, 'check-list-item')}
+                onMouseDown={(e) => {
+                    e.preventDefault();
+                    toggleBlock(editor, 'check-list-item');
+                }}
+            />
         </div>
     )
 }

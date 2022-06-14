@@ -2917,6 +2917,11 @@
   "resolved" "https://registry.npmjs.org/@types/pretty-hrtime/-/pretty-hrtime-1.0.1.tgz"
   "version" "1.0.1"
 
+"@types/prismjs@^1.26.0":
+  "integrity" "sha512-ZTaqn/qSqUuAq1YwvOFQfVW1AR/oQJlLSZVustdjwI+GZ8kr0MSHBj0tsXPW1EqHubx50gtBEjbPGsdZwQwCjQ=="
+  "resolved" "https://registry.npmjs.org/@types/prismjs/-/prismjs-1.26.0.tgz"
+  "version" "1.26.0"
+
 "@types/prop-types@*":
   "integrity" "sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w=="
   "resolved" "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.5.tgz"
@@ -4010,6 +4015,11 @@
   "version" "0.3.1"
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.1"
+
+"babel-plugin-prismjs@^2.1.0":
+  "integrity" "sha512-ehzSKYfeAz4U78zi/sfwsjDPlq0LvDKxNefcZTJ/iKBu+plsHsLqZhUeGf1+82LAcA35UZGbU6ksEx2Utphc/g=="
+  "resolved" "https://registry.npmjs.org/babel-plugin-prismjs/-/babel-plugin-prismjs-2.1.0.tgz"
+  "version" "2.1.0"
 
 "babel-plugin-react-docgen@^4.2.1":
   "integrity" "sha512-UQ0NmGHj/HAqi5Bew8WvNfCk8wSsmdgNd8ZdMjBCICtyCJCq9LiqgqvjCYe570/Wg7AQArSq1VQ60Dd/CHN7mQ=="
@@ -10394,7 +10404,7 @@
   "resolved" "https://registry.npmjs.org/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz"
   "version" "1.0.3"
 
-"prismjs@^1.27.0", "prismjs@^1.8.4":
+"prismjs@^1.18.0", "prismjs@^1.27.0", "prismjs@^1.28.0", "prismjs@^1.8.4":
   "integrity" "sha512-8aaXdYvl1F7iC7Xm1spqSaY/OJBpYW3v+KJ+F17iYxvdc8sfjW194COK5wVhMZX45tGteiBQgdvD/nhxcRwylw=="
   "resolved" "https://registry.npmjs.org/prismjs/-/prismjs-1.28.0.tgz"
   "version" "1.28.0"

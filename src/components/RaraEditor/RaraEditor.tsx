@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { Editable, withReact, ReactEditor, Slate, useSlate } from 'slate-react'
+import { Editable, withReact, ReactEditor, Slate, useSlateStatic, useReadOnly } from 'slate-react'
 import {
     createEditor,
 
@@ -11,12 +11,15 @@ import {
 import { withHistory } from 'slate-history';
 import { BaseEditor } from 'slate'
 import { HistoryEditor } from 'slate-history'
-import { ChecklistElement, ColoredElement, CustomElement, CustomTextElement, ParagraphElement, RaraEditorProps } from '../../types';
+import { CustomElement, CustomTextElement, RaraEditorProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
-import { IconButton } from '../IconButton';
 import { Toolbar } from '../Toolbar';
 import './styles.css';
-import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from '../../lib/functions';
+import { isBlockActive } from '../../lib/functions';
+// import '../../lib/CodeBlock/prism.css';
+// import '../../lib/CodeBlock/prism.js';
+import 'prismjs/themes/prism.css';
+import Prism from 'prismjs';
 
 // const HOTKEYS = {
 //     'mod+b': 'bold',
@@ -24,6 +27,7 @@ import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from '../../lib/
 //     'mod+u': 'underline',
 //     'mod+`': 'code',
 // };
+// Prism.highlightAll();
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -84,6 +88,14 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                     {children}
                 </li>
             )
+        case 'check-list-item':
+            return <CheckListItemElement attributes={attributes} children={children} element={element} />
+        case 'list-item':
+            return (
+                <li style={style} {...attributes}>
+                    {children}
+                </li>
+            )
         case 'numbered-list':
             return (
                 <ol style={style} {...attributes}>
@@ -91,7 +103,9 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                 </ol>
             )
         case 'code':
-            return <pre className='rte-pre' {...attributes}>{children}</pre>;
+            return <pre><code className='rte-pre language-javascript' {...attributes}>
+                {children}
+            </code></pre>;
         case 'link':
             return (
                 <a href={element.url} {...attributes}>
@@ -106,12 +120,79 @@ const Element = ({ attributes, children, element }: ElementProps) => {
             )
     }
 }
+
+interface CheckListItemElementProps {
+    attributes?: any,
+    children?: any,
+    element?: any
+}
+const CheckListItemElement = ({ attributes, children, element }: CheckListItemElementProps) => {
+    const editor = useSlateStatic()
+    const readOnly = useReadOnly()
+    const { checked } = element
+    return (
+        <div
+            {...attributes}
+            style={{
+                display: 'flex',
+                alignItems: 'center'
+            }}
+        // className={css`
+        //   display: flex;
+        //   flex-direction: row;
+        //   align-items: center;
+        //   & + & {
+        //     margin-top: 0;
+        //   }
+        // `}
+        >
+            <span
+                contentEditable={false}
+                style={{
+                    marginRight: '0.75em'
+                }}
+            >
+                <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={event => {
+                        const path = ReactEditor.findPath(editor, element)
+                        const newProperties: Partial<SlateElement> = {
+                            checked: event.target.checked,
+                        }
+                        Transforms.setNodes(editor, newProperties, { at: path })
+                    }}
+                />
+            </span>
+            <span
+                contentEditable={!readOnly}
+                suppressContentEditableWarning
+                style={{
+                    flex: 1,
+                    opacity: checked ? 0.666 : 1,
+                    textDecoration: !checked ? 'none' : 'line-through',
+
+                }}
+            //   className={css`
+            //     flex: 1;
+            //     opacity: ${checked ? 0.666 : 1};
+            //     text-decoration: ${!checked ? 'none' : 'line-through'};
+            //     &:focus {
+            //       outline: none;
+            //     }
+            //   `}
+            >
+                {children}
+            </span>
+        </div>
+    )
+}
 interface LeafProps {
     attributes?: any,
     children?: any,
     leaf?: any
 }
-const FONT_SIZES = [0, 32, 24, 20, 16];
+// const FONT_SIZES = [0, 32, 24, 20, 16];
 const Leaf = ({ attributes, children, leaf }: LeafProps) => {
     if (leaf.bold) {
         children = <strong>{children}</strong>
@@ -129,7 +210,7 @@ const Leaf = ({ attributes, children, leaf }: LeafProps) => {
         children = <u>{children}</u>
     }
     if (leaf.color) {
-        console.log("LEAF color",leaf);
+        console.log("LEAF color", leaf);
         children = <span style={{
             color: leaf.color
         }}>{children}</span>
@@ -209,19 +290,12 @@ const RaraEditor = (props: RaraEditorProps) => {
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
-    const toolBarItems = [
-        {
-            name: "Bold",
-            type: 'mark',
-            format: ''
-        }
-    ]
 
     return <div>
 
         <h1>Rara Editor {props.value}</h1>
         <Slate
-        
+
             onChange={change => {
                 //TO check if the values are changed or not
                 const isAstChange = editor.operations.some(
@@ -325,29 +399,6 @@ const RaraEditor = (props: RaraEditorProps) => {
 
 
 
-interface MarkButtonProps {
-    format: string,
-    label: string,
-    value?: any
-}
-
-const MarkButton = ({ format, label, value }: MarkButtonProps) => {
-    const editor = useSlate()
-    return (
-        <IconButton
-            name={label}
-            active={isMarkActive(editor, format)}
-            onMouseDown={(event: any) => {
-                event.preventDefault()
-                toggleMark(editor, format, value)
-            }}
-        />
-    )
-}
-interface BlockButtonProps {
-    format: string,
-    label: string
-}
 
 
 const checkListAndRemoveIfExist = (editor: BaseEditor & ReactEditor & HistoryEditor) => {
@@ -414,23 +465,7 @@ const checkListAndRemoveIfExist = (editor: BaseEditor & ReactEditor & HistoryEdi
 
 
 
-const BlockButton = ({ format, label }: BlockButtonProps) => {
-    const editor = useSlate()
-    return (
-        <IconButton
-            name={label}
-            active={isBlockActive(
-                editor,
-                format,
-                TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-            )}
-            onMouseDown={event => {
-                event.preventDefault()
-                toggleBlock(editor, format)
-            }}
-        />
-    )
-}
+
 
 RaraEditor.displayName = "RaraEditor";
 
