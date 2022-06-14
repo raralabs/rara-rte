@@ -6,11 +6,13 @@
  - [x] Underline
  - [x] Strikethrough
  - [x] Quote
- - [ ] Heading (1,2...5)
+ - [x] Heading (1,2...5)
  - [ ] Code
  - [ ] Ordered List
  - [ ] Unordered List
  - [ ] Checklist
+ - [ ] Mention
+ - [ ] Hashtag
  - [ ] Nested List
  - [ ] Indent (Increase, Decrease)
   

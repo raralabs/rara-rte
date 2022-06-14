@@ -30,3 +30,19 @@
     height: 20px;
     align-items: center;
 }
+
+.parent-heading-picker {
+    position: relative;
+}
+
+.heading-picker-main {}
+
+.heading-picker-content {
+    display: none;
+}
+
+
+.parent-heading-picker:hover .heading-picker-content{
+    display: flex;
+    flex-direction: column;
+}

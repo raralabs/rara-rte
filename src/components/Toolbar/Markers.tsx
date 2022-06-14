@@ -54,12 +54,13 @@ interface MarkerItemProps {
     name: string,
     active: boolean,
     onMouseDown: (e: any) => void,
-    icon?: any
+    icon?: any,
+    label?: any
 }
 
 export const MarkerItem = (props: MarkerItemProps) => {
-    const { onMouseDown, active, icon, name } = props??{};
-    console.log(name,active);
+    const { onMouseDown, active, icon, name, label } = props ?? {};
+    console.log(name, active);
     return <div
         className={`rte-marker-item rte-toolbar-btn ${active ? 'active' : ''}`}
         onMouseDown={onMouseDown}
@@ -73,6 +74,7 @@ export const MarkerItem = (props: MarkerItemProps) => {
                 // "--color_fill":"#000"
             }}></use>
         </svg> */}
-        <img src={require('../../assets/' + icon)} alt={name} />
+        {icon ?
+            <img src={require('../../assets/' + icon)} alt={name} /> : label}
     </div>
 }

@@ -5,11 +5,11 @@ import './styles.css';
 interface ColorPickerProps {
     defaultColor?: string,
     // color?: string,
-    onChange?: (color: string,e:any) => void
+    onChange?: (color: string, e: any) => void
 }
 
 const LIST_COLORS = ["black", "#450CA3", "#4361EE", "#4CC9F0", "#219653", "#AACC00", "#FDC500", "#FB8500", "#FF006E", "#D90429", "#6A040F"];
-const COLOR_ITEM_SIZE=20;
+const COLOR_ITEM_SIZE = 20;
 
 const ColorPicker = (props: ColorPickerProps) => {
     const {
@@ -18,7 +18,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         onChange
     } = props;
     const editor = useSlate();
-    const color=getColorForSelection(editor,'color');
+    const color = getColorForSelection(editor, 'color');
 
     return <div className='parent-color-picker' style={{
         position: 'relative'
@@ -26,7 +26,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         <div
             className='color-picker-main'
 
-            onClick={(e)=>{
+            onClick={(e) => {
                 e.preventDefault();
             }}
             // onMouseEnter={e => {
@@ -50,7 +50,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         >
 
         </div>
-        {true && <div
+        <div
             className='color-picker-content'
             style={{
                 position: 'absolute',
@@ -62,8 +62,8 @@ const ColorPicker = (props: ColorPickerProps) => {
                 gap: 10,
                 flexWrap: 'wrap',
                 width: (COLOR_ITEM_SIZE + 10) * 11,
-                left:COLOR_ITEM_SIZE,
-                top:-15,
+                left: COLOR_ITEM_SIZE,
+                top: -15,
                 borderRadius: 10
             }}>
             {LIST_COLORS.map((colorValue) => {
@@ -71,7 +71,8 @@ const ColorPicker = (props: ColorPickerProps) => {
                     onClick={(e) => {
                         // e.preventDefault();
                         // onChange && onChange(colorValue,e);
-                        toggleMark(editor, 'color', color);
+
+                        toggleMark(editor, 'color', colorValue==color?null:colorValue);
                     }}
                     style={{
                         backgroundColor: colorValue,
@@ -87,7 +88,7 @@ const ColorPicker = (props: ColorPickerProps) => {
                 </div>
             })}
 
-        </div>}
+        </div>
     </div>
 
 }

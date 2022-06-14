@@ -16,7 +16,7 @@ import { serializeSlateData } from '../../utils/serializer';
 import { IconButton } from '../IconButton';
 import { Toolbar } from '../Toolbar';
 import './styles.css';
-import { isMarkActive, toggleMark,isBlockActive, toggleBlock } from '../../lib/functions';
+import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from '../../lib/functions';
 
 
 // const HOTKEYS = {
@@ -50,17 +50,34 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                 </ul>
             )
         case 'heading-one':
-            console.log(attributes,children,element);
             return (
-                <span style={{...style,fontSize:30,fontWeight:'bold'}} {...attributes}>
+                <h1 className='rte-heading-one' style={{ ...style }} {...attributes}>
                     {children}
-                </span>
+                </h1>
             )
         case 'heading-two':
             return (
-                <h2 style={style} {...attributes}>
+                <h2 className='rte-heading-two' style={{ ...style }} {...attributes}>
                     {children}
                 </h2>
+            )
+        case 'heading-three':
+            return (
+                <h3 className='rte-heading-three' style={{ ...style }} {...attributes}>
+                    {children}
+                </h3>
+            )
+        case 'heading-four':
+            return (
+                <h4 className='rte-heading-four' style={{ ...style }} {...attributes}>
+                    {children}
+                </h4>
+            )
+        case 'heading-five':
+            return (
+                <h5 className='rte-heading-five' style={{ ...style }} {...attributes}>
+                    {children}
+                </h5>
             )
         case 'list-item':
             return (
@@ -95,7 +112,7 @@ interface LeafProps {
     children?: any,
     leaf?: any
 }
-const FONT_SIZES=[0,32,24,20,16];
+const FONT_SIZES = [0, 32, 24, 20, 16];
 const Leaf = ({ attributes, children, leaf }: LeafProps) => {
     if (leaf.bold) {
         children = <strong>{children}</strong>
@@ -112,14 +129,8 @@ const Leaf = ({ attributes, children, leaf }: LeafProps) => {
     if (leaf.underline) {
         children = <u>{children}</u>
     }
-    if (leaf.level) {
-        children = <span style={{
-            fontSize: FONT_SIZES[leaf.level]??8,
-            fontWeight:'bold',
-
-        }}>{children}</span>
-    }
     if (leaf.color) {
+        console.log("LEAF color",leaf);
         children = <span style={{
             color: leaf.color
         }}>{children}</span>

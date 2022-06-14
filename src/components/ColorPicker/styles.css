@@ -8,9 +8,9 @@
     display: none;
 }
 
-.color-picker-main:hover {
+/* .color-picker-main:hover {
     background-color: gray !important;
-}
+} */
 
 .parent-color-picker:hover .color-picker-content{
     display: flex;

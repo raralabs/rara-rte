@@ -4,6 +4,7 @@ import { isBlockActive, toggleBlock } from '../../lib/functions';
 import { ColorPicker } from '../ColorPicker';
 import { IconButton } from '../IconButton';
 import { Divider } from './Divider';
+import { Headings } from './Headings';
 import { MarkerItem, Markers } from './Markers';
 
 interface ToolbarProps {
@@ -28,6 +29,8 @@ export const Toolbar = ({ items }: ToolbarProps) => {
                 }}
                 active={isBlockActive(editor, 'block-quote')}
             />
+            <Divider/>
+            <Headings/>
         </div>
     )
 }
