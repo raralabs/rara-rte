@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { Editable, withReact, ReactEditor, Slate, useSlateStatic, useReadOnly } from 'slate-react'
+import { Editable, withReact, ReactEditor, Slate, useSlateStatic, useReadOnly, RenderElementProps } from 'slate-react'
 import {
     createEditor,
 
@@ -15,11 +15,11 @@ import { CustomElement, CustomTextElement, RaraEditorProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
 import { Toolbar } from '../Toolbar';
 import './styles.css';
-import { isBlockActive } from '../../lib/functions';
+import { isBlockActive, withInlines } from '../../lib/functions';
 // import '../../lib/CodeBlock/prism.css';
 // import '../../lib/CodeBlock/prism.js';
 import 'prismjs/themes/prism.css';
-import { CheckListItemElement } from '../Elements';
+import { CheckListItemElement, LinkElement } from '../Elements';
 
 // const HOTKEYS = {
 //     'mod+b': 'bold',
@@ -35,9 +35,10 @@ const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 interface ElementProps {
     attributes?: any,
     children?: any,
-    element?: any
+    element?: any,
+    onCheckboxChange?:(checked:boolean,value:string)=>void
 }
-const Element = ({ attributes, children, element }: ElementProps) => {
+const Element = ({ attributes, children, element,onCheckboxChange }: ElementProps) => {
     const style = { textAlign: element.align }
     switch (element.type) {
         case 'block-quote':
@@ -89,7 +90,9 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                 </li>
             )
         case 'check-list-item':
-            return <CheckListItemElement attributes={attributes} children={children} element={element} />
+            return <CheckListItemElement 
+            onCheckboxChange={onCheckboxChange}
+            attributes={attributes} children={children} element={element} />
         case 'list-item':
             return (
                 <li style={style} {...attributes}>
@@ -107,11 +110,7 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                 {children}
             </code></pre>;
         case 'link':
-            return (
-                <a href={element.url} {...attributes}>
-                    {children}
-                </a>
-            );
+            return <LinkElement attributes={attributes} children={children} element={element} />
         default:
             return (
                 <p className='rte-paragraph' style={style} {...attributes}>
@@ -144,7 +143,6 @@ const Leaf = ({ attributes, children, leaf }: LeafProps) => {
         children = <u>{children}</u>
     }
     if (leaf.color) {
-        console.log("LEAF color", leaf);
         children = <span style={{
             color: leaf.color
         }}>{children}</span>
@@ -200,7 +198,8 @@ declare module 'slate' {
 
 
 const RaraEditor = (props: RaraEditorProps) => {
-    const renderElement = useCallback((props: ElementProps) => <Element {...props} />, [])
+    const {readOnly=false,onCheckboxChange}=props;
+    const renderElement = useCallback((props: ElementProps) => <Element {...props} onCheckboxChange={onCheckboxChange} />, [])
     const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, [])
 
     // const editor = useMemo(() => withReact(createEditor()), [])
@@ -222,7 +221,7 @@ const RaraEditor = (props: RaraEditorProps) => {
     //     },
     // ]
 
-    const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+    const editor = useMemo(() => withInlines(withHistory(withReact(createEditor()))), [])
 
 
     return <div>
@@ -237,14 +236,12 @@ const RaraEditor = (props: RaraEditorProps) => {
                 )
                 if (isAstChange) {
                     // Save the value to Local Storage.
-                    console.log("saving data", change);
                     localStorage.setItem('content', JSON.stringify(change))
-                    console.log("Serialized Value", serializeSlateData(change))
                 }
             }}
             editor={editor} value={initialValue} >
             {/* <Toolbar /> */}
-            <Toolbar
+            {!readOnly&&<Toolbar
                 items={
                     [
                         // <ColorPickerButton
@@ -273,10 +270,14 @@ const RaraEditor = (props: RaraEditorProps) => {
                         // <BlockButton key={'justify'} format="justify" label="format_align_justify" />
                     ]}
             />
+            }
             <Editable
-                renderElement={renderElement}
+                renderElement={(p:RenderElementProps)=>{
+                    return renderElement(p);
+                }}
                 renderLeaf={renderLeaf}
                 placeholder="Placeholder"
+                readOnly={readOnly}
                 // spellCheck
                 // autoFocus
                 // decorate={([node, path]) => {
@@ -301,7 +302,6 @@ const RaraEditor = (props: RaraEditorProps) => {
                 onKeyDown={(e) => {
                     //metaKey to track Cmd of mac,ALT of window,  *** of linux keyboard
                     if (e.key === 'Enter' && e.metaKey) {
-                        console.log("Metakey Enter", e, editor);
                         checkListAndRemoveIfExist(editor);
                         // const marks = Editor.marks(editor)
                         // console.log(marks);

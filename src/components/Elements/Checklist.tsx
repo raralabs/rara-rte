@@ -6,12 +6,14 @@ import {
     Element as SlateElement,
 
 } from 'slate'
+import { serializeSlateData } from '../../utils/serializer';
 interface CheckListItemElementProps {
     attributes?: any,
     children?: any,
-    element?: any
+    element?: any,
+    onCheckboxChange?: (checked: boolean, value: string) => void
 }
-const CheckListItemElement = ({ attributes, children, element }: CheckListItemElementProps) => {
+const CheckListItemElement = ({ attributes, children, element, onCheckboxChange }: CheckListItemElementProps) => {
     const editor = useSlateStatic()
     const readOnly = useReadOnly()
     const { checked } = element
@@ -42,6 +44,10 @@ const CheckListItemElement = ({ attributes, children, element }: CheckListItemEl
                     checked={checked}
                     onChange={event => {
                         const path = ReactEditor.findPath(editor, element)
+                        // console.log("PATH",element,path,editor.children,serializeSlateData(element.children));
+
+                        //sends trigger of checklist change for text value
+                        onCheckboxChange && onCheckboxChange(event.target.checked, serializeSlateData(element.children))
                         const newProperties: Partial<SlateElement> = {
                             checked: event.target.checked,
                         }

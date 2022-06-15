@@ -60,7 +60,6 @@ interface MarkerItemProps {
 
 export const MarkerItem = (props: MarkerItemProps) => {
     const { onMouseDown, active, icon, name, label } = props ?? {};
-    console.log(name, active);
     return <div
         className={`rte-marker-item rte-toolbar-btn ${active ? 'active' : ''}`}
         onMouseDown={onMouseDown}

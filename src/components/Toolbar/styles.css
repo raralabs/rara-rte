@@ -17,7 +17,7 @@
     filter: invert(58%) sepia(6%) saturate(0%) hue-rotate(196deg) brightness(103%) contrast(86%);
 }
 .rte-marker-item.active img{
-    filter: invert(0%) sepia(0%) saturate(7469%) hue-rotate(144deg) brightness(94%) contrast(98%);    fill:rebeccapurple !important;
+    filter: invert(40%) sepia(58%) saturate(2609%) hue-rotate(320deg) brightness(96%) contrast(94%);
 }
 
 .rte-toolbar{
