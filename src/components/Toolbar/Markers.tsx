@@ -35,6 +35,7 @@ export const Markers = ({ }: MarkerProps) => {
     }}>
         {options.map((markerItem) => {
             return <MarkerItem
+                key={markerItem.format}
                 name={markerItem.name}
                 active={isMarkActive(editor, markerItem.format)}
                 icon={markerItem.icon}
@@ -50,6 +51,8 @@ export const Markers = ({ }: MarkerProps) => {
 }
 
 
+
+
 interface MarkerItemProps {
     name: string,
     active: boolean,
@@ -60,7 +63,6 @@ interface MarkerItemProps {
 
 export const MarkerItem = (props: MarkerItemProps) => {
     const { onMouseDown, active, icon, name, label } = props ?? {};
-    console.log(name, active);
     return <div
         className={`rte-marker-item rte-toolbar-btn ${active ? 'active' : ''}`}
         onMouseDown={onMouseDown}

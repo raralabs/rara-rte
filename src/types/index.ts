@@ -14,7 +14,7 @@ export type CustomTextElement={
     strike?:boolean,
     underline?:boolean
 }
-export type CustomElement =ColoredElement|ChecklistElement|HeadingElement|ParagraphElement
+export type CustomElement =ColoredElement|ChecklistElement|HeadingElement|ParagraphElement|LinkElement
 
 
 export type ColoredElement={
@@ -33,9 +33,17 @@ export type HeadingElement = {
     children: CustomTextElement[]
 }
 
+export type LinkElement={
+    type: 'link',
+    url?: string,
+    children: CustomTextElement[],
+}
+
 
 export interface RaraEditorProps{
-    value:string;
-    onChange:(val:string)=>void
+    value?:string;
+    onChange?:(val:string)=>void,
+    readOnly?:boolean,
+    onCheckboxChange?:(checked:boolean,value:string)=>void
 }
 

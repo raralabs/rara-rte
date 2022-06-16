@@ -1,0 +1,6 @@
+
+.rte-checkbox {
+    height: 20px;
+    width: 20px;
+    accent-color: var(--rte-primary);
+}

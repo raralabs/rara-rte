@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { Editable, withReact, ReactEditor, Slate, useSlate } from 'slate-react'
+import { Editable, withReact, ReactEditor, Slate, useSlateStatic, useReadOnly, RenderElementProps } from 'slate-react'
 import {
     createEditor,
 
@@ -11,12 +11,15 @@ import {
 import { withHistory } from 'slate-history';
 import { BaseEditor } from 'slate'
 import { HistoryEditor } from 'slate-history'
-import { ChecklistElement, ColoredElement, CustomElement, CustomTextElement, ParagraphElement, RaraEditorProps } from '../../types';
+import { CustomElement, CustomTextElement, RaraEditorProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
-import { IconButton } from '../IconButton';
 import { Toolbar } from '../Toolbar';
 import './styles.css';
-import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from '../../lib/functions';
+import { isBlockActive, toggleMark, withInlines } from '../../lib/functions';
+// import '../../lib/CodeBlock/prism.css';
+// import '../../lib/CodeBlock/prism.js';
+// import 'prismjs/themes/prism.css';
+import { CheckListItemElement, LinkElement } from '../Elements';
 
 // const HOTKEYS = {
 //     'mod+b': 'bold',
@@ -24,6 +27,7 @@ import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from '../../lib/
 //     'mod+u': 'underline',
 //     'mod+`': 'code',
 // };
+// Prism.highlightAll();
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -31,9 +35,10 @@ const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 interface ElementProps {
     attributes?: any,
     children?: any,
-    element?: any
+    element?: any,
+    onCheckboxChange?: (checked: boolean, value: string) => void
 }
-const Element = ({ attributes, children, element }: ElementProps) => {
+const Element = ({ attributes, children, element, onCheckboxChange }: ElementProps) => {
     const style = { textAlign: element.align }
     switch (element.type) {
         case 'block-quote':
@@ -84,6 +89,16 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                     {children}
                 </li>
             )
+        case 'check-list-item':
+            return <CheckListItemElement
+                onCheckboxChange={onCheckboxChange}
+                attributes={attributes} children={children} element={element} />
+        case 'list-item':
+            return (
+                <li style={style} {...attributes}>
+                    {children}
+                </li>
+            )
         case 'numbered-list':
             return (
                 <ol style={style} {...attributes}>
@@ -91,13 +106,11 @@ const Element = ({ attributes, children, element }: ElementProps) => {
                 </ol>
             )
         case 'code':
-            return <pre className='rte-pre' {...attributes}>{children}</pre>;
+            return <pre className='rte-pre'{...attributes}>
+                {children}
+            </pre>;
         case 'link':
-            return (
-                <a href={element.url} {...attributes}>
-                    {children}
-                </a>
-            );
+            return <LinkElement attributes={attributes} children={children} element={element} />
         default:
             return (
                 <p className='rte-paragraph' style={style} {...attributes}>
@@ -106,12 +119,13 @@ const Element = ({ attributes, children, element }: ElementProps) => {
             )
     }
 }
+
 interface LeafProps {
     attributes?: any,
     children?: any,
     leaf?: any
 }
-const FONT_SIZES = [0, 32, 24, 20, 16];
+// const FONT_SIZES = [0, 32, 24, 20, 16];
 const Leaf = ({ attributes, children, leaf }: LeafProps) => {
     if (leaf.bold) {
         children = <strong>{children}</strong>
@@ -129,7 +143,6 @@ const Leaf = ({ attributes, children, leaf }: LeafProps) => {
         children = <u>{children}</u>
     }
     if (leaf.color) {
-        console.log("LEAF color",leaf);
         children = <span style={{
             color: leaf.color
         }}>{children}</span>
@@ -185,19 +198,34 @@ declare module 'slate' {
 
 
 const RaraEditor = (props: RaraEditorProps) => {
-    const renderElement = useCallback((props: ElementProps) => <Element {...props} />, [])
+    const { readOnly = false, onCheckboxChange,onChange} = props;
+    const renderElement = useCallback((props: ElementProps) => <Element {...props} onCheckboxChange={onCheckboxChange} />, [])
     const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, [])
 
     // const editor = useMemo(() => withReact(createEditor()), [])
     const initialValue = useMemo(
-        () =>
-            localStorage.getItem('content') ?
+        () => {
+            try {
+                const valueArray = JSON.parse(props.value ?? '[{"type":"paragraph","children":[{"text":""}]}]');
+                return valueArray;
+            } catch (e) {
+                console.error("Unparsable value provided", props.value);
+                return [
+                    {
+                        type: 'paragraph',
+                        children: [{ text: '' }],
+                    },
+                ]
+            }
+            return localStorage.getItem('content') ?
                 JSON.parse(localStorage.getItem('content') ?? "[]") : [
                     {
                         type: 'paragraph',
                         children: [{ text: 'A line of text in a paragraph.' }],
                     },
-                ],
+                ]
+        }
+        ,
         []
     )
     // const initialValue: Descendant[] = [
@@ -207,21 +235,12 @@ const RaraEditor = (props: RaraEditorProps) => {
     //     },
     // ]
 
-    const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+    const editor = useMemo(() => withInlines(withHistory(withReact(createEditor()))), [])
 
-    const toolBarItems = [
-        {
-            name: "Bold",
-            type: 'mark',
-            format: ''
-        }
-    ]
 
-    return <div>
-
-        <h1>Rara Editor {props.value}</h1>
+    return <div className='rte-editor'>
         <Slate
-        
+
             onChange={change => {
                 //TO check if the values are changed or not
                 const isAstChange = editor.operations.some(
@@ -229,34 +248,13 @@ const RaraEditor = (props: RaraEditorProps) => {
                 )
                 if (isAstChange) {
                     // Save the value to Local Storage.
-                    console.log("saving data", change);
-                    localStorage.setItem('content', JSON.stringify(change))
-                    console.log("Serialized Value", serializeSlateData(change))
+                    onChange&&onChange(JSON.stringify(change));
                 }
             }}
             editor={editor} value={initialValue} >
-            {/* <Toolbar /> */}
-            <Toolbar
+            {!readOnly && <Toolbar
                 items={
                     [
-                        // <ColorPickerButton
-                        // />,
-                        // <Divider/>,
-                        // <Markers />,
-                        // <Divider/>,
-                        // <input type="color" id="colorpicker" onChange={(e)=>{
-                        //     console.log(e.target.value);
-                        //     toggleMark(editor,'color',e.target.value);
-                        // }}></input>,
-                        // <MarkButton key={'color1'} format="color" label="red" value={'red'} />,
-                        // <MarkButton key={'bold'} format="bold" label="format_bold" />,
-                        // <MarkButton key={'italic'} format="italic" label="format_italic" />,
-                        // <MarkButton key={'underline'} format="underline" label="format_underlined" />,
-                        // <MarkButton key={'code'} format="code" label="code" />,
-                        // <MarkButton key={'heading1'} format="level" label="looks_one"  value={1}/>,
-                        // <MarkButton key={'heading2'} format="level" label="looks_one"  value={2}/>,
-                        // <BlockButton key={'heading2'} format="heading-two" label="looks_two" />,
-                        // <BlockButton key={'block'} format="block-quote" label="format_quote" />,
                         // <BlockButton key={'numbered'} format="numbered-list" label="format_list_numbered" />,
                         // <BlockButton key={'bulleted'} format="bulleted-list" label="format_list_bulleted" />,
                         // <BlockButton key={'left'} format="left" label="format_align_left" />,
@@ -265,10 +263,15 @@ const RaraEditor = (props: RaraEditorProps) => {
                         // <BlockButton key={'justify'} format="justify" label="format_align_justify" />
                     ]}
             />
+            }
             <Editable
-                renderElement={renderElement}
+                renderElement={(p: RenderElementProps) => {
+                    return renderElement(p);
+                }}
+                className='rte-editor-body'
                 renderLeaf={renderLeaf}
                 placeholder="Placeholder"
+                readOnly={readOnly}
                 // spellCheck
                 // autoFocus
                 // decorate={([node, path]) => {
@@ -293,20 +296,21 @@ const RaraEditor = (props: RaraEditorProps) => {
                 onKeyDown={(e) => {
                     //metaKey to track Cmd of mac,ALT of window,  *** of linux keyboard
                     if (e.key === 'Enter' && e.metaKey) {
-                        console.log("Metakey Enter", e, editor);
                         checkListAndRemoveIfExist(editor);
                         // const marks = Editor.marks(editor)
                         // console.log(marks);
                     }
-                    // let's make the current text bold if the user holds command and hits "b"
                     if (e.metaKey && e.key === 'b') {
                         e.preventDefault();
-                        editor.addMark('bold', true);
+                        toggleMark(editor,'bold');
                     }
                     if (e.metaKey && e.key === 'i') {
                         e.preventDefault();
-
-                        editor.addMark('italic', true);
+                        toggleMark(editor,'italic');
+                    }
+                    if (e.metaKey && e.key === 'u') {
+                        e.preventDefault();
+                        toggleMark(editor,'underline');
                     }
                 }}
             // onKeyDown={event => {
@@ -325,29 +329,6 @@ const RaraEditor = (props: RaraEditorProps) => {
 
 
 
-interface MarkButtonProps {
-    format: string,
-    label: string,
-    value?: any
-}
-
-const MarkButton = ({ format, label, value }: MarkButtonProps) => {
-    const editor = useSlate()
-    return (
-        <IconButton
-            name={label}
-            active={isMarkActive(editor, format)}
-            onMouseDown={(event: any) => {
-                event.preventDefault()
-                toggleMark(editor, format, value)
-            }}
-        />
-    )
-}
-interface BlockButtonProps {
-    format: string,
-    label: string
-}
 
 
 const checkListAndRemoveIfExist = (editor: BaseEditor & ReactEditor & HistoryEditor) => {
@@ -414,23 +395,7 @@ const checkListAndRemoveIfExist = (editor: BaseEditor & ReactEditor & HistoryEdi
 
 
 
-const BlockButton = ({ format, label }: BlockButtonProps) => {
-    const editor = useSlate()
-    return (
-        <IconButton
-            name={label}
-            active={isBlockActive(
-                editor,
-                format,
-                TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-            )}
-            onMouseDown={event => {
-                event.preventDefault()
-                toggleBlock(editor, format)
-            }}
-        />
-    )
-}
+
 
 RaraEditor.displayName = "RaraEditor";
 

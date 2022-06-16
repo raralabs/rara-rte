@@ -68,11 +68,12 @@ const ColorPicker = (props: ColorPickerProps) => {
             }}>
             {LIST_COLORS.map((colorValue) => {
                 return <div
+                    key={colorValue}
                     onClick={(e) => {
                         // e.preventDefault();
                         // onChange && onChange(colorValue,e);
 
-                        toggleMark(editor, 'color', colorValue==color?null:colorValue);
+                        toggleMark(editor, 'color', colorValue == color ? null : colorValue);
                     }}
                     style={{
                         backgroundColor: colorValue,

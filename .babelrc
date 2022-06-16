@@ -1,6 +1,12 @@
 {
   "presets": [],
   "plugins": [
-    "babel-plugin-transform-scss"
+    "babel-plugin-transform-scss",
+    ["prismjs", {
+      "languages": ["javascript", "css", "markup","json"],
+      "plugins": ["line-numbers"],
+      "theme": "twilight",
+      "css": true
+  }]
   ]
 }

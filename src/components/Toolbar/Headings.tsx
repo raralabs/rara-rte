@@ -70,7 +70,9 @@ export const Headings = (props: HeadingsProps) => {
         }}>
             {Object.keys(HEADINGS_LIST).map((headingKey) => {
                 const headingItem = HEADINGS_LIST[headingKey];
-                return <div style={{
+                return <div 
+                key={headingKey}
+                style={{
                     cursor: 'pointer',
                     padding: 4,
                     fontSize: 16,

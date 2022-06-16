@@ -1,9 +1,9 @@
 
 import { ReactEditor } from 'slate-react'
-import { BaseEditor } from 'slate'
+import { BaseEditor, Range } from 'slate'
 import { HistoryEditor } from 'slate-history'
-import { Editor ,Transforms,Element as SlateElement} from 'slate'
-import { CustomElement } from '../types'
+import { Editor, Transforms, Element as SlateElement } from 'slate'
+import { CustomElement, LinkElement } from '../types'
 
 export const LIST_TYPES = ['numbered-list', 'bulleted-list']
 export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -22,9 +22,9 @@ export const toggleColor = (editor: BaseEditor & ReactEditor & HistoryEditor, fo
 
 export const toggleMark = (editor: BaseEditor & ReactEditor & HistoryEditor, format: string, value: any = true) => {
     const isActive = isMarkActive(editor, format)
-    
-    console.log("TOGGLE MARK",format,value);
-    if (isActive && format!='color') {
+
+    console.log("TOGGLE MARK", format, value);
+    if (isActive && format != 'color') {
         Editor.removeMark(editor, format)
     } else {
         Editor.addMark(editor, format, value)
@@ -32,11 +32,11 @@ export const toggleMark = (editor: BaseEditor & ReactEditor & HistoryEditor, for
 }
 export const getColorForSelection = (editor: BaseEditor & ReactEditor & HistoryEditor, format: string) => {
     const marks: { [index: string]: any } = Editor.marks(editor) ?? {};
-    console.log("getColorForSelection",marks,format);
+    console.log("getColorForSelection", marks, format);
     return marks ? marks[format] : null;
 }
 
-export const getHeadingLevelForSelection= (editor: BaseEditor & ReactEditor & HistoryEditor, format: string) => {
+export const getHeadingLevelForSelection = (editor: BaseEditor & ReactEditor & HistoryEditor, format: string) => {
     const marks: { [index: string]: any } = Editor.marks(editor) ?? {};
     // console.log("HEADING LEVEL",marks);
     return marks ? marks[format] : null;
@@ -96,4 +96,66 @@ export const toggleBlock = (editor: BaseEditor & ReactEditor & HistoryEditor, fo
         const block: CustomElement = { type: format, children: [] }
         Transforms.wrapNodes(editor, block)
     }
+}
+
+export const insertLink = (editor: BaseEditor & ReactEditor & HistoryEditor, url: any) => {
+    if (editor.selection) {
+        wrapLink(editor, url)
+    }
+}
+const wrapLink = (editor: BaseEditor & ReactEditor & HistoryEditor, url: string) => {
+    // if (isBlockActive(editor, 'link')) {
+    //     unwrapLink(editor)
+    // }
+
+    const { selection } = editor
+    const isCollapsed = selection && Range.isCollapsed(selection)
+    const link: LinkElement = {
+        type: 'link',
+        url,
+        children: isCollapsed ? [{ text: url }] : [],
+    }
+
+    if (isCollapsed) {
+        Transforms.insertNodes(editor, link)
+    } else {
+        Transforms.wrapNodes(editor, link, { split: true })
+        Transforms.collapse(editor, { edge: 'end' })
+    }
+}
+
+export const unwrapLink = (editor: BaseEditor & ReactEditor & HistoryEditor) => {
+    Transforms.unwrapNodes(editor, {
+        match: n =>
+            !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'link',
+    })
+}
+
+export const withInlines = (editor: BaseEditor & ReactEditor & HistoryEditor) => {
+    const { insertData, insertText, isInline } = editor
+    editor.isInline = (element: any) =>
+        ['link', 'button'].includes(element.type) || isInline(element)
+    editor.insertText = text => {
+        if (text && isUrl(text)) {
+            wrapLink(editor, text)
+        } else {
+            insertText(text)
+        }
+    }
+    editor.insertData = data => {
+        const text = data.getData('text/plain')
+        if (text && isUrl(text)) {
+            wrapLink(editor, text)
+        } else {
+            insertData(data)
+        }
+    }
+
+    return editor
+}
+
+
+export const isUrl = (url: any) => {
+    //TODO: Done workaround only, later should   be changed
+    return url.includes("http");
 }
