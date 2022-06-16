@@ -15,7 +15,7 @@ import { CustomElement, CustomTextElement, RaraEditorProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
 import { Toolbar } from '../Toolbar';
 import './styles.css';
-import { isBlockActive, withInlines } from '../../lib/functions';
+import { isBlockActive, toggleMark, withInlines } from '../../lib/functions';
 // import '../../lib/CodeBlock/prism.css';
 // import '../../lib/CodeBlock/prism.js';
 // import 'prismjs/themes/prism.css';
@@ -300,15 +300,17 @@ const RaraEditor = (props: RaraEditorProps) => {
                         // const marks = Editor.marks(editor)
                         // console.log(marks);
                     }
-                    // let's make the current text bold if the user holds command and hits "b"
                     if (e.metaKey && e.key === 'b') {
                         e.preventDefault();
-                        editor.addMark('bold', true);
+                        toggleMark(editor,'bold');
                     }
                     if (e.metaKey && e.key === 'i') {
                         e.preventDefault();
-
-                        editor.addMark('italic', true);
+                        toggleMark(editor,'italic');
+                    }
+                    if (e.metaKey && e.key === 'u') {
+                        e.preventDefault();
+                        toggleMark(editor,'underline');
                     }
                 }}
             // onKeyDown={event => {
