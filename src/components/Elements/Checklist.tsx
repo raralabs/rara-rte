@@ -7,6 +7,8 @@ import {
 
 } from 'slate'
 import { serializeSlateData } from '../../utils/serializer';
+import './styles.css';
+
 interface CheckListItemElementProps {
     attributes?: any,
     children?: any,
@@ -41,6 +43,7 @@ const CheckListItemElement = ({ attributes, children, element, onCheckboxChange 
             >
                 <input
                     type="checkbox"
+                    className='rte-checkbox'
                     checked={checked}
                     onChange={event => {
                         const path = ReactEditor.findPath(editor, element)

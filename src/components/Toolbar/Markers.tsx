@@ -35,6 +35,7 @@ export const Markers = ({ }: MarkerProps) => {
     }}>
         {options.map((markerItem) => {
             return <MarkerItem
+                key={markerItem.format}
                 name={markerItem.name}
                 active={isMarkActive(editor, markerItem.format)}
                 icon={markerItem.icon}
@@ -48,6 +49,8 @@ export const Markers = ({ }: MarkerProps) => {
     </div>
 
 }
+
+
 
 
 interface MarkerItemProps {

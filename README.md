@@ -9,7 +9,7 @@
  - [x] Heading (1,2...5)
  - [x] Code
  - [ ] Hashtag
- - [ ] Checklist
+ - [x] Checklist
  - [ ] Ordered List
  - [ ] Unordered List
  - [ ] Mention

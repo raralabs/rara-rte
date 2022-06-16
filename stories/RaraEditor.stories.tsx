@@ -2,6 +2,8 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { RaraEditor } from '../src';
 
+import  RaraEditorExample from '../src/components/RaraEditorExample';
+
 const meta: Meta = {
   title: 'Welcome',
   component: RaraEditor,
@@ -18,10 +20,10 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<any> = args => <div>
-  <RaraEditor {...args} />
-  <RaraEditor {...args} readOnly onCheckboxChange={(checked,value)=>{
+  <RaraEditorExample {...args} />
+  {/* <RaraEditor {...args} readOnly onCheckboxChange={(checked,value)=>{
     console.log("Checkbox changed trigger",checked,value);
-  }} />
+  }} /> */}
 </div>;
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test

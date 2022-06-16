@@ -41,9 +41,9 @@ export type LinkElement={
 
 
 export interface RaraEditorProps{
-    value:string;
-    onChange:(val:string)=>void,
+    value?:string;
+    onChange?:(val:string)=>void,
     readOnly?:boolean,
-    onCheckboxChange:(checked:boolean,value:string)=>void
+    onCheckboxChange?:(checked:boolean,value:string)=>void
 }
 

@@ -18,7 +18,7 @@ import './styles.css';
 import { isBlockActive, withInlines } from '../../lib/functions';
 // import '../../lib/CodeBlock/prism.css';
 // import '../../lib/CodeBlock/prism.js';
-import 'prismjs/themes/prism.css';
+// import 'prismjs/themes/prism.css';
 import { CheckListItemElement, LinkElement } from '../Elements';
 
 // const HOTKEYS = {
@@ -36,9 +36,9 @@ interface ElementProps {
     attributes?: any,
     children?: any,
     element?: any,
-    onCheckboxChange?:(checked:boolean,value:string)=>void
+    onCheckboxChange?: (checked: boolean, value: string) => void
 }
-const Element = ({ attributes, children, element,onCheckboxChange }: ElementProps) => {
+const Element = ({ attributes, children, element, onCheckboxChange }: ElementProps) => {
     const style = { textAlign: element.align }
     switch (element.type) {
         case 'block-quote':
@@ -90,9 +90,9 @@ const Element = ({ attributes, children, element,onCheckboxChange }: ElementProp
                 </li>
             )
         case 'check-list-item':
-            return <CheckListItemElement 
-            onCheckboxChange={onCheckboxChange}
-            attributes={attributes} children={children} element={element} />
+            return <CheckListItemElement
+                onCheckboxChange={onCheckboxChange}
+                attributes={attributes} children={children} element={element} />
         case 'list-item':
             return (
                 <li style={style} {...attributes}>
@@ -106,9 +106,9 @@ const Element = ({ attributes, children, element,onCheckboxChange }: ElementProp
                 </ol>
             )
         case 'code':
-            return <pre><code className='rte-pre language-javascript' {...attributes}>
+            return <pre className='rte-pre'{...attributes}>
                 {children}
-            </code></pre>;
+            </pre>;
         case 'link':
             return <LinkElement attributes={attributes} children={children} element={element} />
         default:
@@ -198,20 +198,34 @@ declare module 'slate' {
 
 
 const RaraEditor = (props: RaraEditorProps) => {
-    const {readOnly=false,onCheckboxChange}=props;
+    const { readOnly = false, onCheckboxChange,onChange} = props;
     const renderElement = useCallback((props: ElementProps) => <Element {...props} onCheckboxChange={onCheckboxChange} />, [])
     const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, [])
 
     // const editor = useMemo(() => withReact(createEditor()), [])
     const initialValue = useMemo(
-        () =>
-            localStorage.getItem('content') ?
+        () => {
+            try {
+                const valueArray = JSON.parse(props.value ?? '[{"type":"paragraph","children":[{"text":""}]}]');
+                return valueArray;
+            } catch (e) {
+                console.error("Unparsable value provided", props.value);
+                return [
+                    {
+                        type: 'paragraph',
+                        children: [{ text: '' }],
+                    },
+                ]
+            }
+            return localStorage.getItem('content') ?
                 JSON.parse(localStorage.getItem('content') ?? "[]") : [
                     {
                         type: 'paragraph',
                         children: [{ text: 'A line of text in a paragraph.' }],
                     },
-                ],
+                ]
+        }
+        ,
         []
     )
     // const initialValue: Descendant[] = [
@@ -224,9 +238,7 @@ const RaraEditor = (props: RaraEditorProps) => {
     const editor = useMemo(() => withInlines(withHistory(withReact(createEditor()))), [])
 
 
-    return <div>
-
-        <h1>Rara Editor {props.value}</h1>
+    return <div className='rte-editor'>
         <Slate
 
             onChange={change => {
@@ -236,32 +248,13 @@ const RaraEditor = (props: RaraEditorProps) => {
                 )
                 if (isAstChange) {
                     // Save the value to Local Storage.
-                    localStorage.setItem('content', JSON.stringify(change))
+                    onChange&&onChange(JSON.stringify(change));
                 }
             }}
             editor={editor} value={initialValue} >
-            {/* <Toolbar /> */}
-            {!readOnly&&<Toolbar
+            {!readOnly && <Toolbar
                 items={
                     [
-                        // <ColorPickerButton
-                        // />,
-                        // <Divider/>,
-                        // <Markers />,
-                        // <Divider/>,
-                        // <input type="color" id="colorpicker" onChange={(e)=>{
-                        //     console.log(e.target.value);
-                        //     toggleMark(editor,'color',e.target.value);
-                        // }}></input>,
-                        // <MarkButton key={'color1'} format="color" label="red" value={'red'} />,
-                        // <MarkButton key={'bold'} format="bold" label="format_bold" />,
-                        // <MarkButton key={'italic'} format="italic" label="format_italic" />,
-                        // <MarkButton key={'underline'} format="underline" label="format_underlined" />,
-                        // <MarkButton key={'code'} format="code" label="code" />,
-                        // <MarkButton key={'heading1'} format="level" label="looks_one"  value={1}/>,
-                        // <MarkButton key={'heading2'} format="level" label="looks_one"  value={2}/>,
-                        // <BlockButton key={'heading2'} format="heading-two" label="looks_two" />,
-                        // <BlockButton key={'block'} format="block-quote" label="format_quote" />,
                         // <BlockButton key={'numbered'} format="numbered-list" label="format_list_numbered" />,
                         // <BlockButton key={'bulleted'} format="bulleted-list" label="format_list_bulleted" />,
                         // <BlockButton key={'left'} format="left" label="format_align_left" />,
@@ -272,9 +265,10 @@ const RaraEditor = (props: RaraEditorProps) => {
             />
             }
             <Editable
-                renderElement={(p:RenderElementProps)=>{
+                renderElement={(p: RenderElementProps) => {
                     return renderElement(p);
                 }}
+                className='rte-editor-body'
                 renderLeaf={renderLeaf}
                 placeholder="Placeholder"
                 readOnly={readOnly}

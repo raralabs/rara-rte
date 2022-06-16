@@ -1,13 +1,14 @@
-import React, { useMemo,useState } from 'react'
+import React, { useMemo, useState } from 'react'
 // Import the Slate editor factory.
-import { createEditor } from 'slate'
 import RaraEditor from "./RaraEditor/RaraEditor"
-import { Slate, Editable, withReact } from 'slate-react'
 
 
-const RaraEditorExample=()=>{
-    const editor = useMemo(() => withReact(createEditor()), [])
-
-    const [editorData,setEditorData]=useState([]);
-    return <RaraEditor value='' onChange={()=>{}}/>
+const RaraEditorExample = () => {
+    const [editorData, setEditorData] = useState('[{"type":"paragraph","children":[{"text":""}]}]');
+    return <RaraEditor value={editorData} onChange={(val) => {
+        setEditorData(val);
+    }} />
 }
+RaraEditorExample.defaultName="RaraEditorExample";
+
+export default RaraEditorExample;

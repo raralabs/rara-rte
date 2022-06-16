@@ -21,6 +21,7 @@ export const Toolbar = ({ items }: ToolbarProps) => {
             <Markers />
             <Divider />
             <MarkerItem
+                key={'block-quote'}
                 icon={'quote.svg'}
                 name="Block Quot"
                 onMouseDown={(e) => {
@@ -33,6 +34,7 @@ export const Toolbar = ({ items }: ToolbarProps) => {
             <Headings />
             <Divider />
             <MarkerItem
+                key={'code'}
                 icon={'code.svg'}
                 name="Code"
                 active={isBlockActive(editor, 'code')}
@@ -43,6 +45,7 @@ export const Toolbar = ({ items }: ToolbarProps) => {
             />
             <Divider />
             <MarkerItem
+                key={'check-list-item'}
                 icon={'clist.svg'}
                 name="Checklist"
                 active={isBlockActive(editor, 'check-list-item')}
@@ -54,11 +57,12 @@ export const Toolbar = ({ items }: ToolbarProps) => {
             <Divider />
             <MarkerItem
                 icon={'link.svg'}
+                key='link'
                 name="Link"
                 active={isBlockActive(editor, 'link')}
                 onMouseDown={(e) => {
                     e.preventDefault()
-                    console.log("Link clicked",isBlockActive(editor,'link'))
+                    console.log("Link clicked", isBlockActive(editor, 'link'))
                     if (!isBlockActive(editor, 'link')) {
                         const url = window.prompt('Enter the URL of the link:')
                         if (!url) return
