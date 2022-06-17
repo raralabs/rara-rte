@@ -8,12 +8,10 @@
  - [x] Quote
  - [x] Heading (1,2...5)
  - [x] Code
- - [ ] Hashtag
  - [x] Checklist
+ - [ ] Mention
  - [ ] Ordered List
  - [ ] Unordered List
- - [ ] Mention
-
  - [ ] Nested List
  - [ ] Indent (Increase, Decrease)
   
