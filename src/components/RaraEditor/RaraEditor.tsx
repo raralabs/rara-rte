@@ -15,158 +15,15 @@ import { HistoryEditor } from 'slate-history'
 import { CustomElement, CustomTextElement, RaraEditorType, RaraEditorProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
 import { Toolbar } from '../Toolbar';
-import './styles.css';
 import { isBlockActive, toggleBlock, toggleMark, withInlines } from '../../lib/functions';
-// import '../../lib/CodeBlock/prism.css';
-// import '../../lib/CodeBlock/prism.js';
-// import 'prismjs/themes/prism.css';
-import { CheckListItemElement, LinkElement } from '../Elements';
+import { Element, ElementProps, Leaf, LeafProps } from '../Elements';
 
-// const HOTKEYS = {
-//     'mod+b': 'bold',
-//     'mod+i': 'italic',
-//     'mod+u': 'underline',
-//     'mod+`': 'code',
-// };
-// Prism.highlightAll();
+
+import './styles.css';
+import { onKeyDown } from '../../lib/handlers';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
-
-interface ElementProps {
-    attributes?: any,
-    children?: any,
-    element?: any,
-    onCheckboxChange?: (checked: boolean, value: string) => void
-}
-const Element = ({ attributes, children, element, onCheckboxChange }: ElementProps) => {
-    const style = { textAlign: element.align }
-    switch (element.type) {
-        case 'block-quote':
-            return (
-                <blockquote style={style} {...attributes}>
-                    {children}
-                </blockquote>
-            )
-        case 'bulleted-list':
-            return (
-                <ul style={style} {...attributes}>
-                    {children}
-                </ul>
-            )
-        case 'heading-one':
-            return (
-                <h1 className='rte-heading-one' style={{ ...style }} {...attributes}>
-                    {children}
-                </h1>
-            )
-        case 'heading-two':
-            return (
-                <h2 className='rte-heading-two' style={{ ...style }} {...attributes}>
-                    {children}
-                </h2>
-            )
-        case 'heading-three':
-            return (
-                <h3 className='rte-heading-three' style={{ ...style }} {...attributes}>
-                    {children}
-                </h3>
-            )
-        case 'heading-four':
-            return (
-                <h4 className='rte-heading-four' style={{ ...style }} {...attributes}>
-                    {children}
-                </h4>
-            )
-        case 'heading-five':
-            return (
-                <h5 className='rte-heading-five' style={{ ...style }} {...attributes}>
-                    {children}
-                </h5>
-            )
-        case 'list-item':
-            return (
-                <li style={style} {...attributes}>
-                    {children}
-                </li>
-            )
-        case 'check-list-item':
-            return <CheckListItemElement
-                onCheckboxChange={onCheckboxChange}
-                attributes={attributes} children={children} element={element} />
-        case 'list-item':
-            return (
-                <li style={style} {...attributes}>
-                    {children}
-                </li>
-            )
-        case 'numbered-list':
-            return (
-                <ol style={style} {...attributes}>
-                    {children}
-                </ol>
-            )
-        case 'code':
-            return <pre className='rte-pre'{...attributes}>
-                {children}
-            </pre>;
-        case 'link':
-            return <LinkElement attributes={attributes} children={children} element={element} />
-        default:
-            return (
-                <p className='rte-paragraph' style={style} {...attributes}>
-                    {children}
-                </p>
-            )
-    }
-}
-
-interface LeafProps {
-    attributes?: any,
-    children?: any,
-    leaf?: any
-}
-// const FONT_SIZES = [0, 32, 24, 20, 16];
-const Leaf = ({ attributes, children, leaf }: LeafProps) => {
-    if (leaf.bold) {
-        children = <strong>{children}</strong>
-    }
-    if (leaf.code) {
-        children = <code>{children}</code>
-    }
-    if (leaf.italic) {
-        children = <em>{children}</em>
-    }
-    if (leaf.strike) {
-        children = <s>{children}</s>
-    }
-    if (leaf.underline) {
-        children = <u>{children}</u>
-    }
-    if (leaf.color) {
-        children = <span style={{
-            color: leaf.color
-        }}>{children}</span>
-    }
-    // if (leaf.placeholder) {
-    //     return (
-    //         <>
-    //             {/* <DefaultLeaf {...props} /> */}
-    //             <DefaultLeaf {...attributes}>{children}</DefaultLeaf>
-    //             <span
-    //                 style={{ opacity: 0.3, position: "absolute", bottom:0 }}
-    //                 contentEditable={false}
-    //             >
-    //                 Type / to open menu
-    //             </span>
-    //         </>
-    //     );
-    // }
-
-    return <span {...attributes}>{children}</span>
-}
-
-
 
 
 declare module 'slate' {
@@ -183,7 +40,6 @@ const RaraEditor = (props: RaraEditorProps) => {
     const renderElement = useCallback((props: ElementProps) => <Element {...props} onCheckboxChange={onCheckboxChange} />, [])
     const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, [])
 
-    // const editor = useMemo(() => withReact(createEditor()), [])
     const initialValue = useMemo(
         () => {
             try {
@@ -198,13 +54,6 @@ const RaraEditor = (props: RaraEditorProps) => {
                     },
                 ]
             }
-            return localStorage.getItem('content') ?
-                JSON.parse(localStorage.getItem('content') ?? "[]") : [
-                    {
-                        type: 'paragraph',
-                        children: [{ text: 'A line of text in a paragraph.' }],
-                    },
-                ]
         }
         ,
         []
@@ -249,62 +98,8 @@ const RaraEditor = (props: RaraEditorProps) => {
                 placeholder="Placeholder"
                 readOnly={readOnly}
                 onKeyDown={(e) => {
-                    //metaKey to track Cmd of mac,ALT of window,  *** of linux keyboard
-                    console.log(editor);
-                    if (e.key === 'Enter') {
-
-
-                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
-                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
-                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
-                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
-                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
-                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
-
-
-                        //check if cursor in in last list item
-                        //if it is empty, exit block
-                        //if it is not empty, another item addeed by slate
-                        console.log("RARA Editor", editor.children, editor.selection?.anchor);
-                        const indexOfDecendent = editor.selection?.anchor.path.at(0);
-                        if (indexOfDecendent) {
-                            //got the path
-                            const decendent = editor.children.at(indexOfDecendent);
-                            console.log("Last Cursor was on", decendent)
-                            if(decendent?.type=='check-list-item' && ''==serializeSlateData(decendent?.children??[])){
-                                console.log("Now toggle the block")
-                                toggleBlock(editor,'check-list-item');
-                            }
-                            // const childText=serializeSlateData()
-                        }
-                    }
-                    if (e.key === 'Enter' && e.metaKey) {
-                        checkListAndRemoveIfExist(editor);
-                        // const marks = Editor.marks(editor)
-                        // console.log(marks);
-                    }
-                    if (e.metaKey && e.key === 'b') {
-                        e.preventDefault();
-                        toggleMark(editor, 'bold');
-                    }
-                    if (e.metaKey && e.key === 'i') {
-                        e.preventDefault();
-                        toggleMark(editor, 'italic');
-                    }
-                    if (e.metaKey && e.key === 'u') {
-                        e.preventDefault();
-                        toggleMark(editor, 'underline');
-                    }
+                    onKeyDown(e, editor);
                 }}
-            // onKeyDown={event => {
-            //    for (const hotkey in HOTKEYS) {
-            //      if (isHotkey(hotkey, event as any)) {
-            //        event.preventDefault()
-            //        const mark = HOTKEYS[hotkey]
-            //        toggleMark(editor, mark)
-            //      }
-            //    }
-            // }}
             />
         </Slate>
     </div>
@@ -375,8 +170,6 @@ const checkListAndRemoveIfExist = (editor: BaseEditor & ReactEditor & HistoryEdi
 
     })
 }
-
-
 
 
 
