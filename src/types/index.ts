@@ -1,6 +1,10 @@
 
 // NODE TYPES
 
+import { BaseEditor } from "slate"
+import { HistoryEditor } from "slate-history"
+import { ReactEditor } from "slate-react"
+
 export type ParagraphElement = {
     type?: 'paragraph',
     align?: string,
@@ -12,7 +16,9 @@ export type CustomTextElement={
     bold?:boolean,
     italic?:boolean,
     strike?:boolean,
-    underline?:boolean
+    underline?:boolean,
+    type?:string,
+    children?:any[]
 }
 export type CustomElement =ColoredElement|ChecklistElement|HeadingElement|ParagraphElement|LinkElement
 
@@ -47,3 +53,5 @@ export interface RaraEditorProps{
     onCheckboxChange?:(checked:boolean,value:string)=>void
 }
 
+
+export type RaraEditorType=BaseEditor & ReactEditor & HistoryEditor

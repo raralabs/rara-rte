@@ -8,14 +8,15 @@ import {
     Element as SlateElement,
 
 } from 'slate'
+
 import { withHistory } from 'slate-history';
 import { BaseEditor } from 'slate'
 import { HistoryEditor } from 'slate-history'
-import { CustomElement, CustomTextElement, RaraEditorProps } from '../../types';
+import { CustomElement, CustomTextElement, RaraEditorType, RaraEditorProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
 import { Toolbar } from '../Toolbar';
 import './styles.css';
-import { isBlockActive, toggleMark, withInlines } from '../../lib/functions';
+import { isBlockActive, toggleBlock, toggleMark, withInlines } from '../../lib/functions';
 // import '../../lib/CodeBlock/prism.css';
 // import '../../lib/CodeBlock/prism.js';
 // import 'prismjs/themes/prism.css';
@@ -167,38 +168,18 @@ const Leaf = ({ attributes, children, leaf }: LeafProps) => {
 
 
 
-export type HeadingElement = {
-    type?: 'heading'
-    level?: number
-    children: CustomTextElement[]
-}
-
-// enum formatType {
-//     paragraph = 'paragraph',
-//     heading = 'heading',
-//     listItem = 'list-item',
-//     bold = 'bod'
-//   }
-
-//  ParagraphElement | HeadingElement
-// type CustomText = { text: string; bold?: true, italic?: true };
 
 declare module 'slate' {
     interface CustomTypes {
-        Editor: BaseEditor & ReactEditor & HistoryEditor
+        Editor: RaraEditorType
         Element: CustomElement
         Text: CustomTextElement
     }
 }
 
 
-
-
-
-
-
 const RaraEditor = (props: RaraEditorProps) => {
-    const { readOnly = false, onCheckboxChange,onChange} = props;
+    const { readOnly = false, onCheckboxChange, onChange } = props;
     const renderElement = useCallback((props: ElementProps) => <Element {...props} onCheckboxChange={onCheckboxChange} />, [])
     const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, [])
 
@@ -228,12 +209,6 @@ const RaraEditor = (props: RaraEditorProps) => {
         ,
         []
     )
-    // const initialValue: Descendant[] = [
-    //     {
-    //         type: 'paragraph',
-    //         children: [{ text: 'A line of text in a paragraph.' }],
-    //     },
-    // ]
 
     const editor = useMemo(() => withInlines(withHistory(withReact(createEditor()))), [])
 
@@ -246,9 +221,10 @@ const RaraEditor = (props: RaraEditorProps) => {
                 const isAstChange = editor.operations.some(
                     op => 'set_selection' !== op.type
                 )
+
                 if (isAstChange) {
                     // Save the value to Local Storage.
-                    onChange&&onChange(JSON.stringify(change));
+                    onChange && onChange(JSON.stringify(change));
                 }
             }}
             editor={editor} value={initialValue} >
@@ -272,29 +248,36 @@ const RaraEditor = (props: RaraEditorProps) => {
                 renderLeaf={renderLeaf}
                 placeholder="Placeholder"
                 readOnly={readOnly}
-                // spellCheck
-                // autoFocus
-                // decorate={([node, path]) => {
-                //     //TODO handle this properly later
-                //     if (editor.selection != null) {
-                //         if (
-                //             !Editor.isEditor(node) &&
-                //             Editor.string(editor, [path[0]]) === "" &&
-                //             Range.includes(editor.selection, path) &&
-                //             Range.isCollapsed(editor.selection)
-                //         ) {
-                //             return [
-                //                 {
-                //                     ...editor.selection,
-                //                     placeholder: true,
-                //                 },
-                //             ];
-                //         }
-                //     }
-                //     return [];
-                // }}
                 onKeyDown={(e) => {
                     //metaKey to track Cmd of mac,ALT of window,  *** of linux keyboard
+                    console.log(editor);
+                    if (e.key === 'Enter') {
+
+
+                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
+                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
+                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
+                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
+                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
+                        //TODO  JUGGAD DONE,NEED TO CHANGE LATER
+
+
+                        //check if cursor in in last list item
+                        //if it is empty, exit block
+                        //if it is not empty, another item addeed by slate
+                        console.log("RARA Editor", editor.children, editor.selection?.anchor);
+                        const indexOfDecendent = editor.selection?.anchor.path.at(0);
+                        if (indexOfDecendent) {
+                            //got the path
+                            const decendent = editor.children.at(indexOfDecendent);
+                            console.log("Last Cursor was on", decendent)
+                            if(decendent?.type=='check-list-item' && ''==serializeSlateData(decendent?.children??[])){
+                                console.log("Now toggle the block")
+                                toggleBlock(editor,'check-list-item');
+                            }
+                            // const childText=serializeSlateData()
+                        }
+                    }
                     if (e.key === 'Enter' && e.metaKey) {
                         checkListAndRemoveIfExist(editor);
                         // const marks = Editor.marks(editor)
@@ -302,15 +285,15 @@ const RaraEditor = (props: RaraEditorProps) => {
                     }
                     if (e.metaKey && e.key === 'b') {
                         e.preventDefault();
-                        toggleMark(editor,'bold');
+                        toggleMark(editor, 'bold');
                     }
                     if (e.metaKey && e.key === 'i') {
                         e.preventDefault();
-                        toggleMark(editor,'italic');
+                        toggleMark(editor, 'italic');
                     }
                     if (e.metaKey && e.key === 'u') {
                         e.preventDefault();
-                        toggleMark(editor,'underline');
+                        toggleMark(editor, 'underline');
                     }
                 }}
             // onKeyDown={event => {
