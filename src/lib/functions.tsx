@@ -3,12 +3,22 @@ import { ReactEditor } from 'slate-react'
 import { BaseEditor, Range } from 'slate'
 import { HistoryEditor } from 'slate-history'
 import { Editor, Transforms, Element as SlateElement } from 'slate'
-import { CustomElement, LinkElement } from '../types'
+import { CustomElement, LinkElement, MentionElement, RaraEditorType } from '../types'
 
 export const LIST_TYPES = ['numbered-list', 'bulleted-list']
 export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 
-
+export const insertMention = (editor: RaraEditorType, id?: any, label?: any, metaData?: any) => {
+    const mention: MentionElement = {
+        type: 'mention',
+        label,
+        id,
+        metaData,
+        children: [{ text: '' }],
+    }
+    Transforms.insertNodes(editor, mention)
+    Transforms.move(editor)
+}
 
 export const isMarkActive = (editor: BaseEditor & ReactEditor & HistoryEditor, format: string) => {
     const marks: { [index: string]: boolean } = Editor.marks(editor) ?? {};
@@ -151,6 +161,19 @@ export const withInlines = (editor: BaseEditor & ReactEditor & HistoryEditor) =>
         }
     }
 
+    return editor
+}
+
+export const withMentions = (editor: RaraEditorType) => {
+    const { isInline, isVoid } = editor
+
+    editor.isInline = (element: any) => {
+        return element.type === 'mention' ? true : isInline(element)
+    }
+
+    editor.isVoid = (element: any) => {
+        return element.type === 'mention' ? true : isVoid(element)
+    }
     return editor
 }
 

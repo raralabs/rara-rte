@@ -2,13 +2,15 @@
 import React from 'react';
 import CheckListItemElement from './Checklist';
 import LinkElement from './Links';
+import Mention from './Mention';
 
 export interface ElementProps {
     attributes?: any,
     children?: any,
     element?: any,
-    onCheckboxChange?: (checked: boolean, value: string) => void
+    onCheckboxChange?: (checked: boolean, value: string) => void,
 }
+
 const Element = ({ attributes, children, element, onCheckboxChange }: ElementProps) => {
     const style = { textAlign: element.align }
     switch (element.type) {
@@ -64,6 +66,13 @@ const Element = ({ attributes, children, element, onCheckboxChange }: ElementPro
             return <CheckListItemElement
                 onCheckboxChange={onCheckboxChange}
                 attributes={attributes} children={children} element={element} />
+        case 'mention':
+            return <Mention
+                children={children}
+                element={element}
+                attributes={attributes}
+            />
+        // return <
         case 'list-item':
             return (
                 <li style={style} {...attributes}>

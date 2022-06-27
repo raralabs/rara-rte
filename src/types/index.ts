@@ -20,7 +20,7 @@ export type CustomTextElement={
     type?:string,
     children?:any[]
 }
-export type CustomElement =ColoredElement|ChecklistElement|HeadingElement|ParagraphElement|LinkElement
+export type CustomElement =ColoredElement|ChecklistElement|HeadingElement|ParagraphElement|LinkElement|MentionElement
 
 
 export type ColoredElement={
@@ -39,6 +39,14 @@ export type HeadingElement = {
     children: CustomTextElement[]
 }
 
+export type MentionElement={
+    type?:'mention',
+    id?:any,
+    label?:string,
+    metaData?:any,
+    children:CustomTextElement[]
+}
+
 export type LinkElement={
     type: 'link',
     url?: string,
@@ -46,12 +54,18 @@ export type LinkElement={
 }
 
 
-export interface RaraEditorProps{
+export type RaraEditorProps={
     value?:string;
     onChange?:(val:string)=>void,
     readOnly?:boolean,
-    onCheckboxChange?:(checked:boolean,value:string)=>void
+    onCheckboxChange?:(checked:boolean,value:string)=>void,
+    onMentionListChange?:(mentionedItems:MentionItemProps[])=>void
 }
 
+export type MentionItemProps={
+    label:string,
+    id:any,
+    metaData?:any
+}
 
 export type RaraEditorType=BaseEditor & ReactEditor & HistoryEditor

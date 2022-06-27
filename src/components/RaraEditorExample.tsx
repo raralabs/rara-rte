@@ -5,10 +5,18 @@ import RaraEditor from "./RaraEditor/RaraEditor"
 
 const RaraEditorExample = () => {
     const [editorData, setEditorData] = useState('[{"type":"paragraph","children":[{"text":""}]}]');
-    return <RaraEditor value={editorData} onChange={(val) => {
-        setEditorData(val);
-    }} />
+    return <RaraEditor
+        value={editorData}
+        onCheckboxChange={(checked, value) => {
+            console.log("Checkbox Toggled", checked, value);
+        }}
+        onMentionListChange={(mentiondItems)=>{
+            console.log("Mentioned Item Changed",mentiondItems);
+        }}
+        onChange={(val) => {
+            setEditorData(val);
+        }} />
 }
-RaraEditorExample.defaultName="RaraEditorExample";
+RaraEditorExample.defaultName = "RaraEditorExample";
 
 export default RaraEditorExample;
