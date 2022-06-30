@@ -3,12 +3,22 @@ import { ReactEditor } from 'slate-react'
 import { BaseEditor, Range } from 'slate'
 import { HistoryEditor } from 'slate-history'
 import { Editor, Transforms, Element as SlateElement } from 'slate'
-import { CustomElement, LinkElement } from '../types'
+import { CustomElement, LinkElement, MentionElement, MentionItemProps, RaraEditorType } from '../types'
 
 export const LIST_TYPES = ['numbered-list', 'bulleted-list']
 export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 
-
+export const insertMention = (editor: RaraEditorType,item:MentionItemProps) => {
+    const mention: MentionElement = {
+        type: 'mention',
+        label:item.label,
+        id:item.id,
+        metaData:item.metaData,
+        children: [{ text: '' }],
+    }
+    Transforms.insertNodes(editor, mention)
+    Transforms.move(editor)
+}
 
 export const isMarkActive = (editor: BaseEditor & ReactEditor & HistoryEditor, format: string) => {
     const marks: { [index: string]: boolean } = Editor.marks(editor) ?? {};
@@ -134,7 +144,7 @@ export const unwrapLink = (editor: BaseEditor & ReactEditor & HistoryEditor) => 
 export const withInlines = (editor: BaseEditor & ReactEditor & HistoryEditor) => {
     const { insertData, insertText, isInline } = editor
     editor.isInline = (element: any) =>
-        ['link', 'button'].includes(element.type) || isInline(element)
+        ['link', 'button','mention'].includes(element.type) || isInline(element)
     editor.insertText = text => {
         if (text && isUrl(text)) {
             wrapLink(editor, text)
@@ -151,6 +161,19 @@ export const withInlines = (editor: BaseEditor & ReactEditor & HistoryEditor) =>
         }
     }
 
+    return editor
+}
+
+export const withMentions = (editor: RaraEditorType) => {
+    const { isInline, isVoid } = editor
+
+    editor.isInline = (element: any) => {
+        return element.type === 'mention' ? true : isInline(element)
+    }
+
+    editor.isVoid = (element: any) => {
+        return element.type === 'mention' ? true : isVoid(element)
+    }
     return editor
 }
 

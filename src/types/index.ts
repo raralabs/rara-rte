@@ -1,6 +1,7 @@
 
 // NODE TYPES
 
+import { ReactNode } from "react"
 import { BaseEditor } from "slate"
 import { HistoryEditor } from "slate-history"
 import { ReactEditor } from "slate-react"
@@ -20,7 +21,16 @@ export type CustomTextElement={
     type?:string,
     children?:any[]
 }
-export type CustomElement =ColoredElement|ChecklistElement|HeadingElement|ParagraphElement|LinkElement
+
+export type CodeElement={
+    type?:'code',
+    children?:CustomTextElement[]
+}
+export type BlockQuoteElement={
+    type?:'block-quote',
+    children?:CustomTextElement[]
+}
+export type CustomElement =BlockQuoteElement|CodeElement|ColoredElement|ChecklistElement|HeadingElement|ParagraphElement|LinkElement|MentionElement
 
 
 export type ColoredElement={
@@ -34,9 +44,16 @@ export type ChecklistElement={
     children: CustomTextElement[],
 }
 export type HeadingElement = {
-    type?: 'heading'
-    level?: 1|2|3|4|5|6,
+    type?: 'heading-one'|'heading-two'|'heading-three'|'heading-four'|'heading-five'
     children: CustomTextElement[]
+}
+
+export type MentionElement={
+    type?:'mention',
+    id?:any,
+    label?:string,
+    metaData?:any,
+    children:CustomTextElement[]
 }
 
 export type LinkElement={
@@ -46,12 +63,22 @@ export type LinkElement={
 }
 
 
-export interface RaraEditorProps{
+export type RaraEditorProps={
     value?:string;
     onChange?:(val:string)=>void,
     readOnly?:boolean,
-    onCheckboxChange?:(checked:boolean,value:string)=>void
+    onCheckboxChange?:(checked:boolean,value:string)=>void,
+    onMentionListChange?:(mentionedItems:MentionItemProps[])=>void,
+    onMentionQuery?:(query:string)=>Promise<MentionItemProps[]>,
+    isMentionLoading?:boolean,
+    mentionOptionRenderer?:(mentionOptionItem:MentionItemProps)=>ReactNode,
+    mentionItemRenderer?:(mentionOptionItem:MentionItemProps)=>ReactNode
 }
 
+export type MentionItemProps={
+    label:string,
+    id:any,
+    metaData?:any
+}
 
 export type RaraEditorType=BaseEditor & ReactEditor & HistoryEditor
