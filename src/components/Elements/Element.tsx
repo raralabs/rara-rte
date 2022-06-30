@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { CustomElement, MentionItemProps } from '../../types';
 import CheckListItemElement from './Checklist';
 import LinkElement from './Links';
 import Mention from './Mention';
@@ -7,12 +8,17 @@ import Mention from './Mention';
 export interface ElementProps {
     attributes?: any,
     children?: any,
-    element?: any,
+    element: CustomElement,
     onCheckboxChange?: (checked: boolean, value: string) => void,
+    onMentionQuery?:(query:string)=>Promise<MentionItemProps[]>,
+    isMentionLoading?:boolean,
+    mentionItemRenderer?:(mentionOptionItem:MentionItemProps)=>ReactNode
 }
 
-const Element = ({ attributes, children, element, onCheckboxChange }: ElementProps) => {
-    const style = { textAlign: element.align }
+const Element = ({ attributes, children, element, onCheckboxChange,mentionItemRenderer }: ElementProps) => {
+    const style = { 
+        // textAlign: element.align
+    }
     switch (element.type) {
         case 'block-quote':
             return (
@@ -20,12 +26,12 @@ const Element = ({ attributes, children, element, onCheckboxChange }: ElementPro
                     {children}
                 </blockquote>
             )
-        case 'bulleted-list':
-            return (
-                <ul style={style} {...attributes}>
-                    {children}
-                </ul>
-            )
+        // case 'bulleted-list':
+        //     return (
+        //         <ul style={style} {...attributes}>
+        //             {children}
+        //         </ul>
+        //     )
         case 'heading-one':
             return (
                 <h1 className='rte-heading-one' style={{ ...style }} {...attributes}>
@@ -56,12 +62,12 @@ const Element = ({ attributes, children, element, onCheckboxChange }: ElementPro
                     {children}
                 </h5>
             )
-        case 'list-item':
-            return (
-                <li style={style} {...attributes}>
-                    {children}
-                </li>
-            )
+        // case 'list-item':
+        //     return (
+        //         <li style={style} {...attributes}>
+        //             {children}
+        //         </li>
+        //     )
         case 'check-list-item':
             return <CheckListItemElement
                 onCheckboxChange={onCheckboxChange}
@@ -71,20 +77,21 @@ const Element = ({ attributes, children, element, onCheckboxChange }: ElementPro
                 children={children}
                 element={element}
                 attributes={attributes}
+                mentionItemRenderer={mentionItemRenderer}
             />
         // return <
-        case 'list-item':
-            return (
-                <li style={style} {...attributes}>
-                    {children}
-                </li>
-            )
-        case 'numbered-list':
-            return (
-                <ol style={style} {...attributes}>
-                    {children}
-                </ol>
-            )
+        // case 'list-item':
+        //     return (
+        //         <li style={style} {...attributes}>
+        //             {children}
+        //         </li>
+        //     )
+        // case 'numbered-list':
+        //     return (
+        //         <ol style={style} {...attributes}>
+        //             {children}
+        //         </ol>
+        //     )
         case 'code':
             return <pre className='rte-pre'{...attributes}>
                 {children}

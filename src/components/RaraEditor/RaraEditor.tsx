@@ -13,7 +13,7 @@ import {
 import { withHistory } from 'slate-history';
 import { BaseEditor } from 'slate'
 import { HistoryEditor } from 'slate-history'
-import { CustomElement, CustomTextElement, RaraEditorType, RaraEditorProps } from '../../types';
+import { CustomElement, CustomTextElement, RaraEditorType, RaraEditorProps, MentionItemProps } from '../../types';
 import { serializeSlateData } from '../../utils/serializer';
 import { Toolbar } from '../Toolbar';
 import { insertMention, isBlockActive, toggleBlock, toggleMark, withInlines, withMentions } from '../../lib/functions';
@@ -38,13 +38,22 @@ declare module 'slate' {
 
 
 const RaraEditor = (props: RaraEditorProps) => {
-    const { readOnly = false, onCheckboxChange, onChange } = props;
+    const { readOnly = false, onCheckboxChange, onChange, isMentionLoading, mentionOptionRenderer, onMentionQuery,mentionItemRenderer } = props;
     const ref = useRef<HTMLDivElement | null>()// useRef<React.LegacyRef<HTMLDivElement>>
     const [target, setTarget] = useState<Range | null>()
     const [index, setIndex] = useState(0)
-    const [search, setSearch] = useState('')
+    // const [search, setSearch] = useState('')
+    const [searchResults, setSearchResults] = useState<MentionItemProps[]>([]);
+    const [isSearching, setIsSearching] = useState(true);
 
-    const renderElement = useCallback((props: ElementProps) => <Element {...props} onCheckboxChange={onCheckboxChange} />, [])
+    const renderElement = useCallback((props: ElementProps) => <Element {...props}
+        onCheckboxChange={onCheckboxChange}
+        isMentionLoading={isMentionLoading}
+        onMentionQuery={onMentionQuery}
+        mentionItemRenderer={mentionItemRenderer}
+
+
+    />, [])
     const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, [])
 
     const initialValue = useMemo(
@@ -68,10 +77,10 @@ const RaraEditor = (props: RaraEditorProps) => {
 
     const editor = useMemo(() => withMentions(withInlines(withHistory(withReact(createEditor())))), [])
 
-    const chars = CHARACTERS.filter((c: string) =>
-        c.toLowerCase().startsWith(search.toLowerCase())
-    ).slice(0, 10)
-    console.log("filtered chars", chars, target);
+    // const chars = CHARACTERS.filter((c: string) =>
+    //     c.toLowerCase().startsWith(search.toLowerCase())
+    // ).slice(0, 10)
+    // console.log("filtered chars", chars, target);
 
     const onKeyDown = useCallback(
         (event: any) => {
@@ -79,47 +88,50 @@ const RaraEditor = (props: RaraEditorProps) => {
                 switch (event.key) {
                     case 'ArrowDown':
                         event.preventDefault()
-                        const prevIndex = index >= chars.length - 1 ? 0 : index + 1
+                        const prevIndex = index >= searchResults.length - 1 ? 0 : index + 1
                         setIndex(prevIndex)
                         break
                     case 'ArrowUp':
                         event.preventDefault()
-                        const nextIndex = index <= 0 ? chars.length - 1 : index - 1
+                        const nextIndex = index <= 0 ? searchResults.length - 1 : index - 1
                         setIndex(nextIndex)
                         break
                     case 'Tab':
                     case 'Enter':
                         event.preventDefault()
                         Transforms.select(editor, target)
-                        insertMention(editor, index, chars[index], { id: index, name: chars[index] });
+                        insertMention(editor, searchResults[index]);
                         setTarget(null)
+                        setSearchResults([]);
                         break
                     case 'Escape':
                         event.preventDefault()
                         setTarget(null)
+                        setSearchResults([])
+                        setIsSearching(false);
                         break
                 }
             }
         },
-        [index, search, target]
+        [index, JSON.stringify(searchResults), target]
     )
 
     useEffect(() => {
-        if (target && chars.length > 0) {
+        if (target && searchResults.length > 0) {
             const el = ref.current
-            if(el){
-            const domRange = ReactEditor.toDOMRange(editor, target)
-            const rect = domRange.getBoundingClientRect()
-            el.style.top = `${rect.top + window.pageYOffset + 24}px`
-            el.style.left = `${rect.left + window.pageXOffset}px`
+            if (el) {
+                const domRange = ReactEditor.toDOMRange(editor, target)
+                const rect = domRange.getBoundingClientRect()
+                el.style.top = `${rect.top + window.pageYOffset + 24}px`
+                el.style.left = `${rect.left + window.pageXOffset}px`
             }
         }
-    }, [chars.length, editor, index, search, target])
+    }, [editor, index, JSON.stringify(searchResults), target])
 
     return <div className='rte-editor'>
         <Slate
 
-            onChange={change => {
+            onChange={async (change) => {
                 //TO check if the values are changed or not
                 const isAstChange = editor.operations.some(
                     op => 'set_selection' !== op.type
@@ -137,13 +149,26 @@ const RaraEditor = (props: RaraEditorProps) => {
                     const afterRange = Editor.range(editor, start, after)
                     const afterText = Editor.string(editor, afterRange)
                     const afterMatch = afterText.match(/^(\s|$)/)
+                    console.log("BMA",beforeMatch,afterMatch);
 
                     if (beforeMatch && afterMatch) {
                         console.log("Matching");
                         setTarget(beforeRange)
-                        setSearch(beforeMatch[1])
+                        setIsSearching(true);
+                        if (onMentionQuery) {
+                            let results = await onMentionQuery(beforeMatch[1]);
+                            console.log("GOT result", results);
+                            setSearchResults(results);
+                            
+                        }
+                        setIsSearching(false);
+
+                        // setSearch(beforeMatch[1])
                         setIndex(0)
                         return
+                    }else if(searchResults.length>0){
+                        setSearchResults([]);
+                        setIsSearching(false);
                     }
                 }
 
@@ -167,35 +192,50 @@ const RaraEditor = (props: RaraEditorProps) => {
                     ]}
             />
             }
-            {target && chars.length > 0 && (
+            {target && (searchResults.length > 0 || isSearching) && (
                 <Portal>
-                    <div
-                        ref={ref}
-                        style={{
-                            top: '-9999px',
-                            left: '-9999px',
-                            position: 'absolute',
-                            zIndex: 1,
-                            padding: '3px',
-                            background: 'white',
-                            borderRadius: '4px',
-                            boxShadow: '0 1px 5px rgba(0,0,0,.2)',
-                        }}
-                        data-cy="mentions-portal"
-                    >
-                        {chars.map((char, i) => (
-                            <div
-                                key={char}
-                                style={{
-                                    padding: '1px 3px',
-                                    borderRadius: '3px',
-                                    background: i === index ? '#B4D5FF' : 'transparent',
-                                }}
-                            >
-                                {char}
-                            </div>
-                        ))}
-                    </div>
+                    {isSearching ? <div style={{
+                        top: '-9999px',
+                        left: '-9999px',
+                        position: 'absolute',
+                        zIndex: 1,
+                        padding: '3px',
+                        background: 'white',
+                        borderRadius: '4px',
+                        boxShadow: '0 1px 5px rgba(0,0,0,.2)',
+                    }}>
+                        Loading...
+                    </div> :
+                        <div
+                            ref={ref}
+                            style={{
+                                top: '-9999px',
+                                left: '-9999px',
+                                position: 'absolute',
+                                zIndex: 1,
+                                padding: '3px',
+                                background: 'white',
+                                borderRadius: '4px',
+                                boxShadow: '0 1px 5px rgba(0,0,0,.2)',
+                            }}
+                            data-cy="mentions-portal"
+                        >
+                            {searchResults.map((searchResultItem, i) => (
+                                <div
+                                    key={"searchResultItem" + i}
+                                    style={{
+                                        padding: '1px 3px',
+                                        borderRadius: '3px',
+                                        background: i === index ? '#B4D5FF' : 'transparent',
+                                    }}
+                                >
+                                    {mentionOptionRenderer != null ?
+                                        mentionOptionRenderer(searchResultItem) :
+                                        searchResultItem.label}
+                                </div>
+                            ))}
+                        </div>
+                    }
                 </Portal>
             )}
             <Editable
