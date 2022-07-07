@@ -89,11 +89,11 @@ This is the folder structure we set up for you:
   package.json
   tsconfig.json
 /src
-  index.tsx       # EDIT THIS
+  index.tsx      
 /test
-  blah.test.tsx   # EDIT THIS
+  blah.test.tsx   
 /stories
-  Thing.stories.tsx # EDIT THIS
+  RaraEditor.stories.tsx 
 /.storybook
   main.js
   preview.js
