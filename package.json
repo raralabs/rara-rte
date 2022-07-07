@@ -29,13 +29,20 @@
       "pre-commit": "tsdx lint"
     }
   },
+  "np": {
+		"yarn": false,
+		"contents": "dist"
+	},
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "rara-rte",
+  "name": "@raralabs/rara-rte",
   "author": "Raralabs Pvt. Ltd.",
   "module": "dist/rara-rte.esm.js",
   "size-limit": [
