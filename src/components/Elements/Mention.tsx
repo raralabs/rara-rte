@@ -21,7 +21,7 @@ const Mention = ({ attributes, children, element,mentionItemRenderer }: ElementP
             }}
         >
 
-            {/* {children} */}
+            {children}
             {mentionItemRenderer!=null?mentionItemRenderer({
                 id:element.id,
                 label:element.label,

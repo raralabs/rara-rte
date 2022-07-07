@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { searchMockedCharacter } from '../Mock/SearchMocker';
 import { CustomElement, MentionItemProps } from '../types';
 import { serializeSlateData } from '../utils/serializer';
 // Import the Slate editor factory.
@@ -23,30 +22,32 @@ const RaraEditorExample = () => {
         }} 
         isMentionLoading={true}
         onMentionQuery={async (query:string)=>{
-            let chars=await searchMockedCharacter(query)
-            let results=chars.map((i,index)=>{
-                return {
-                "label":i,
-                "id":i,
-                metaData:{
-                    name:i,
-                    index:index
-                }
-                }
-            })
-            return results;
+            // let chars=await searchMockedCharacter(query)
+            // let results=chars.map((i,index)=>{
+            //     return {
+            //     "label":i,
+            //     "id":i,
+            //     metaData:{
+            //         name:i,
+            //         index:index
+            //     }
+            //     }
+            // })
+            return [];
         }}
         mentionOptionRenderer={(mentionOptionItem:MentionItemProps)=>{
+            // console.log(mentionOptionItem.metaData?.index)
             return <div style={{
                 fontSize:20,
                 fontWeight:'bold',
-                color:'red'
+                color:(mentionOptionItem.metaData?.index%2)==0?'red':'green'
             }}>{mentionOptionItem.label} {mentionOptionItem.metaData?.index}</div>
         }}
         mentionItemRenderer={(mentionItem:MentionItemProps)=>{
+           
             return <p style={{
                 margin:0,
-                color:'red'
+                color:(mentionItem.metaData?.index%2)==0?'red':'green'
                 // display:'flex',
                 // gap:10,
                 // fontSize:'inherit'

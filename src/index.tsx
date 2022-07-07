@@ -1,6 +1,7 @@
 // import React, { FC, HTMLAttributes, ReactChild } from 'react';
 
 import  {RaraEditor} from './components/RaraEditor';
+import {MentionItemProps} from './types/index'
 // export interface Props extends HTMLAttributes<HTMLDivElement> {
 //   /** custom content, defaults to 'the snozzberries taste like snozzberries' */
 //   children?: ReactChild;
@@ -15,4 +16,4 @@ import  {RaraEditor} from './components/RaraEditor';
 //   return <div>{children || `the snozzberries taste like snozzberries`}</div>;
 // };
 
-export  {RaraEditor};
+export  {RaraEditor,MentionItemProps};

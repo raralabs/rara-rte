@@ -2,21 +2,73 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 // import { RaraEditor } from '../.';
-import {RaraEditor} from '../src/components/RaraEditor';
+import { RaraEditor } from '../src/components/RaraEditor';
+import { searchMockedCharacter } from './Mock/SearchMocker';
+import { MentionItemProps } from '../src/types';
 
 const App = () => {
-  const [v,onV]=React.useState("");
-  return (
-    <div>
-      {/* <RaraEditor value='This is value'  /> */}
-      <div>Hello</div>
-      <RaraEditor value={v} 
-      onChange={(v)=>{
-        onV(v)
+
+  const [editorData, setEditorData] = React.useState('[{"type":"paragraph","children":[{"text":""}]}]');
+
+  return <RaraEditor
+    value={editorData}
+    onCheckboxChange={(checked, value) => {
+      console.log("Checkbox Toggled", checked, value);
+    }}
+    onMentionListChange={(mentiondItems) => {
+      console.log("Mentioned Item Changed", mentiondItems);
+    }}
+    onChange={(val) => {
+      setEditorData(val);
+    }}
+    isMentionLoading={true}
+    onMentionQuery={async (query: string) => {
+      let chars = await searchMockedCharacter(query)
+      let results = chars.map((i, index) => {
+        return {
+          "label": i,
+          "id": i,
+          metaData: {
+            name: i,
+            index: index
+          }
+        }
+      })
+      return results;
+    }}
+    mentionOptionRenderer={(mentionOptionItem: MentionItemProps) => {
+      // console.log(mentionOptionItem.metaData?.index)
+      return <div style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: (mentionOptionItem.metaData?.index % 2) == 0 ? 'red' : 'green'
+      }}>{mentionOptionItem.label} {mentionOptionItem.metaData?.index}</div>
+    }}
+    mentionItemRenderer={(mentionItem: MentionItemProps) => {
+
+      return <p style={{
+        margin: 0,
+        color: (mentionItem.metaData?.index % 2) == 0 ? 'red' : 'green'
+        // display:'flex',
+        // gap:10,
+        // fontSize:'inherit'
+      }}>
+        <img src='https://www.w3schools.com/w3images/mac.jpg' style={{
+          height: 10,
+          width: 10,
+          borderRadius: '50%',
+          marginRight: 10
+
         }} />
 
-    </div>
-  );
+        <span data-slate-string='true'>
+          {mentionItem.label}
+        </span>
+
+      </p>
+    }}
+  />;
+
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
