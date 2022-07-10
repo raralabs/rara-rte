@@ -1,9 +1,12 @@
 import { ElementProps } from "./Element"
 
 import React from "react"
+import { MentionElement } from "../../types";
 
 const Mention = ({ attributes, children, element,mentionItemRenderer }: ElementProps) => {
 
+
+    var  el =  element  as MentionElement;
  
     return (
         <span
@@ -23,12 +26,12 @@ const Mention = ({ attributes, children, element,mentionItemRenderer }: ElementP
 
             {children}
             {mentionItemRenderer!=null?mentionItemRenderer({
-                id:element.id,
-                label:element.label,
-                metaData:element.metaData
+                id:el.id,
+                label:el.label??el.id,
+                metaData:el.metaData
             }):<span style={{
                 color:"#1A6CAA",
-            }}>{element.label}</span>}
+            }}>{el.label}</span>}
             
         </span>
     )

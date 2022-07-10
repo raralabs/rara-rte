@@ -2,7 +2,6 @@ import React from 'react';
 import { useSlate } from 'slate-react';
 import { insertLink, isBlockActive, toggleBlock, unwrapLink } from '../../lib/functions';
 import { ColorPicker } from '../ColorPicker';
-import { IconButton } from '../IconButton';
 import { Divider } from './Divider';
 import { Headings } from './Headings';
 import { MarkerItem, Markers } from './Markers';
@@ -10,7 +9,7 @@ import { MarkerItem, Markers } from './Markers';
 interface ToolbarProps {
     items: any[]
 }
-export const Toolbar = ({ items }: ToolbarProps) => {
+export const Toolbar = ({ }: ToolbarProps) => {
     const editor = useSlate()
     // console.log(editor);
     return (

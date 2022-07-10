@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSlate } from 'slate-react';
 import { getColorForSelection, toggleMark } from '../../lib/functions';
 import './styles.css';
@@ -15,7 +15,6 @@ const ColorPicker = (props: ColorPickerProps) => {
     const {
         defaultColor = "black",
         // color,
-        onChange
     } = props;
     const editor = useSlate();
     const color = getColorForSelection(editor, 'color');
@@ -69,7 +68,7 @@ const ColorPicker = (props: ColorPickerProps) => {
             {LIST_COLORS.map((colorValue) => {
                 return <div
                     key={colorValue}
-                    onClick={(e) => {
+                    onClick={() => {
                         // e.preventDefault();
                         // onChange && onChange(colorValue,e);
 

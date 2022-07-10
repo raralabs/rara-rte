@@ -32,6 +32,7 @@ export type BlockQuoteElement={
 }
 export type CustomElement =BlockQuoteElement|CodeElement|ColoredElement|ChecklistElement|HeadingElement|ParagraphElement|LinkElement|MentionElement
 
+export type ElementType= "color" | "block-quote" | "code" | "heading-one" | "heading-two" | "heading-three" | "heading-four" | "heading-five" | "check-list-item" | "paragraph" | "link" | "mention" | undefined;
 
 export type ColoredElement={
     type:'color',

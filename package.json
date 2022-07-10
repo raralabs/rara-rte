@@ -30,9 +30,9 @@
     }
   },
   "np": {
-		"yarn": false,
-		"contents": "dist"
-	},
+    "yarn": false,
+    "contents": "dist"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
@@ -68,6 +68,7 @@
     "@types/react-dom": "^18.0.5",
     "babel-loader": "^8.2.5",
     "husky": "^8.0.1",
+    "identity-obj-proxy": "^3.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-is": "^18.1.0",
@@ -84,5 +85,11 @@
     "slate": "^0.81.0",
     "slate-history": "^0.66.0",
     "slate-react": "^0.81.0"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    }
   }
 }
