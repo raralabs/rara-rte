@@ -5,8 +5,7 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src",
-    "src/components/RaraEditor/styles.css"
+    "src"
   ],
   "engines": {
     "node": ">=10"
