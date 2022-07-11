@@ -1,24 +1,28 @@
 :root {
     --rte-primary: #EF476F;
     --white: #ffffff;
-  }
+}
 
-.rte-editor{
+.rte-editor {
     border: 1px solid #959595;
     padding: 8px 8px 20px 8px;
     border-radius: 20px;
 }
-.rte-editor.read-only{
+
+.rte-editor.read-only {
     border: none;
     padding: 0px;
     border-radius: 0px;
 }
-.rte-editor-body{
+
+.rte-editor-body {
     padding-top: 20px;
 }
-.rte-editor-body.read-only{
+
+.rte-editor-body.read-only {
     padding: 0px;
 }
+
 blockquote {
     border-left: 2px solid #0071f3;
     padding-left: 24px;
