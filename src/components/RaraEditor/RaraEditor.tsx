@@ -16,7 +16,7 @@ import { insertMention, withInlines, withMentions } from '../../lib/functions';
 import { Element, ElementProps, Leaf, LeafProps } from '../Elements';
 
 
-// import './styles.css';
+import './styles.css';
 import { Portal } from '../../lib/Portal';
 
 // const LIST_TYPES = ['numbered-list', 'bulleted-list']
