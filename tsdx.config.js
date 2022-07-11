@@ -1,14 +1,11 @@
-const postcss = require('rollup-plugin-postcss');
+import postcss from 'rollup-plugin-postcss'
+
 module.exports = {
     rollup(config, options) {
         config.plugins.push(
             postcss({
                 modules: true,
                 plugins: [
-                    autoprefixer(),
-                    cssnano({
-                        preset: 'default',
-                    }),
                 ],
                 // Append to <head /> as code running
                 inject: true,
