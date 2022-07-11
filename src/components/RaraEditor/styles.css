@@ -1,3 +1,7 @@
+:root {
+    --rte-primary: #EF476F;
+    --white: #ffffff;
+  }
 
 .rte-editor{
     border: 1px solid #959595;
