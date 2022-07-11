@@ -82,6 +82,7 @@
     "babel-plugin-prismjs": "^2.1.0",
     "babel-plugin-transform-scss": "^1.1.0",
     "prismjs": "^1.28.0",
+    "rollup-plugin-postcss": "^4.0.2",
     "slate": "^0.81.0",
     "slate-history": "^0.66.0",
     "slate-react": "^0.81.0"
