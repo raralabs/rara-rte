@@ -34,7 +34,7 @@
     "contents": "dist"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+      "access": "public"
   },
   "prettier": {
     "printWidth": 80,
