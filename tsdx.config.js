@@ -1,5 +1,5 @@
-import postcss from 'rollup-plugin-postcss'
-
+// import postcss from 'rollup-plugin-postcss'
+const postcss= require('rollup-plugin-postcss');
 module.exports = {
     rollup(config, options) {
         config.plugins.push(
