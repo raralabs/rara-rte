@@ -4,19 +4,15 @@ const images = require('@rollup/plugin-image');
 
 module.exports = {
     rollup(config, options) {
-        config.plugins = [
-            images({ include: ['**/*.png', '**/*.jpg','**/*.svg'] }),
-            ...config.plugins,
-        ];
         config.plugins.push(
             postcss({
                 modules: true,
                 plugins: [
                 ],
                 // Append to <head /> as code running
-                inject: true,
+                inject: false,
                 // Keep it as false since we don't extract to css file anymore
-                extract: false,
+                extract: true,
             })
         );
         return config;
