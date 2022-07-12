@@ -1,7 +1,13 @@
 // import postcss from 'rollup-plugin-postcss'
 const postcss = require('rollup-plugin-postcss');
+const images = require('@rollup/plugin-image');
+
 module.exports = {
     rollup(config, options) {
+        config.plugins = [
+            images({ include: ['**/*.png', '**/*.jpg','**/*.svg'] }),
+            ...config.plugins,
+        ];
         config.plugins.push(
             postcss({
                 modules: true,
@@ -14,20 +20,5 @@ module.exports = {
             })
         );
         return config;
-    },
-    module: {
-        rules: [
-            {
-                test: /\.(png|jpg|gif|svg)$/i,
-                use: [
-                    {
-                        loader: 'url-loader',
-                        options: {
-                            limit: false,
-                        },
-                    },
-                ],
-            },
-        ],
-    },
+    }
 };

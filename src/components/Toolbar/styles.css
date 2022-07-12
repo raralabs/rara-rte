@@ -13,10 +13,10 @@
     width: 20px;
 }
 
-.rte-marker-item img{
+.rte-marker-item svg{
     filter: invert(58%) sepia(6%) saturate(0%) hue-rotate(196deg) brightness(103%) contrast(86%);
 }
-.rte-marker-item.active img{
+.rte-marker-item.active svg{
     filter: invert(40%) sepia(58%) saturate(2609%) hue-rotate(320deg) brightness(96%) contrast(94%);
 }
 

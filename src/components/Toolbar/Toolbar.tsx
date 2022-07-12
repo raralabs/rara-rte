@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSlate } from 'slate-react';
+import Icons from '../../assets/icons';
 import { insertLink, isBlockActive, toggleBlock, unwrapLink } from '../../lib/functions';
 import { ColorPicker } from '../ColorPicker';
 import { Divider } from './Divider';
@@ -21,7 +22,7 @@ export const Toolbar = ({ }: ToolbarProps) => {
             <Divider />
             <MarkerItem
                 key={'block-quote'}
-                icon={'quote.svg'}
+                icon={Icons.QUOTE}
                 name="Block Quot"
                 onMouseDown={(e) => {
                     e.preventDefault();
@@ -34,7 +35,7 @@ export const Toolbar = ({ }: ToolbarProps) => {
             <Divider />
             <MarkerItem
                 key={'code'}
-                icon={'code.svg'}
+                icon={Icons.CODE}
                 name="Code"
                 active={isBlockActive(editor, 'code')}
                 onMouseDown={(e) => {
@@ -45,7 +46,7 @@ export const Toolbar = ({ }: ToolbarProps) => {
             <Divider />
             <MarkerItem
                 key={'check-list-item'}
-                icon={'clist.svg'}
+                icon={Icons.CLIST}
                 name="Checklist"
                 active={isBlockActive(editor, 'check-list-item')}
                 onMouseDown={(e) => {
@@ -55,7 +56,7 @@ export const Toolbar = ({ }: ToolbarProps) => {
             />
             <Divider />
             <MarkerItem
-                icon={'link.svg'}
+                icon={Icons.LINK}
                 key='link'
                 name="Link"
                 active={isBlockActive(editor, 'link')}

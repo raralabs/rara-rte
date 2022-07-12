@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSlate } from 'slate-react';
+import Icons from '../../assets/icons';
 import {isBlockActive, toggleBlock } from '../../lib/functions';
 import { MarkerItem } from './Markers';
 import './styles.css'
@@ -52,7 +53,7 @@ export const Headings = (props: HeadingsProps) => {
         <div className='heading-picker-main'>
             <MarkerItem onMouseDown={(e) => {
                 e.preventDefault();
-            }} icon={'heading.svg'} active={false} name="Heading" />
+            }} icon={Icons.HEADING} active={false} name="Heading" />
         </div>
         <div className='heading-picker-content' style={{
             position: 'absolute',

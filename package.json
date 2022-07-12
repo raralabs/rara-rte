@@ -5,7 +5,8 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "src/assets"
   ],
   "engines": {
     "node": ">=10"
@@ -57,6 +58,7 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.18.2",
+    "@rollup/plugin-image": "^2.1.1",
     "@size-limit/preset-small-lib": "^7.0.8",
     "@storybook/addon-essentials": "^6.5.7",
     "@storybook/addon-info": "^5.3.21",

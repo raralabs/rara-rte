@@ -1,8 +1,11 @@
 import React from 'react';
 import { useSlate } from 'slate-react';
+import Icons from '../../assets/icons';
 import { isMarkActive, toggleMark } from '../../lib/functions';
 import './styles.css'
 
+// const bold=require('../../assets/bold.svg');
+// import {ReactComponent as ReactLogo} from '../../assets/bold.svg';
 interface MarkerProps {
 
 }
@@ -11,22 +14,23 @@ export const Markers = ({ }: MarkerProps) => {
     const options = [
         {
             format: 'bold',
-            icon: 'bold.svg',
+            icon: Icons.BOLD,
+            // iconComp:bold,
             name: "Bold",
         },
         {
             format: 'italic',
-            icon: "italic.svg",
+            icon: Icons.ITALIC,
             name: "Italic"
         },
         {
             format: 'underline',
-            icon: "underline.svg",
+            icon: Icons.UNDERLINE,
             name: "Underline"
         },
         {
             format: 'strike',
-            icon: "strike.svg",
+            icon: Icons.STRIKE,
             name: "Strike Through"
         }
     ];
@@ -62,7 +66,7 @@ interface MarkerItemProps {
 }
 
 export const MarkerItem = (props: MarkerItemProps) => {
-    const { onMouseDown, active, icon, name, label } = props ?? {};
+    const { onMouseDown, active, icon, name } = props ?? {};
     return <div
         className={`rte-marker-item rte-toolbar-btn ${active ? 'active' : ''}`}
         onMouseDown={onMouseDown}
@@ -70,13 +74,8 @@ export const MarkerItem = (props: MarkerItemProps) => {
         style={{
             cursor: 'pointer'
         }}>
-        {/* <svg>
-            <use href={require('../../assets/' + icon + ".svg")} style={{
-
-                // "--color_fill":"#000"
-            }}></use>
-        </svg> */}
-        {icon ?
-            <img src={require('../../assets/' + icon)} alt={name} /> : label}
+        {icon}
+        {/* {icon ?
+            <img src={require('../../assets/' + icon)} alt={name} /> : label} */}
     </div>
 }

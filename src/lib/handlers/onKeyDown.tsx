@@ -5,7 +5,7 @@ import { toggleBlock, toggleMark } from "../functions";
 const onKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
     editor: RaraEditorType,
-    target?:any,
+    // target?:any,
 ) => {
     //metaKey to track Cmd of mac,ALT of window,  *** of linux keyboard
     console.log(editor);
