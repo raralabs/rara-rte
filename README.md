@@ -44,3 +44,16 @@ export default function App() {
   );
 }
 ```
+
+
+# Props
+| Name  | Description  |  Default |
+|---|---|---|
+| value  |  `string` |  - |
+| onChange  | `((val: string) => void)`  |  - |
+| readOnly  | `boolean`  |  false |
+| onCheckboxChange | `((checked: boolean, value: string) => void)`  |  - |
+| onMentionQuery  | `((query: string) => Promise<MentionItemProps[]>)`  |  - |
+| mentionItemRenderer  | `((mentionOptionItem: MentionItemProps) => ReactNode)`  |  - |
+| mentionOptionRenderer  | `((mentionOptionItem: MentionItemProps) => ReactNode)`  |  - |
+
