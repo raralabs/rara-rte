@@ -6,6 +6,7 @@ import { ColorPicker } from '../ColorPicker';
 import { Divider } from './Divider';
 import { Headings } from './Headings';
 import { MarkerItem, Markers } from './Markers';
+import { TextAlignMarkers } from './TextAlignMarkers';
 
 interface ToolbarProps {
     items: any[]
@@ -32,6 +33,8 @@ export const Toolbar = ({ }: ToolbarProps) => {
             />
             <Divider />
             <Headings />
+            <Divider />
+            <TextAlignMarkers/>
             <Divider />
             <MarkerItem
                 key={'code'}
