@@ -86,6 +86,7 @@
     "rollup-plugin-postcss": "^4.0.2",
     "slate": "^0.81.0",
     "slate-history": "^0.66.0",
+    "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.81.0"
   },
   "jest": {

@@ -18,6 +18,7 @@ import { Element, ElementProps, Leaf, LeafProps } from '../Elements';
 
 import './styles.css';
 import { Portal } from '../../lib/Portal';
+import withHtml from '../../lib/handlers/withHTML';
 
 // const LIST_TYPES = ['numbered-list', 'bulleted-list']
 // const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -58,10 +59,14 @@ const RaraEditor = (props: RaraEditorProps) => {
     const initialValue = useMemo(
         () => {
             try {
-                const valueArray = JSON.parse(props.value ?? '[{"type":"paragraph","children":[{"text":""}]}]');
+                let v=props.value;
+                if(["[]","[ ]","",undefined,null].includes(v)){
+                    v=undefined;
+                }
+                const valueArray = JSON.parse(v ?? '[{"type":"paragraph","children":[{"text":""}]}]');
                 return valueArray;
             } catch (e) {
-                console.error("Unparsable value provided", props.value);
+                console.error("Unparsable value provided",props.value);
                 return [
                     {
                         type: 'paragraph',
@@ -74,7 +79,7 @@ const RaraEditor = (props: RaraEditorProps) => {
         []
     )
 
-    const editor = useMemo(() => withMentions(withInlines(withHistory(withReact(createEditor())))), [])
+    const editor = useMemo(() => withHtml(withMentions(withInlines(withHistory(withReact(createEditor()))))), [])
 
     // const chars = CHARACTERS.filter((c: string) =>
     //     c.toLowerCase().startsWith(search.toLowerCase())
