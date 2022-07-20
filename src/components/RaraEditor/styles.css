@@ -6,7 +6,7 @@
 .rte-editor {
     border: 1px solid #959595;
     padding: 8px 8px 20px 8px;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .rte-editor.read-only {

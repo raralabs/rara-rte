@@ -28,16 +28,16 @@ const HEADINGS_LIST: {
         name: "Heading 3",
         label: "H3",
     },
-    "heading-four": {
-        icon: "heading.svg",
-        name: "Heading 4",
-        label: "H4",
-    },
-    "heading-five": {
-        icon: "heading.svg",
-        name: "Heading 5",
-        label: "H5",
-    }
+    // "heading-four": {
+    //     icon: "heading.svg",
+    //     name: "Heading 4",
+    //     label: "H4",
+    // },
+    // "heading-five": {
+    //     icon: "heading.svg",
+    //     name: "Heading 5",
+    //     label: "H5",
+    // }
 }
 
 

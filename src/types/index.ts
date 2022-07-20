@@ -68,6 +68,7 @@ export type RaraEditorProps={
     value?:string;
     onChange?:(val:string)=>void,
     readOnly?:boolean,
+    placeholder?:string,
     onCheckboxChange?:(checked:boolean,value:string)=>void,
     onMentionListChange?:(mentionedItems:MentionItemProps[])=>void,
     onMentionQuery?:(query:string)=>Promise<MentionItemProps[]>,

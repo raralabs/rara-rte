@@ -34,7 +34,7 @@ declare module 'slate' {
 
 
 const RaraEditor = (props: RaraEditorProps) => {
-    const { readOnly = false, onCheckboxChange, onChange, isMentionLoading, mentionOptionRenderer, onMentionQuery,mentionItemRenderer } = props;
+    const { readOnly = false, onCheckboxChange, onChange, isMentionLoading, mentionOptionRenderer, onMentionQuery,mentionItemRenderer,placeholder } = props;
 
     const ref =useRef<HTMLInputElement>(null)
     // useRef<HTMLDivElement>()// useRef<React.LegacyRef<HTMLDivElement>>
@@ -246,9 +246,10 @@ const RaraEditor = (props: RaraEditorProps) => {
                 renderElement={(p: RenderElementProps) => {
                     return renderElement(p);
                 }}
+                
                 className={`rte-editor-body ${readOnly?'read-only':''}`}
                 renderLeaf={renderLeaf}
-                placeholder="Placeholder"
+                placeholder={placeholder??(readOnly?placeholder:"Placeholder")}
                 readOnly={readOnly}
                 onKeyDown={onKeyDown}
             // onKeyDown={(e) => {
