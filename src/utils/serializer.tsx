@@ -1,7 +1,6 @@
 // Import the `Node` helper interface from Slate.
 import { Descendant, Node } from 'slate'
 import { jsx } from 'slate-hyperscript'
-import { CustomElement } from '../types'
 
 // Define a serializing function that takes a value and returns a string.
 export const serializeSlateData = (value: Descendant[]) => {
