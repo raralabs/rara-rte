@@ -60,11 +60,11 @@ export const Headings = (props: HeadingsProps) => {
             zIndex: 100,
             backgroundColor: 'white',
             boxShadow: `0 4px 8px 0 rgba(0,0,0,0.2)`,
-            padding: 10,
+            padding: '8px 4px',
             // display: 'flsex',
             gap: 10,
             flexWrap: 'wrap',
-            width: 28,
+            width: '40px',
             left: 0,
             top: 20,
             borderRadius: 10
