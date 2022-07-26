@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSlate } from 'slate-react';
 import Icons from '../../assets/icons';
-import { isBlockActive, isMarkActive, TEXT_ALIGN_TYPES, toggleBlock, toggleMark } from '../../lib/functions';
+import { isBlockActive,  toggleBlock } from '../../lib/functions';
 import { MarkerItem } from './Markers';
 
 interface TextAlignMarkerProps {

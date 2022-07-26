@@ -50,7 +50,7 @@ export const getHeadingLevelForSelection = (editor: BaseEditor & ReactEditor & H
 }
 
 
-export const isBlockActive = (editor: BaseEditor & ReactEditor & HistoryEditor, format: any,blockType:any='type') => {
+export const isBlockActive = (editor: BaseEditor & ReactEditor & HistoryEditor, format: any,blockType:'type'|'align'='type') => {
     const { selection } = editor
     if (!selection) return false
     const [match] = Array.from(
