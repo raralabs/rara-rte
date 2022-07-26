@@ -50,7 +50,7 @@ export const getHeadingLevelForSelection = (editor: BaseEditor & ReactEditor & H
 }
 
 
-export const isBlockActive = (editor: BaseEditor & ReactEditor & HistoryEditor, format: any) => {
+export const isBlockActive = (editor: BaseEditor & ReactEditor & HistoryEditor, format: any,blockType:any='type') => {
     const { selection } = editor
     if (!selection) return false
     const [match] = Array.from(
@@ -60,7 +60,7 @@ export const isBlockActive = (editor: BaseEditor & ReactEditor & HistoryEditor, 
                 return !Editor.isEditor(n) &&
                     SlateElement.isElement(n) &&
                     // n.type!=null &&
-                    n['type'] === format;
+                    n[blockType] === format;
             }
         }
         ));
@@ -72,7 +72,7 @@ export const toggleBlock = (editor: BaseEditor & ReactEditor & HistoryEditor, fo
     const isActive = isBlockActive(
         editor,
         format,
-        // TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
+        TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
     )
     const isList = LIST_TYPES.includes(format)
 

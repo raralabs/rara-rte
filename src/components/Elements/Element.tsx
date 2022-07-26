@@ -17,7 +17,7 @@ export interface ElementProps {
 
 const Element = ({ attributes, children, element, onCheckboxChange,mentionItemRenderer }: ElementProps) => {
     const style = { 
-        // textAlign: element.align
+        textAlign: element.align
     }
     switch (element.type) {
         case 'block-quote':

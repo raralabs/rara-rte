@@ -6,6 +6,11 @@ import { BaseEditor } from "slate"
 import { HistoryEditor } from "slate-history"
 import { ReactEditor } from "slate-react"
 
+
+interface BasicElement{
+    type?:string,
+    align?:string
+}
 export type ParagraphElement = {
     type?: 'paragraph',
     align?: string,
@@ -23,10 +28,12 @@ export type CustomTextElement={
 }
 
 export type CodeElement={
+    align?:string,
     type?:'code',
     children?:CustomTextElement[]
 }
 export type BlockQuoteElement={
+    align?:string,
     type?:'block-quote',
     children?:CustomTextElement[]
 }
@@ -35,21 +42,25 @@ export type CustomElement =BlockQuoteElement|CodeElement|ColoredElement|Checklis
 export type ElementType= "color" | "block-quote" | "code" | "heading-one" | "heading-two" | "heading-three" | "heading-four" | "heading-five" | "check-list-item" | "paragraph" | "link" | "mention" | undefined;
 
 export type ColoredElement={
+    align?:string,
     type:'color',
     color?:string,
     children:any[]
 }
 export type ChecklistElement={
+    align?:string,
     type: 'check-list-item',
     checked: boolean,
     children: CustomTextElement[],
 }
 export type HeadingElement = {
+    align?:string,
     type?: 'heading-one'|'heading-two'|'heading-three'|'heading-four'|'heading-five'
     children: CustomTextElement[]
 }
 
 export type MentionElement={
+    align?:string,
     type?:'mention',
     id?:any,
     label?:string,
@@ -58,6 +69,7 @@ export type MentionElement={
 }
 
 export type LinkElement={
+    align?:string,
     type: 'link',
     url?: string,
     children: CustomTextElement[],

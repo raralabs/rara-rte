@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSlate } from 'slate-react';
 import Icons from '../../assets/icons';
-import { isMarkActive, toggleMark } from '../../lib/functions';
+import { isBlockActive, isMarkActive, TEXT_ALIGN_TYPES, toggleBlock, toggleMark } from '../../lib/functions';
 import { MarkerItem } from './Markers';
 
 interface TextAlignMarkerProps {
@@ -11,25 +11,25 @@ interface TextAlignMarkerProps {
 export const TextAlignMarkers = ({ }: TextAlignMarkerProps) => {
     const options = [
         {
-            format: 'bold',
+            format: 'left',
             icon: Icons.ALIGN_LEFT,
             // iconComp:bold,
-            name: "Bold",
+            name: "Left",
         },
         {
-            format: 'italic',
+            format: 'center',
             icon: Icons.ALIGN_CENTER,
-            name: "Italic"
+            name: "Center"
         },
         {
-            format: 'underline',
+            format: 'right',
             icon: Icons.ALIGN_RIGHT,
-            name: "Underline"
+            name: "Right"
         },
         {
-            format: 'strike',
+            format: 'justify',
             icon: Icons.ALIGN_JUSTIFY,
-            name: "Strike Through"
+            name: "Justify"
         }
     ];
     const editor = useSlate();
@@ -39,11 +39,11 @@ export const TextAlignMarkers = ({ }: TextAlignMarkerProps) => {
             return <MarkerItem
                 key={markerItem.format}
                 name={markerItem.name}
-                active={isMarkActive(editor, markerItem.format)}
+                active={isBlockActive(editor, markerItem.format,'align')}
                 icon={markerItem.icon}
                 onMouseDown={(e) => {
                     e.preventDefault();
-                    toggleMark(editor, markerItem.format);
+                    toggleBlock(editor, markerItem.format);
                 }}
             />
         })}
