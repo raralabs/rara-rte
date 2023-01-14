@@ -1,17 +1,13 @@
 .parent-color-picker {
     position: relative;
+    height: 100%;
+    display: flex;
 }
 
-.color-picker-main {}
 
-.color-picker-content {
-    display: none;
-}
 
 /* .color-picker-main:hover {
     background-color: gray !important;
 } */
 
-.parent-color-picker:hover .color-picker-content{
-    display: flex;
-}
+

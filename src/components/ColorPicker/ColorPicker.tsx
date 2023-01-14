@@ -1,96 +1,111 @@
-import React from 'react';
+import * as React from 'react';
+import Icons from '../../assets/icons';
+import { colors } from '../../utils/serializer';
 import { useSlate } from 'slate-react';
 import { getColorForSelection, toggleMark } from '../../lib/functions';
+import { useToolbar } from '../Toolbar/context/useLayout';
 import './styles.css';
 interface ColorPickerProps {
-    defaultColor?: string,
-    // color?: string,
-    onChange?: (color: string, e: any) => void
+  defaultColor?: string;
+  // color?: string,
+  onChange?: (color: string, e: any) => void;
 }
 
-const LIST_COLORS = ["black", "#450CA3", "#4361EE", "#4CC9F0", "#219653", "#AACC00", "#FDC500", "#FB8500", "#FF006E", "#D90429", "#6A040F"];
+const LIST_COLORS = colors;
 const COLOR_ITEM_SIZE = 20;
 
 const ColorPicker = (props: ColorPickerProps) => {
-    const {
-        defaultColor = "black",
-        // color,
-    } = props;
-    const editor = useSlate();
-    const color = getColorForSelection(editor, 'color');
+  const { state, updateState, slug } = useToolbar();
 
-    return <div className='parent-color-picker' style={{
-        position: 'relative'
-    }}>
-        <div
-            className='color-picker-main'
+  const { defaultColor = '#000000' } = props;
+  const editor = useSlate();
+  const color = getColorForSelection(editor, 'color');
 
-            onClick={(e) => {
-                e.preventDefault();
-            }}
-            // onMouseEnter={e => {
-            //     e.preventDefault();
-            //     setVisible(!isVisible);
-            // }}
-            // onMouseLeave={(e) => {
-            //     setVisible(!isVisible);
-            // }}
-            // onClick={() => {
-            //     setVisible(!isVisible);
+  return (
+    <div
+      className="parent-color-picker"
+      id="colorSelectorPortal"
+      style={{
+        position: 'relative',
+      }}
+    >
+      <span
+        onClick={() => updateState(slug?.colorSelector, !state?.colorSelector)}
+        style={{
+          cursor: 'pointer',
+          fill: color ?? defaultColor,
+        }}
+      >
+        {Icons.COLOR_SELECTOR}
+      </span>
+      {/* <div
+        className="color-picker-main"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+        // onMouseEnter={e => {
+        //     e.preventDefault();
+        //     setVisible(!isVisible);
+        // }}
+        // onMouseLeave={(e) => {
+        //     setVisible(!isVisible);
+        // }}
+        // onClick={() => {
+        //     setVisible(!isVisible);
 
-            // }}
-            style={{
-                backgroundColor: color ?? defaultColor,
-                borderRadius: '50%',
+        // }}
+        style={{
+          backgroundColor: color ?? defaultColor,
+          borderRadius: '50%',
+          minWidth: COLOR_ITEM_SIZE,
+          minHeight: COLOR_ITEM_SIZE,
+          cursor: 'pointer',
+        }}
+      ></div> */}
+      <div
+        id="colorSelectorPortal"
+        className="color-picker-content"
+        style={{
+          visibility: state?.colorSelector ? 'visible' : 'hidden',
+          width: (COLOR_ITEM_SIZE + 10) * 8,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(8, 1fr)',
+          position: 'absolute',
+          zIndex: 100,
+          backgroundColor: 'white',
+          boxShadow: `0 4px 8px 0 rgba(0,0,0,0.2)`,
+          padding: '8px',
+          gap: 6,
+          flexWrap: 'wrap',
+          left: -15,
+          top: 25,
+          borderRadius: '4px',
+        }}
+      >
+        {LIST_COLORS.map(colorValue => {
+          return (
+            <div
+              key={colorValue}
+              onClick={() => {
+                toggleMark(
+                  editor,
+                  'color',
+                  colorValue == color ? null : colorValue
+                );
+              }}
+              style={{
+                backgroundColor: colorValue,
+                borderRadius: colorValue == color ? '50%' : '4px',
                 minWidth: COLOR_ITEM_SIZE,
                 minHeight: COLOR_ITEM_SIZE,
-                cursor: 'pointer'
-            }}
-        >
-
-        </div>
-        <div
-            className='color-picker-content'
-            style={{
-                position: 'absolute',
-                zIndex: 100,
-                backgroundColor: 'white',
-                boxShadow: `0 4px 8px 0 rgba(0,0,0,0.2)`,
-                padding: 10,
-                // display: 'flsex',
-                gap: 10,
-                flexWrap: 'wrap',
-                width: (COLOR_ITEM_SIZE + 10) * 11,
-                left: COLOR_ITEM_SIZE,
-                top: -15,
-                borderRadius: 10
-            }}>
-            {LIST_COLORS.map((colorValue) => {
-                return <div
-                    key={colorValue}
-                    onClick={() => {
-                        // e.preventDefault();
-                        // onChange && onChange(colorValue,e);
-
-                        toggleMark(editor, 'color', colorValue == color ? null : colorValue);
-                    }}
-                    style={{
-                        backgroundColor: colorValue,
-                        borderRadius: '50%',
-                        minWidth: COLOR_ITEM_SIZE,
-                        minHeight: COLOR_ITEM_SIZE,
-                        // border:colorValue==color?'4px solid':'none',
-                        // borderStyle:colorValue==color?'inset':'none',
-                        // boxSizing: 'border-box',
-                        cursor: 'pointer'
-                    }}>
-
-                </div>
-            })}
-
-        </div>
+                cursor: 'pointer',
+              }}
+            ></div>
+          );
+        })}
+      </div>
     </div>
-
-}
-ColorPicker.defaultName = "ColorPicker";
+  );
+};
+ColorPicker.defaultName = 'ColorPicker';
 export default ColorPicker;
