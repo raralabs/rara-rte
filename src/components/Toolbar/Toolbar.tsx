@@ -85,7 +85,7 @@ export const Toolbar = ({ onSearch }: ToolbarProps) => {
           }}
         />
         <Divider />
-        <Search onChange={onSearch} />
+        {/* <Search onChange={onSearch} /> */}
       </div>
     </ContextProvider>
   );
