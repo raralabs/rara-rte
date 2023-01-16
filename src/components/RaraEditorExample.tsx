@@ -226,46 +226,46 @@ const RaraEditorExample = () => {
             </div>
           );
         }}
-        mentionContactItemRenderer={(mentionItem: MentionItemProps) => {
-          return (
-            <p
-              style={{
-                margin: 0,
-                color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
-                // display:'flex',
-                // gap:10,
-                // fontSize:'inherit'
-              }}
-            >
-              <span data-slate-string="true">{mentionItem.label}</span>
-            </p>
-          );
-        }}
-        mentionItemRenderer={(mentionItem: MentionItemProps) => {
-          return (
-            <p
-              style={{
-                margin: 0,
-                color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
-                // display:'flex',
-                // gap:10,
-                // fontSize:'inherit'
-              }}
-            >
-              <img
-                src="https://www.w3schools.com/w3images/mac.jpg"
-                style={{
-                  height: 10,
-                  width: 10,
-                  borderRadius: '50%',
-                  marginRight: 10,
-                }}
-              />
+        // mentionContactItemRenderer={(mentionItem: MentionItemProps) => {
+        //   return (
+        //     <p
+        //       style={{
+        //         margin: 0,
+        //         color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+        //         // display:'flex',
+        //         // gap:10,
+        //         // fontSize:'inherit'
+        //       }}
+        //     >
+        //       <span data-slate-string="true">{mentionItem.label}</span>
+        //     </p>
+        //   );
+        // }}
+        // mentionItemRenderer={(mentionItem: MentionItemProps) => {
+        //   return (
+        //     <p
+        //       style={{
+        //         margin: 0,
+        //         color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+        //         // display:'flex',
+        //         // gap:10,
+        //         // fontSize:'inherit'
+        //       }}
+        //     >
+        //       <img
+        //         src="https://www.w3schools.com/w3images/mac.jpg"
+        //         style={{
+        //           height: 10,
+        //           width: 10,
+        //           borderRadius: '50%',
+        //           marginRight: 10,
+        //         }}
+        //       />
 
-              <span data-slate-string="true">{mentionItem.label}</span>
-            </p>
-          );
-        }}
+        //       <span data-slate-string="true">{mentionItem.label}</span>
+        //     </p>
+        //   );
+        // }}
         // mentionDetailRenderer={(mentionItem: MentionItemProps) => {
         //   return (
         //     <p
