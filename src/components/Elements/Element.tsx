@@ -3,6 +3,7 @@ import { CustomElement, MentionItemProps } from '../../types';
 import CheckListItemElement from './Checklist';
 import LinkElement from './Links';
 import Mention from './Mention';
+import MentionContact from './MentionContact';
 
 export interface ElementProps {
   attributes?: any;
@@ -12,6 +13,10 @@ export interface ElementProps {
   onMentionQuery?: (query: string) => Promise<MentionItemProps[]>;
   isMentionLoading?: boolean;
   mentionItemRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
+  mentionDetailRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
+  mentionContactItemRenderer?: (
+    mentionOptionItem: MentionItemProps
+  ) => ReactNode;
 }
 
 const Element = ({
@@ -20,11 +25,14 @@ const Element = ({
   element,
   onCheckboxChange,
   mentionItemRenderer,
+  mentionContactItemRenderer,
+  mentionDetailRenderer,
 }: ElementProps) => {
   const style = {
     textAlign: element.align,
   };
 
+  console.log(element.type, 'xxxxxxx');
   switch (element.type) {
     case 'block-quote':
       return (
@@ -103,6 +111,17 @@ const Element = ({
           element={element}
           attributes={attributes}
           mentionItemRenderer={mentionItemRenderer}
+          mentionDetailRenderer={mentionDetailRenderer}
+        />
+      );
+    case 'mentionContact':
+      return (
+        <MentionContact
+          children={children}
+          element={element}
+          attributes={attributes}
+          mentionContactItemRenderer={mentionContactItemRenderer}
+          mentionDetailRenderer={mentionDetailRenderer}
         />
       );
 

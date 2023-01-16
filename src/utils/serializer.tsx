@@ -117,11 +117,20 @@ interface IediterHooks {
   searchResults: MentionItemProps[];
   setIndex: (e: number) => void;
   insertMention: (editor: RaraEditorType, item: MentionItemProps) => void;
+  insertMentionContact: (
+    editor: RaraEditorType,
+    item: MentionItemProps
+  ) => void;
   setTarget: Dispatch<SetStateAction<BaseRange | null | undefined>>;
   setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
   editor: RaraEditorType;
   search: string;
+  mentionIndicator: string;
 }
+export const mention = {
+  USER_MENTION: 'USER_MENTION',
+  CONTACT_MENTION: 'CONTACT_MENTION',
+};
 export const editerHooks = ({
   index,
   target,
@@ -130,8 +139,10 @@ export const editerHooks = ({
   insertMention,
   setTarget,
   setSearchResults,
+  insertMentionContact,
   editor,
   search,
+  mentionIndicator,
   ...props
 }: IediterHooks) => {
   const initialValue = useMemo(() => {
@@ -173,7 +184,12 @@ export const editerHooks = ({
           case 'Enter':
             event.preventDefault();
             Transforms.select(editor, target);
-            insertMention(editor, searchResults[index]);
+
+            if (mentionIndicator === mention.CONTACT_MENTION) {
+              insertMentionContact(editor, searchResults[index]);
+            } else {
+              insertMention(editor, searchResults[index]);
+            }
             setTarget(null);
             setSearchResults([]);
             break;
@@ -273,7 +289,7 @@ export const colors = [
   '#80B496',
   '#C2DBCA',
   '#022B30',
-  '#043430',
+  '#043431',
   '#004144',
   '#005D5D',
   '#007D79',

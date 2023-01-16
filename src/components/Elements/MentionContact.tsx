@@ -3,11 +3,11 @@ import { ElementProps } from './Element';
 import { MentionElement } from '../../types';
 import './styles.css';
 
-const Mention = ({
+const MentionContact = ({
   attributes,
   children,
   element,
-  mentionItemRenderer,
+  mentionContactItemRenderer,
   mentionDetailRenderer,
 }: ElementProps) => {
   var el = element as MentionElement;
@@ -21,8 +21,8 @@ const Mention = ({
       className="rte-mentionWrapper"
     >
       {children}
-      {mentionItemRenderer != null ? (
-        mentionItemRenderer({
+      {mentionContactItemRenderer != null ? (
+        mentionContactItemRenderer({
           id: el.id,
           label: el.label ?? el.id,
           metaData: el.metaData,
@@ -48,7 +48,7 @@ const Mention = ({
           ) : (
             <div className="mentionDetailPopOverItem">
               <span className="mentionDetailPopOverAvatar">
-                {el?.label.charAt(0)}
+                {String(el?.label).charAt(0)}
               </span>
               <span> {el.label}</span>
             </div>
@@ -59,4 +59,4 @@ const Mention = ({
   );
 };
 
-export default Mention;
+export default MentionContact;

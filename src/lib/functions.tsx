@@ -27,6 +27,20 @@ export const insertMention = (
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
 };
+export const insertMentionContact = (
+  editor: RaraEditorType,
+  item: MentionItemProps
+) => {
+  const mention: MentionElement = {
+    type: 'mentionContact',
+    label: item.label,
+    id: item.id,
+    metaData: item.metaData,
+    children: [{ text: '' }],
+  };
+  Transforms.insertNodes(editor, mention);
+  Transforms.move(editor);
+};
 
 export const isMarkActive = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
@@ -213,6 +227,13 @@ export const withMentions = (editor: RaraEditorType) => {
 
   editor.isVoid = (element: any) => {
     return element.type === 'mention' ? true : isVoid(element);
+  };
+  editor.isInline = (element: any) => {
+    return element.type === 'mentionContact' ? true : isInline(element);
+  };
+
+  editor.isVoid = (element: any) => {
+    return element.type === 'mentionContact' ? true : isVoid(element);
   };
   return editor;
 };

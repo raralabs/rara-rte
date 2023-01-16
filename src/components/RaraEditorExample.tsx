@@ -137,6 +137,32 @@ const CHARACTERS = [
   'Ziro the Hutt',
   'Zuckuss',
 ];
+const CONTACT = [
+  124124124,
+  1212214124124,
+  12436,
+  346,
+  346,
+  43634634,
+  6346,
+  346,
+  346346346,
+  34623,
+  214,
+  12,
+  235,
+  235,
+  6,
+  346,
+  45665,
+  8,
+  9,
+  325235235,
+  23523,
+  235,
+  23,
+  325,
+];
 const RaraEditorExample = () => {
   const [editorData, setEditorData] = useState(
     '[{"type":"paragraph","children":[{"text":""}]}]'
@@ -175,6 +201,16 @@ const RaraEditorExample = () => {
             },
           };
         })}
+        onMentionContactQuery={CONTACT?.map((i, index) => {
+          return {
+            label: i,
+            id: i,
+            metaData: {
+              name: i,
+              index: index,
+            },
+          };
+        })}
         mentionOptionRenderer={(mentionOptionItem: MentionItemProps) => {
           // console.log(mentionOptionItem.metaData?.index)
           return (
@@ -188,6 +224,21 @@ const RaraEditorExample = () => {
             >
               {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
             </div>
+          );
+        }}
+        mentionContactItemRenderer={(mentionItem: MentionItemProps) => {
+          return (
+            <p
+              style={{
+                margin: 0,
+                color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+                // display:'flex',
+                // gap:10,
+                // fontSize:'inherit'
+              }}
+            >
+              <span data-slate-string="true">{mentionItem.label}</span>
+            </p>
           );
         }}
         mentionItemRenderer={(mentionItem: MentionItemProps) => {
@@ -215,6 +266,18 @@ const RaraEditorExample = () => {
             </p>
           );
         }}
+        // mentionDetailRenderer={(mentionItem: MentionItemProps) => {
+        //   return (
+        //     <p
+        //       style={{
+        //         margin: 0,
+        //         color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+        //       }}
+        //     >
+        //       <span data-slate-string="true">{mentionItem.label}</span>
+        //     </p>
+        //   );
+        // }}
       />
       <RaraEditor
         readOnly={true}

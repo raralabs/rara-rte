@@ -18,7 +18,12 @@ import {
   MentionItemProps,
 } from '../../types';
 import { Toolbar } from '../Toolbar';
-import { insertMention, withInlines, withMentions } from '../../lib/functions';
+import {
+  insertMention,
+  withInlines,
+  withMentions,
+  insertMentionContact,
+} from '../../lib/functions';
 import { Element, ElementProps, Leaf, LeafProps } from '../Elements';
 
 import './styles.css';
@@ -26,7 +31,7 @@ import { Portal } from '../../lib/Portal';
 import withHtml from '../../lib/handlers/withHTML';
 import { HoveringToolbar } from '../Toolbar/HoveringToolbar';
 
-import { editerHooks } from '../../utils/serializer';
+import { editerHooks, mention } from '../../utils/serializer';
 
 // const LIST_TYPES = ['numbered-list', 'bulleted-list']
 // const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -46,14 +51,18 @@ const RaraEditor = (props: RaraEditorProps) => {
     onChange,
     mentionOptionRenderer,
     onMentionQuery = [],
+    onMentionContactQuery = [],
     mentionItemRenderer,
     placeholder,
+    mentionContactItemRenderer,
+    mentionDetailRenderer,
   } = props;
 
   const ref = useRef<HTMLInputElement>(null);
   const [target, setTarget] = useState<Range | null>();
   const [index, setIndex] = useState(0);
   const [search, setSearch] = useState('');
+  const [mentionIndicator, setMentionIndicator] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<MentionItemProps[]>([]);
 
   const editor = useMemo(
@@ -69,20 +78,25 @@ const RaraEditor = (props: RaraEditorProps) => {
     searchResults,
     setIndex,
     insertMention,
+    insertMentionContact,
     setTarget,
     setSearchResults,
     editor,
     search,
+    mentionIndicator,
     ...props,
   });
+
   const renderElement = useCallback(
     (props: ElementProps) => (
       <Element
         {...props}
         onCheckboxChange={onCheckboxChange}
         isMentionLoading={false}
-        onMentionQuery={onMentionQuery}
+        // onMentionQuery={onMentionQuery}
         mentionItemRenderer={mentionItemRenderer}
+        mentionDetailRenderer={mentionDetailRenderer}
+        mentionContactItemRenderer={mentionContactItemRenderer}
       />
     ),
     []
@@ -125,6 +139,7 @@ const RaraEditor = (props: RaraEditorProps) => {
             const afterMatch = afterText.match(/^(\s|$)/);
 
             if (beforeMatch && afterMatch) {
+              setMentionIndicator(mention?.USER_MENTION);
               setTarget(beforeRange);
               if (onMentionQuery) {
                 const filterOption = onMentionQuery?.filter(e =>
@@ -136,11 +151,36 @@ const RaraEditor = (props: RaraEditorProps) => {
               // setSearch(beforeMatch[1])
               setIndex(0);
               return;
-            } else if (searchResults.length > 0) {
-              setSearchResults([]);
             }
           }
 
+          if (selection && Range.isCollapsed(selection)) {
+            const [start] = Range.edges(selection);
+            const wordBefore = Editor.before(editor, start, { unit: 'word' });
+            const before = wordBefore && Editor.before(editor, wordBefore);
+            const beforeRange = before && Editor.range(editor, before, start);
+            const beforeText =
+              beforeRange && Editor.string(editor, beforeRange);
+            const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/);
+            const after = Editor.after(editor, start);
+            const afterRange = Editor.range(editor, start, after);
+            const afterText = Editor.string(editor, afterRange);
+            const afterMatch = afterText.match(/^(\s|$)/);
+            if (beforeMatch && afterMatch) {
+              setMentionIndicator(mention?.CONTACT_MENTION);
+              setTarget(beforeRange);
+              if (onMentionContactQuery) {
+                const filterOption = onMentionContactQuery?.filter(e =>
+                  String(e?.label)?.includes(beforeMatch[1])
+                );
+                setSearchResults(filterOption);
+              }
+
+              // setSearch(beforeMatch[1])
+              setIndex(0);
+              return;
+            }
+          }
           setTarget(null);
           if (isAstChange) {
             // Save the value to Local Storage.
@@ -175,7 +215,7 @@ const RaraEditor = (props: RaraEditorProps) => {
         {target && (
           <Portal>
             <div ref={ref} className="mentionPopOver" data-cy="mentions-portal">
-              {searchResults.map((searchResultItem, i) => (
+              {searchResults?.map((searchResultItem, i) => (
                 <div
                   style={{
                     background: i === index ? '#B4D5FF' : 'transparent',
