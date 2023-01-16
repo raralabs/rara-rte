@@ -29,14 +29,17 @@ const MentionContact = ({
           metaData: el.metaData,
         })
       ) : (
-        <div
-          style={{
-            cursor: 'pointer',
-            color: '#1A6CAA',
-          }}
-        >
-          {el.label}
-        </div>
+        <>
+          <span
+            style={{
+              cursor: 'pointer',
+              color: '#1A6CAA',
+            }}
+          >
+            {el.label}
+          </span>
+          <br />
+        </>
       )}
       <div className="mentionDetailPopOver" data-cy="mentions-portal">
         <div>

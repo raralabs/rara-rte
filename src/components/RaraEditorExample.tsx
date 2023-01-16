@@ -216,7 +216,7 @@ const RaraEditorExample = () => {
           return (
             <div
               style={{
-                fontSize: 20,
+                // fontSize: 20,
                 fontWeight: 'bold',
                 color:
                   mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',

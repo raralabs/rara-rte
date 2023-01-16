@@ -19,6 +19,7 @@ const Mention = ({
       // data-cy={`mention-${element.character?.replace(' ', '-')}`}
 
       className="rte-mentionWrapper"
+      style={{ padding: 0, margin: 0 }}
     >
       {children}
       {mentionItemRenderer != null ? (
@@ -28,14 +29,17 @@ const Mention = ({
           metaData: el.metaData,
         })
       ) : (
-        <div
-          style={{
-            cursor: 'pointer',
-            color: '#1A6CAA',
-          }}
-        >
-          {el.label}
-        </div>
+        <>
+          <span
+            style={{
+              cursor: 'pointer',
+              color: '#1A6CAA',
+            }}
+          >
+            {el.label}
+          </span>
+          <br />
+        </>
       )}
       <div className="mentionDetailPopOver" data-cy="mentions-portal">
         <div>
