@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ElementProps } from './Element';
 import { MentionElement } from '../../types';
 import './styles.css';
+import Icons from '../../assets/icons';
 
 const MentionContact = ({
   attributes,
@@ -47,9 +48,7 @@ const MentionContact = ({
             })
           ) : (
             <div className="mentionDetailPopOverItem">
-              <span className="mentionDetailPopOverAvatar">
-                {String(el?.label).charAt(0)}
-              </span>
+              <span>{Icons.CELL_PHONE}</span>
               <span> {el.label}</span>
             </div>
           )}

@@ -48,7 +48,7 @@ const Mention = ({
           ) : (
             <div className="mentionDetailPopOverItem">
               <span className="mentionDetailPopOverAvatar">
-                {el?.label.charAt(0)}
+                {el?.label?.charAt(0)}
               </span>
               <span> {el.label}</span>
             </div>
