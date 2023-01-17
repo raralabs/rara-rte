@@ -9,7 +9,7 @@ const MentionContact = ({
   children,
   element,
   mentionContactItemRenderer,
-  mentionDetailRenderer,
+  mentionContactDetailRenderer,
 }: ElementProps) => {
   var el = element as MentionElement;
 
@@ -43,8 +43,8 @@ const MentionContact = ({
       )}
       <div className="mentionDetailPopOver" data-cy="mentions-portal">
         <div>
-          {mentionDetailRenderer != null ? (
-            mentionDetailRenderer({
+          {mentionContactDetailRenderer != null ? (
+            mentionContactDetailRenderer({
               id: el.id,
               label: el.label ?? el.id,
               metaData: el.metaData,

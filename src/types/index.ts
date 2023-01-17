@@ -111,11 +111,17 @@ export type RaraEditorProps = {
   onMentionContactQuery?: MentionItemProps[];
   isMentionLoading?: boolean;
   mentionOptionRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
+  mentionContactOptionRenderer?: (
+    mentionOptionItem: MentionItemProps
+  ) => ReactNode;
   mentionItemRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
   mentionContactItemRenderer?: (
     mentionOptionItem: MentionItemProps
   ) => ReactNode;
   mentionDetailRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
+  mentionContactDetailRenderer?: (
+    mentionOptionItem: MentionItemProps
+  ) => ReactNode;
 };
 
 export type MentionItemProps = {

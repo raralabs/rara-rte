@@ -211,7 +211,7 @@ const RaraEditorExample = () => {
             },
           };
         })}
-        mentionOptionRenderer={(mentionOptionItem: MentionItemProps) => {
+        mentionContactOptionRenderer={(mentionOptionItem: MentionItemProps) => {
           // console.log(mentionOptionItem.metaData?.index)
           return (
             <div
@@ -226,6 +226,21 @@ const RaraEditorExample = () => {
             </div>
           );
         }}
+        // mentionOptionRenderer={(mentionOptionItem: MentionItemProps) => {
+        //   // console.log(mentionOptionItem.metaData?.index)
+        //   return (
+        //     <div
+        //       style={{
+        //         // fontSize: 20,
+        //         fontWeight: 'bold',
+        //         color:
+        //           mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+        //       }}
+        //     >
+        //       {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
+        //     </div>
+        //   );
+        // }}
         // mentionContactItemRenderer={(mentionItem: MentionItemProps) => {
         //   return (
         //     <p
@@ -278,6 +293,27 @@ const RaraEditorExample = () => {
         //     </p>
         //   );
         // }}
+        mentionContactDetailRenderer={(mentionItem: MentionItemProps) => {
+          return (
+            <p
+              style={{
+                margin: 0,
+                color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+              }}
+            >
+              <img
+                src="https://www.w3schools.com/w3images/mac.jpg"
+                style={{
+                  height: 10,
+                  width: 10,
+                  borderRadius: '50%',
+                  marginRight: 10,
+                }}
+              />
+              <span data-slate-string="true">{mentionItem.label}</span>
+            </p>
+          );
+        }}
       />
       <RaraEditor
         readOnly={true}

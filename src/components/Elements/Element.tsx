@@ -14,6 +14,9 @@ export interface ElementProps {
   isMentionLoading?: boolean;
   mentionItemRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
   mentionDetailRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
+  mentionContactDetailRenderer?: (
+    mentionOptionItem: MentionItemProps
+  ) => ReactNode;
   mentionContactItemRenderer?: (
     mentionOptionItem: MentionItemProps
   ) => ReactNode;
@@ -27,6 +30,7 @@ const Element = ({
   mentionItemRenderer,
   mentionContactItemRenderer,
   mentionDetailRenderer,
+  mentionContactDetailRenderer,
 }: ElementProps) => {
   const style = {
     textAlign: element.align,
@@ -121,7 +125,7 @@ const Element = ({
           element={element}
           attributes={attributes}
           mentionContactItemRenderer={mentionContactItemRenderer}
-          mentionDetailRenderer={mentionDetailRenderer}
+          mentionContactDetailRenderer={mentionContactDetailRenderer}
         />
       );
 

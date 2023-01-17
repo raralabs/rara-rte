@@ -32,6 +32,7 @@ import withHtml from '../../lib/handlers/withHTML';
 import { HoveringToolbar } from '../Toolbar/HoveringToolbar';
 
 import { editerHooks, mention } from '../../utils/serializer';
+import Icons from '../../assets/icons';
 
 // const LIST_TYPES = ['numbered-list', 'bulleted-list']
 // const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -50,11 +51,13 @@ const RaraEditor = (props: RaraEditorProps) => {
     onCheckboxChange,
     onChange,
     mentionOptionRenderer,
+    mentionContactOptionRenderer,
     onMentionQuery = [],
     onMentionContactQuery = [],
     mentionItemRenderer,
     placeholder,
     mentionContactItemRenderer,
+    mentionContactDetailRenderer,
     mentionDetailRenderer,
   } = props;
 
@@ -97,6 +100,7 @@ const RaraEditor = (props: RaraEditorProps) => {
         mentionItemRenderer={mentionItemRenderer}
         mentionDetailRenderer={mentionDetailRenderer}
         mentionContactItemRenderer={mentionContactItemRenderer}
+        mentionContactDetailRenderer={mentionContactDetailRenderer}
       />
     ),
     []
@@ -222,20 +226,36 @@ const RaraEditor = (props: RaraEditorProps) => {
                   }}
                   key={'searchResultItem' + i}
                 >
-                  {mentionOptionRenderer != null ? (
-                    mentionOptionRenderer(searchResultItem)
+                  {mention?.CONTACT_MENTION === mentionIndicator ? (
+                    <>
+                      {mentionContactOptionRenderer != null ? (
+                        mentionContactOptionRenderer(searchResultItem)
+                      ) : (
+                        <div className="mentionPopOverItem">
+                          <span>{Icons.CELL_PHONE}</span>
+                          <span> {searchResultItem.label}</span>{' '}
+                        </div>
+                      )}
+                    </>
                   ) : (
-                    <div className="mentionPopOverItem">
-                      <span
-                        style={{
-                          backgroundColor: i % 2 === 0 ? '#7eaaed' : '#5ec4db',
-                        }}
-                        className="mentionPoPoverAvatar"
-                      >
-                        {searchResultItem.label.charAt(0)}
-                      </span>
-                      <span> {searchResultItem.label}</span>{' '}
-                    </div>
+                    <>
+                      {mentionOptionRenderer != null ? (
+                        mentionOptionRenderer(searchResultItem)
+                      ) : (
+                        <div className="mentionPopOverItem">
+                          <span
+                            style={{
+                              backgroundColor:
+                                i % 2 === 0 ? '#7eaaed' : '#5ec4db',
+                            }}
+                            className="mentionPoPoverAvatar"
+                          >
+                            {searchResultItem?.label?.charAt(0)}
+                          </span>
+                          <span> {searchResultItem.label}</span>{' '}
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               ))}
