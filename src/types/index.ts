@@ -79,7 +79,8 @@ export type HeadingElement = {
     | 'heading-six'
     | 'bulleted-list'
     | 'list-item'
-    | 'numbered-list';
+    | 'numbered-list'
+    | 'mentionContact';
   children: CustomTextElement[];
 };
 
@@ -122,6 +123,7 @@ export type RaraEditorProps = {
   mentionContactDetailRenderer?: (
     mentionOptionItem: MentionItemProps
   ) => ReactNode;
+  styles?: React.CSSProperties;
 };
 
 export type MentionItemProps = {

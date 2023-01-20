@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from 'react';
 import { MentionItemProps } from '../types';
 import { serializeSlateData } from '../utils/serializer';
@@ -138,30 +139,23 @@ const CHARACTERS = [
   'Zuckuss',
 ];
 const CONTACT = [
-  124124124,
-  1212214124124,
-  12436,
-  346,
-  346,
-  43634634,
-  6346,
-  346,
-  346346346,
-  34623,
-  214,
-  12,
-  235,
-  235,
-  6,
-  346,
-  45665,
-  8,
-  9,
-  325235235,
-  23523,
-  235,
-  23,
-  325,
+  9898775635,
+  9898725635,
+  9898795635,
+  9834775635,
+  9865775635,
+  9875775635,
+  9898775635,
+  9878775635,
+  9898775635,
+  9898775635,
+  9812775635,
+  9898775635,
+  9867775635,
+  9898775635,
+  9879775635,
+  9898775635,
+  9887775635,
 ];
 const RaraEditorExample = () => {
   const [editorData, setEditorData] = useState(
@@ -190,7 +184,6 @@ const RaraEditorExample = () => {
           console.log('SERIALIZED', serializeSlateData(JSON.parse(val)));
           setEditorData(val);
         }}
-        isMentionLoading={true}
         onMentionQuery={CHARACTERS?.map((i, index) => {
           return {
             label: i,
@@ -222,25 +215,25 @@ const RaraEditorExample = () => {
                   mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
               }}
             >
+              {mentionOptionItem.label}
+            </div>
+          );
+        }}
+        mentionOptionRenderer={(mentionOptionItem: MentionItemProps) => {
+          // console.log(mentionOptionItem.metaData?.index)
+          return (
+            <div
+              style={{
+                // fontSize: 20,
+                fontWeight: 'bold',
+                color:
+                  mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+              }}
+            >
               {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
             </div>
           );
         }}
-        // mentionOptionRenderer={(mentionOptionItem: MentionItemProps) => {
-        //   // console.log(mentionOptionItem.metaData?.index)
-        //   return (
-        //     <div
-        //       style={{
-        //         // fontSize: 20,
-        //         fontWeight: 'bold',
-        //         color:
-        //           mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
-        //       }}
-        //     >
-        //       {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
-        //     </div>
-        //   );
-        // }}
         // mentionContactItemRenderer={(mentionItem: MentionItemProps) => {
         //   return (
         //     <p

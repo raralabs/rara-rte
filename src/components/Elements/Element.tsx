@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { ReactNode } from 'react';
 import { CustomElement, MentionItemProps } from '../../types';
 import CheckListItemElement from './Checklist';
@@ -36,7 +37,6 @@ const Element = ({
     textAlign: element.align,
   };
 
-  console.log(element.type, 'xxxxxxx');
   switch (element.type) {
     case 'block-quote':
       return (

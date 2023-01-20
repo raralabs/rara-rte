@@ -125,7 +125,8 @@ interface IediterHooks {
   setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
   editor: RaraEditorType;
   search: string;
-  mentionIndicator: string;
+  mentionIndicator: string | null;
+  value?: any;
 }
 export const mention = {
   USER_MENTION: 'USER_MENTION',
@@ -143,11 +144,11 @@ export const editerHooks = ({
   editor,
   search,
   mentionIndicator,
-  ...props
+  value,
 }: IediterHooks) => {
   const initialValue = useMemo(() => {
     try {
-      let v = props?.value;
+      let v: any = value;
       if (['[]', '[ ]', '', undefined, null].includes(v)) {
         v = undefined;
       }

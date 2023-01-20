@@ -59,6 +59,7 @@ const RaraEditor = (props: RaraEditorProps) => {
     mentionContactItemRenderer,
     mentionContactDetailRenderer,
     mentionDetailRenderer,
+    styles,
   } = props;
 
   const ref = useRef<HTMLInputElement>(null);
@@ -120,7 +121,7 @@ const RaraEditor = (props: RaraEditorProps) => {
   }, [editor, index, JSON.stringify(searchResults), target]);
 
   return (
-    <div className={`rte-editor ${readOnly ? 'read-only' : ''}`}>
+    <div className={`rte-editor ${readOnly ? 'read-only' : ''}`} style={styles}>
       <Slate
         onChange={async change => {
           //TO check if the values are changed or not
@@ -147,7 +148,7 @@ const RaraEditor = (props: RaraEditorProps) => {
               setTarget(beforeRange);
               if (onMentionQuery) {
                 const filterOption = onMentionQuery?.filter(e =>
-                  e?.label?.includes(beforeMatch[1])
+                  String(e?.label)?.includes(beforeMatch[1])
                 );
                 setSearchResults(filterOption);
               }
@@ -199,7 +200,6 @@ const RaraEditor = (props: RaraEditorProps) => {
             <Toolbar onSearch={setSearch} items={[]} />
           </div>
         )}
-
         <Editable
           decorate={decorate}
           spellCheck
@@ -250,7 +250,7 @@ const RaraEditor = (props: RaraEditorProps) => {
                             }}
                             className="mentionPoPoverAvatar"
                           >
-                            {searchResultItem?.label?.charAt(0)}
+                            {String(searchResultItem?.label)?.charAt(0)}
                           </span>
                           <span> {searchResultItem.label}</span>{' '}
                         </div>
