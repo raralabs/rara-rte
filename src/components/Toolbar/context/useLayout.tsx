@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 export interface LayoutContextProps {
   state: {
-    colorSelector: string;
-    headingSelector: string;
-    alignSelector: string;
-    listSelector: string;
-    search: string;
+    colorSelector: boolean;
+    headingSelector: boolean;
+    alignSelector: boolean;
+    listSelector: boolean;
+    search: boolean;
   };
-  updateState: (key: string, value: string) => void;
+  updateState: (key: string, value: string|boolean) => void;
   slug: {
     colorSelector: string;
     headingSelector: string;
@@ -36,7 +36,7 @@ function ContextProvider(props: { children: React.ReactNode }) {
     listSelector: false,
     search: false,
   });
-  const updateState = (key: string, value: string) => {
+  const updateState = (key: string, value: string|boolean) => {
     for (let x in state) {
       state[x] = false;
     }
