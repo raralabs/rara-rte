@@ -126,7 +126,7 @@ interface IediterHooks {
   editor: RaraEditorType;
   search: string;
   value?:string
-  mentionIndicator:string
+  mentionIndicator:string|null
 }
 export const mention = {
   USER_MENTION: 'USER_MENTION',
