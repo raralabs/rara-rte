@@ -15,7 +15,7 @@ const LIST_COLORS = colors;
 const COLOR_ITEM_SIZE = 20;
 
 const ColorPicker = (props: ColorPickerProps) => {
-  const { state, updateState, slug } = useToolbar();
+  const { state, updateState, slug } = useToolbar()!;
 
   const { defaultColor = '#000000' } = props;
   const editor = useSlate();

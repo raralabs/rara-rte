@@ -2,6 +2,8 @@
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
   "include": ["src", "types"],
   "compilerOptions": {
+    //downlevelIteration flag is used to enable the use of generator functions in environments that don't support them natively
+    "downlevelIteration": true,
     "module": "esnext",
     "lib": ["dom", "esnext"],
     "importHelpers": true,

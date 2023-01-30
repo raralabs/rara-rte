@@ -86,9 +86,9 @@ export type HeadingElement = {
 
 export type MentionElement = {
   align?: string;
-  type?: 'mention';
+  type?: 'mention'|'mentionContact';
   id?: any;
-  label?: string;
+  label: string|number;
   metaData?: any;
   children: CustomTextElement[];
 };

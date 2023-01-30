@@ -8,7 +8,7 @@ import { MarkerItem } from './Markers';
 interface TextAlignMarkerProps {}
 
 export const TextAlignMarkers = ({}: TextAlignMarkerProps) => {
-  const { state, updateState, slug } = useToolbar();
+  const { state, updateState, slug } = useToolbar()!;
 
   const [isActive, setIsActive] = React.useState<boolean>(false);
   const options = [

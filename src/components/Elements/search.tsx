@@ -3,11 +3,11 @@ import Icons from '../../assets/icons';
 import { useToolbar } from '../Toolbar/context/useLayout';
 import './styles.css';
 interface ColorPickerProps {
-  onChange?: (e: string) => void;
+  onChange: (e: string) => void;
 }
 
 const Search = (props: ColorPickerProps) => {
-  const { state, updateState, slug } = useToolbar();
+  const { state, updateState, slug } = useToolbar()!;
   const { onChange } = props;
 
   return (
