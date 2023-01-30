@@ -11,7 +11,7 @@ export interface ElementProps {
   children?: React.ReactNode;
   element: CustomElement;
   onCheckboxChange?: (checked: boolean, value: string) => void;
-  onMentionQuery?: (query: string) => Promise<MentionItemProps[]>;
+  onMentionQuery?: MentionItemProps[];
   isMentionLoading?: boolean;
   mentionItemRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;
   mentionDetailRenderer?: (mentionOptionItem: MentionItemProps) => ReactNode;

@@ -8,7 +8,7 @@ import { MarkerItem } from './Markers';
 interface ListsMarkerProps {}
 
 export const ListsMarkers = ({}: ListsMarkerProps) => {
-  const { state, updateState, slug } = useToolbar();
+  const { state, updateState, slug } = useToolbar()!;
 
   const [isActive, setIsActive] = React.useState<boolean>(false);
   const options = [
@@ -36,7 +36,7 @@ export const ListsMarkers = ({}: ListsMarkerProps) => {
             e.preventDefault();
           }}
           icon={Icons.UN_ORDERED_LIST}
-          active={isActive || state?.listSelector}
+          active={isActive || !!state?.listSelector}
           name="Heading"
         />
         <div

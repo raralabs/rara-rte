@@ -1,6 +1,6 @@
 // Import the `Node` helper interface from Slate.
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
-import { BaseRange, Descendant, Node, Text, Transforms } from 'slate';
+import { BaseRange, Descendant, Node, NodeEntry, Text, Transforms } from 'slate';
 import { jsx } from 'slate-hyperscript';
 import { toggleFormat } from '../components/Toolbar/HoveringToolbar';
 import { MentionItemProps, RaraEditorType } from '../types';
@@ -125,8 +125,8 @@ interface IediterHooks {
   setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
   editor: RaraEditorType;
   search: string;
-  mentionIndicator: string | null;
-  value?: any;
+  value?:string
+  mentionIndicator:string
 }
 export const mention = {
   USER_MENTION: 'USER_MENTION',
@@ -168,7 +168,7 @@ export const editerHooks = ({
   }, []);
 
   const onKeyDown = useCallback(
-    (event: KeyboardEvent) => {
+    (event: { key: any; preventDefault: () => void; }) => {
       if (target) {
         switch (event.key) {
           case 'ArrowDown':
@@ -220,7 +220,7 @@ export const editerHooks = ({
   };
 
   const decorate = useCallback(
-    ([node, path]: string) => {
+    ([node, path]: NodeEntry<Node>) => {
       const ranges: any[] = [];
 
       if (search && Text?.isText(node)) {

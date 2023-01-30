@@ -54,7 +54,7 @@ const HEADINGS_LIST: {
 };
 
 export const Headings = (props: HeadingsProps) => {
-  const { state, updateState, slug } = useToolbar();
+  const { state, updateState, slug } = useToolbar()!;
 
   const [isHeaderActive, setIsHeaderActive] = React.useState<boolean>(false);
   const {} = props;
@@ -72,7 +72,7 @@ export const Headings = (props: HeadingsProps) => {
             e.preventDefault();
           }}
           icon={Icons.HEADING}
-          active={isHeaderActive || state?.headingSelector}
+          active={isHeaderActive || !!state?.headingSelector}
           name="Heading"
         />
         <span
