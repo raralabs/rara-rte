@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface IconButtonProps {
-  icon: any;
+  icon: JSX.Element;
   onClick: () => void;
   isActive: boolean;
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 interface LeafProps {
   attributes?: any;
-  children?: any;
+  children?: React.ReactNode;
   leaf?: any;
 }
 const Leaf = ({ attributes, children, leaf }: LeafProps) => {

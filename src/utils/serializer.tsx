@@ -1,6 +1,6 @@
 // Import the `Node` helper interface from Slate.
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
-import { BaseRange, Descendant, Node, NodeEntry, Text, Transforms } from 'slate';
+import { BaseRange, Descendant, Location, Node, NodeEntry, Text, Transforms } from 'slate';
 import { jsx } from 'slate-hyperscript';
 import { toggleFormat } from '../components/Toolbar/HoveringToolbar';
 import { MentionItemProps, RaraEditorType } from '../types';
@@ -10,23 +10,23 @@ export const serializeSlateData = (value: Descendant[]) => {
   return (
     value
       // Return the string content of each paragraph in the value's children.
-      .map((n: any) => Node.string(n))
+      .map((n: Descendant) => Node.string(n))
       // Join them all with line breaks denoting paragraphs.
       .join('\n')
   );
 };
 
 // Define a deserializing function that takes a string and returns a value.
-export const deserializeSlateData = (string: any) => {
+export const deserializeSlateData = (string: string) => {
   // Return a value array of children derived by splitting the string.
-  return string.split('\n').map((line: any) => {
+  return string.split('\n').map((line: string) => {
     return {
       children: [{ text: line }],
     };
   });
 };
 
-const ELEMENT_TAGS: { [index: string]: any } = {
+const ELEMENT_TAGS: { [index: string]: (el:HTMLElement) => {} } = {
   A: (el: HTMLElement) => ({ type: 'link', url: el.getAttribute('href') }),
   BLOCKQUOTE: () => ({ type: 'quote' }),
   H1: () => ({ type: 'heading-one' }),
@@ -44,7 +44,7 @@ const ELEMENT_TAGS: { [index: string]: any } = {
 };
 
 // COMPAT: `B` is omitted here because Google Docs uses `<b>` in weird ways.
-const TEXT_TAGS: { [index: string]: any } = {
+const TEXT_TAGS: { [index: string]: (el:HTMLElement) => {} } = {
   CODE: () => ({ code: true }),
   DEL: () => ({ strikethrough: true }),
   EM: () => ({ italic: true }),
@@ -73,7 +73,7 @@ export const deserializeHTMLData = (el: HTMLElement) => {
   ) {
     parent = el.childNodes[0] as HTMLElement;
   }
-  let children: any[] = Array.from(parent.childNodes)
+  let children: (React.ReactNode|Descendant)[] = Array.from(parent.childNodes)
     .map(e => deserializeHTMLData(e as HTMLElement))
     .flat();
 
@@ -98,7 +98,7 @@ export const deserializeHTMLData = (el: HTMLElement) => {
   return children;
 };
 
-export const onDOMBeforeInput = (event: InputEvent, editor: any) => {
+export const onDOMBeforeInput = (event: InputEvent, editor:RaraEditorType) => {
   switch (event.inputType) {
     case 'formatBold':
       event.preventDefault();
@@ -113,7 +113,7 @@ export const onDOMBeforeInput = (event: InputEvent, editor: any) => {
 };
 interface IediterHooks {
   index: number;
-  target: any;
+  target:Location;
   searchResults: MentionItemProps[];
   setIndex: (e: number) => void;
   insertMention: (editor: RaraEditorType, item: MentionItemProps) => void;
@@ -148,7 +148,7 @@ export const editerHooks = ({
 }: IediterHooks) => {
   const initialValue = useMemo(() => {
     try {
-      let v: any = value;
+      let v: string|undefined = value;
       if (['[]', '[ ]', '', undefined, null].includes(v)) {
         v = undefined;
       }
@@ -168,7 +168,7 @@ export const editerHooks = ({
   }, []);
 
   const onKeyDown = useCallback(
-    (event: { key: any; preventDefault: () => void; }) => {
+    (event: { key: string; preventDefault: () => void; }) => {
       if (target) {
         switch (event.key) {
           case 'ArrowDown':
@@ -205,7 +205,7 @@ export const editerHooks = ({
     [index, JSON.stringify(searchResults), target]
   );
 
-  const onDOMBeforeInput = (event: InputEvent, editor: any) => {
+  const onDOMBeforeInput = (event: InputEvent, editor: RaraEditorType) => {
     switch (event.inputType) {
       case 'formatBold':
         event.preventDefault();

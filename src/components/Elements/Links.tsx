@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { LinkElement } from '../../types';
 interface LinkElementProps {
   attributes?: any;
-  children?: any;
-  element?: any;
+  children?: React.ReactNode;
+  element?: LinkElement;
 }
 const LinkElement = ({ attributes, children, element }: LinkElementProps) => {
   return (
-    <a href={element.url} {...attributes}>
+    <a href={element?.url} {...attributes}>
       {children}
     </a>
   );

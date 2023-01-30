@@ -28,7 +28,7 @@ export type CodeElement = {
 };
 export type BlockQuoteElement = {
   align?: string;
-  type?: 'block-quote';
+  type?: 'block-quote'|string;
   children?: CustomTextElement[];
 };
 export type CustomElement =

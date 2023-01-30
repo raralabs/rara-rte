@@ -8,7 +8,7 @@ import './styles.css';
 interface ColorPickerProps {
   defaultColor?: string;
   // color?: string,
-  onChange?: (color: string, e: any) => void;
+  onChange?: (color: string, e: React.MouseEvent) => void;
 }
 
 const LIST_COLORS = colors;

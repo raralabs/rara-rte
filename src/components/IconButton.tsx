@@ -2,8 +2,8 @@ import * as React from 'react';
 interface IconButtonProps {
   name: string;
   active: boolean;
-  onMouseDown: (e: any) => void;
-  icon?: any;
+  onMouseDown: (e: React.MouseEvent) => void;
+  icon?:React.ReactNode;
 }
 
 export const IconButton = ({ name, active, onMouseDown, icon }: IconButtonProps) => {
