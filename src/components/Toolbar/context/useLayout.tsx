@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 export interface LayoutContextProps {
   state: {
-    colorSelector: boolean;
-    headingSelector: boolean;
-    alignSelector: boolean;
-    listSelector: boolean;
-    search: boolean;
+    colorSelector: string;
+    headingSelector: string;
+    alignSelector: string;
+    listSelector: string;
+    search: string;
   };
   updateState: (key: string, value: string) => void;
   slug: {
@@ -26,7 +26,7 @@ const slug = {
 };
 const ToolbarContext = React.createContext<LayoutContextProps | null>(null);
 
-function ContextProvider<T>(props: { children: React.ReactNode }) {
+function ContextProvider(props: { children: React.ReactNode }) {
   const { children } = props;
 
   const [state, setState] = useState<any>({
@@ -58,7 +58,7 @@ function ContextProvider<T>(props: { children: React.ReactNode }) {
   const alignSelectorRef = document.getElementById('alignSelectorPortal');
   const listSelectorRef = document.getElementById('listSelectorPortal');
 
-  const handleClickOutside = (event: any) => {
+  const handleClickOutside = (event: { target: Node | null; }) => {
     if (
       !colorSelectorPortalRef?.contains(event.target) &&
       !headingSelectorRef?.contains(event.target) &&
@@ -76,10 +76,10 @@ function ContextProvider<T>(props: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.addEventListener('keydown', handleHideDropdown, true);
-    document.addEventListener('click', handleClickOutside, true);
+    document.addEventListener('click', handleClickOutside as EventListener, true);
     return () => {
       document.removeEventListener('keydown', handleHideDropdown, true);
-      document.removeEventListener('click', handleClickOutside, true);
+      document.removeEventListener('click', handleClickOutside as EventListener, true);
     };
   });
   return (
