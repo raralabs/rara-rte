@@ -14,7 +14,7 @@ import {
 export const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
 
-interface IFormat extends Omit<CustomTextElement, "text">{
+export interface IFormat extends Omit<CustomTextElement, "text">{
   color?:string
   align?:string
 }

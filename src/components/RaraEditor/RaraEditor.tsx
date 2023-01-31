@@ -6,6 +6,7 @@ import {
   ReactEditor,
   Slate,
   RenderElementProps,
+  RenderLeafProps,
 } from 'slate-react';
 import { createEditor, Editor, Range } from 'slate';
 
@@ -106,7 +107,7 @@ const RaraEditor = (props: RaraEditorProps) => {
     ),
     []
   );
-  const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, []);
+  const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, []);
 
   useEffect(() => {
     if (target && searchResults.length > 0) {

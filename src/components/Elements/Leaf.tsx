@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 interface LeafProps {
-  attributes?: Record<string,string>;
+  attributes?: Record<string,string|boolean>;
   children?: React.ReactNode;
-  leaf?: Record<string,string|boolean>
-}
+  leaf?: Record<string,string|boolean|any[]>
+}//need to extend the leaf props to RenderLeafProps
 const Leaf = ({ attributes, children, leaf }: LeafProps) => {
   if (leaf?.bold) {
     children = <strong>{children}</strong>;

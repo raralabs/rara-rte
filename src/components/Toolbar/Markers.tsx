@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSlate } from 'slate-react';
 import Icons from '../../assets/icons';
-import { isMarkActive, toggleMark } from '../../lib/functions';
+import { IFormat, isMarkActive, toggleMark } from '../../lib/functions';
 import './styles.css';
 
 // const bold=require('../../assets/bold.svg');
@@ -9,7 +9,7 @@ import './styles.css';
 interface MarkerProps {}
 
 export const Markers = ({}: MarkerProps) => {
-  const options = [
+  const options:{format:keyof IFormat,icon:JSX.Element,name:string}[] = [
     {
       format: 'bold',
       icon: Icons.BOLD,
