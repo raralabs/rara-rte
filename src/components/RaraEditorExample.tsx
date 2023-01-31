@@ -212,7 +212,7 @@ const RaraEditorExample = () => {
                 // fontSize: 20,
                 fontWeight: 'bold',
                 color:
-                  mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+                  mentionOptionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
               }}
             >
               {mentionOptionItem.label}
@@ -227,7 +227,7 @@ const RaraEditorExample = () => {
                 // fontSize: 20,
                 fontWeight: 'bold',
                 color:
-                  mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+                  mentionOptionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
               }}
             >
               {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
@@ -291,7 +291,7 @@ const RaraEditorExample = () => {
             <p
               style={{
                 margin: 0,
-                color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+                color: mentionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
               }}
             >
               <img
@@ -343,7 +343,7 @@ const RaraEditorExample = () => {
                 fontSize: 20,
                 fontWeight: 'bold',
                 color:
-                  mentionOptionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+                  mentionOptionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
               }}
             >
               {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
@@ -355,7 +355,7 @@ const RaraEditorExample = () => {
             <p
               style={{
                 margin: 0,
-                color: mentionItem.metaData?.index % 2 == 0 ? 'red' : 'green',
+                color: mentionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
                 // display:'flex',
                 // gap:10,
                 // fontSize:'inherit'

@@ -7,7 +7,7 @@ import Mention from './Mention';
 import MentionContact from './MentionContact';
 
 export interface ElementProps {
-  attributes?: any;
+  attributes: Record<string,string|boolean>;
   children?: React.ReactNode;
   element: CustomElement;
   onCheckboxChange?: (checked: boolean, value: string) => void;
@@ -33,8 +33,8 @@ const Element = ({
   mentionDetailRenderer,
   mentionContactDetailRenderer,
 }: ElementProps) => {
-  const style = {
-    textAlign: element.align,
+  const style:React.CSSProperties = {
+    textAlign: element.align as React.CSSProperties['textAlign'],
   };
 
   switch (element.type) {

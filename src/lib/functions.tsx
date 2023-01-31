@@ -19,7 +19,7 @@ export const insertMention = (
 ) => {
   const mention: MentionElement = {
     type: 'mention',
-    label: item.label,
+    label: item.label as string,
     id: item.id,
     metaData: item.metaData,
     children: [{ text: '' }],
@@ -33,7 +33,7 @@ export const insertMentionContact = (
 ) => {
   const mention: MentionElement = {
     type: 'mentionContact',
-    label: item.label,
+    label: item.label as string,
     id: item.id,
     metaData: item.metaData,
     children: [{ text: '' }],
@@ -53,7 +53,7 @@ export const isMarkActive = (
 export const toggleColor = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
   format: string,
-  value: boolean = true
+  value: any = true
 ) => {
   // const color = getColorForSelection(editor, format)
   Editor.addMark(editor, format, value);
@@ -62,7 +62,7 @@ export const toggleColor = (
 export const toggleMark = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
   format: string,
-  value: boolean|string|null = true
+  value: any = true
 ) => {
   const isActive = isMarkActive(editor, format);
 
@@ -91,7 +91,7 @@ export const getHeadingLevelForSelection = (
 
 export const isBlockActive = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: string,
+  format: any,
   blockType: 'type' | 'align' = 'type'
 ) => {
   const { selection } = editor;
@@ -115,7 +115,7 @@ export const isBlockActive = (
 
 export const toggleBlock = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: string
+  format: any
 ) => {
   const isActive = isBlockActive(
     editor,
@@ -154,7 +154,7 @@ export const toggleBlock = (
 
 export const insertLink = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  url: string
+  url: any
 ) => {
   if (editor.selection) {
     wrapLink(editor, url);
@@ -197,8 +197,8 @@ export const withInlines = (
   editor: BaseEditor & ReactEditor & HistoryEditor
 ) => {
   const { insertData, insertText, isInline } = editor;
-  editor.isInline = (element: CustomElement) =>
-    ['link', 'button', 'mention'].includes(element?.type!) || isInline(element);
+  editor.isInline = (element: any) =>
+    ['link', 'button', 'mention'].includes(element.type) || isInline(element);
   editor.insertText = text => {
     if (text && isUrl(text)) {
       wrapLink(editor, text);
@@ -221,24 +221,24 @@ export const withInlines = (
 export const withMentions = (editor: RaraEditorType) => {
   const { isInline, isVoid } = editor;
 
-  editor.isInline = (element: CustomElement) => {
+  editor.isInline = (element: any) => {
     return element.type === 'mention' ? true : isInline(element);
   };
 
-  editor.isVoid = (element: CustomElement) => {
+  editor.isVoid = (element: any) => {
     return element.type === 'mention' ? true : isVoid(element);
   };
-  editor.isInline = (element: CustomElement) => {
+  editor.isInline = (element: any) => {
     return element.type === 'mentionContact' ? true : isInline(element);
   };
 
-  editor.isVoid = (element: CustomElement) => {
+  editor.isVoid = (element: any) => {
     return element.type === 'mentionContact' ? true : isVoid(element);
   };
   return editor;
 };
 
-export const isUrl = (url: string) => {
+export const isUrl = (url: any) => {
   //TODO: Done workaround only, later should   be changed
   return url.includes('http');
 };

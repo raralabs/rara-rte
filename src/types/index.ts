@@ -87,9 +87,9 @@ export type HeadingElement = {
 export type MentionElement = {
   align?: string;
   type?: 'mention'|'mentionContact';
-  id?: any;
-  label: string|number;
-  metaData?: any;
+  id?: number|string;
+  label: string;
+  metaData?: Record<string,string|number>;
   children: CustomTextElement[];
 };
 
@@ -127,9 +127,9 @@ export type RaraEditorProps = {
 };
 
 export type MentionItemProps = {
-  label: string | number;
-  id: any;
-  metaData?: any;
+  label: string|number ;
+  id: string|number;
+  metaData: Record<string|number,number|string>;
 };
 
 export type RaraEditorType = BaseEditor & ReactEditor & HistoryEditor;

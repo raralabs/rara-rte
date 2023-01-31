@@ -3,29 +3,29 @@ import * as React from 'react';
 interface LeafProps {
   attributes?: any;
   children?: React.ReactNode;
-  leaf?: any;
+  leaf?: any
 }
 const Leaf = ({ attributes, children, leaf }: LeafProps) => {
-  if (leaf.bold) {
+  if (leaf?.bold) {
     children = <strong>{children}</strong>;
   }
-  if (leaf.code) {
+  if (leaf?.code) {
     children = <code>{children}</code>;
   }
-  if (leaf.italic) {
+  if (leaf?.italic) {
     children = <em>{children}</em>;
   }
-  if (leaf.strike) {
+  if (leaf?.strike) {
     children = <s>{children}</s>;
   }
-  if (leaf.underline) {
+  if (leaf?.underline) {
     children = <u>{children}</u>;
   }
-  if (leaf.color) {
+  if (leaf?.color) {
     children = (
       <span
         style={{
-          color: leaf.color,
+          color: leaf?.color as string,
         }}
       >
         {children}
@@ -50,10 +50,10 @@ const Leaf = ({ attributes, children, leaf }: LeafProps) => {
   return (
     <span
       {...attributes}
-      {...(leaf.highlight && { 'data-cy': 'search-highlighted' })}
+      {...(leaf?.highlight && { 'data-cy': 'search-highlighted' })}
       style={{
-        fontWeight: leaf.bold ? 'bold' : 'normal',
-        backgroundColor: leaf.highlight ? '#4ceb46' : '',
+        fontWeight: leaf?.bold ? 'bold' : 'normal',
+        backgroundColor: leaf?.highlight ? '#4ceb46' : '',
       }}
       {...attributes}
     >

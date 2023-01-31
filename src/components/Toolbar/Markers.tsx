@@ -56,9 +56,9 @@ export const Markers = ({}: MarkerProps) => {
 interface MarkerItemProps {
   name: string;
   active: boolean;
-  onMouseDown: (e: any) => void;
-  icon?: any;
-  label?: any;
+  onMouseDown: (e: React.MouseEvent) => void;
+  icon?: React.ReactNode;
+  label?: string;
 }
 
 export const MarkerItem = (props: MarkerItemProps) => {

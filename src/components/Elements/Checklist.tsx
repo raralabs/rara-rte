@@ -6,7 +6,7 @@ import './styles.css';
 import { ChecklistElement, CustomElement } from '../../types';
 
 interface CheckListItemElementProps {
-  attributes?: any;
+  attributes?: Record<string,string|boolean>;
   children?: React.ReactNode;
   element?: CustomElement;
   onCheckboxChange?: (checked: boolean, value: string) => void;

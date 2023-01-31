@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ElementProps } from './Element';
-import { MentionElement } from '../../types';
+import {  MentionItemProps } from '../../types';
 import './styles.css';
 
 const Mention = ({
@@ -10,7 +10,7 @@ const Mention = ({
   mentionItemRenderer,
   mentionDetailRenderer,
 }: ElementProps) => {
-  var el = element as MentionElement;
+  var el = element as MentionItemProps;
 
   return (
     <div
@@ -24,7 +24,7 @@ const Mention = ({
       {children}
       {mentionItemRenderer != null ? (
         mentionItemRenderer({
-          id: el.id,
+          id: el?.id as string,
           label: el.label ?? el.id,
           metaData: el.metaData,
         })
@@ -52,7 +52,7 @@ const Mention = ({
           ) : (
             <div className="mentionDetailPopOverItem">
               <span className="mentionDetailPopOverAvatar">
-                {el?.label?.charAt(0)}
+                {(typeof el.label === 'string') && el?.label?.charAt(0)}
               </span>
               <span> {el.label}</span>
             </div>

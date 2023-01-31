@@ -111,9 +111,12 @@ export const onDOMBeforeInput = (event: InputEvent, editor:RaraEditorType) => {
       return toggleFormat(editor, 'underlined');
   }
 };
+interface Range extends BaseRange {
+  highlight: boolean;
+}
 interface IediterHooks {
   index: number;
-  target:Location;
+  target:Location|BaseRange | null | undefined;
   searchResults: MentionItemProps[];
   setIndex: (e: number) => void;
   insertMention: (editor: RaraEditorType, item: MentionItemProps) => void;
@@ -221,7 +224,7 @@ export const editerHooks = ({
 
   const decorate = useCallback(
     ([node, path]: NodeEntry<Node>) => {
-      const ranges: any[] = [];
+      const ranges: Range[] = [];
 
       if (search && Text?.isText(node)) {
         const { text } = node;
