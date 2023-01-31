@@ -2,8 +2,8 @@ import * as React from 'react';
 
 interface DividerProps {
   type?: 'vertical' | 'horizontal';
-  width?: any;
-  height?: any;
+  width?: string;
+  height?: string;
 }
 
 export const Divider = (props: DividerProps) => {
