@@ -50,16 +50,16 @@ export const insertMentionContact = (
 
 export const isMarkActive = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: string
+  format: keyof IFormat
 ) => {
-  const marks: { [index: string]: any } = Editor.marks(editor) ?? {};
+  const marks: IFormat = Editor.marks(editor) ?? {};
   return marks ? !!marks[format] === true : false;
 };
 
 export const toggleColor = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
   format: string,
-  value: any = true
+  value: boolean|string = true
 ) => {
   // const color = getColorForSelection(editor, format)
   Editor.addMark(editor, format, value);
@@ -67,8 +67,8 @@ export const toggleColor = (
 
 export const toggleMark = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: string,
-  value: any = true
+  format: keyof IFormat,
+  value: boolean|string|null = true
 ) => {
   const isActive = isMarkActive(editor, format);
 
