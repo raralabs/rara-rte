@@ -47,8 +47,7 @@ export const HoveringToolbar = () => {
       el.removeAttribute('style');
       return;
     }
-
-    const domSelection = window?.getSelection();
+    const domSelection = window?.getSelection && window?.getSelection();
     const domRange: any = domSelection?.getRangeAt(0);
     const rect = domRange?.getBoundingClientRect();
     el.style.opacity = '1';
