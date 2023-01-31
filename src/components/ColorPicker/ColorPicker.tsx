@@ -33,7 +33,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         onClick={() => updateState(slug?.colorSelector, !state?.colorSelector)}
         style={{
           cursor: 'pointer',
-          fill: color ?? defaultColor,
+          fill: color as string ?? defaultColor,
         }}
       >
         {Icons.COLOR_SELECTOR}

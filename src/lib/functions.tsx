@@ -4,6 +4,7 @@ import { HistoryEditor } from 'slate-history';
 import { Editor, Transforms, Element as SlateElement } from 'slate';
 import {
   CustomElement,
+  CustomTextElement,
   LinkElement,
   MentionElement,
   MentionItemProps,
@@ -12,6 +13,11 @@ import {
 
 export const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
+
+interface IFormat extends Omit<CustomTextElement, "text">{
+  color?:string
+  align?:string
+}
 
 export const insertMention = (
   editor: RaraEditorType,
@@ -75,17 +81,17 @@ export const toggleMark = (
 
 export const getColorForSelection = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: string
+  format: keyof IFormat
 ) => {
-  const marks: { [index: string]: any } = Editor.marks(editor) ?? {};
+  const marks: IFormat= Editor.marks(editor) ?? {};
   return marks ? marks[format] : null;
 };
 
 export const getHeadingLevelForSelection = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: string
+  format:  keyof IFormat
 ) => {
-  const marks: { [index: string]: any } = Editor.marks(editor) ?? {};
+  const marks:  IFormat= Editor.marks(editor) ?? {};
   return marks ? marks[format] : null;
 };
 
@@ -99,7 +105,7 @@ export const isBlockActive = (
   const [match] = Array.from(
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, selection),
-      match: (n: { [index: string]: any }) => {
+      match: (n: IFormat) => {
         return (
           !Editor.isEditor(n) &&
           SlateElement.isElement(n) &&
