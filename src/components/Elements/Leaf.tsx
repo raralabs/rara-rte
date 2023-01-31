@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 interface LeafProps {
-  attributes?: any;
+  attributes?: Record<string,string>;
   children?: React.ReactNode;
-  leaf?: any
+  leaf?: Record<string,string|boolean>
 }
 const Leaf = ({ attributes, children, leaf }: LeafProps) => {
   if (leaf?.bold) {
