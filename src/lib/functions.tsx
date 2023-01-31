@@ -91,7 +91,7 @@ export const getHeadingLevelForSelection = (
 
 export const isBlockActive = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: any,
+  format: string,
   blockType: 'type' | 'align' = 'type'
 ) => {
   const { selection } = editor;
@@ -115,7 +115,7 @@ export const isBlockActive = (
 
 export const toggleBlock = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  format: any
+  format: string
 ) => {
   const isActive = isBlockActive(
     editor,
@@ -154,7 +154,7 @@ export const toggleBlock = (
 
 export const insertLink = (
   editor: BaseEditor & ReactEditor & HistoryEditor,
-  url: any
+  url: string
 ) => {
   if (editor.selection) {
     wrapLink(editor, url);
@@ -197,8 +197,8 @@ export const withInlines = (
   editor: BaseEditor & ReactEditor & HistoryEditor
 ) => {
   const { insertData, insertText, isInline } = editor;
-  editor.isInline = (element: any) =>
-    ['link', 'button', 'mention'].includes(element.type) || isInline(element);
+  editor.isInline = (element: CustomElement) =>
+    ['link', 'button', 'mention'].includes(element.type as string) || isInline(element);
   editor.insertText = text => {
     if (text && isUrl(text)) {
       wrapLink(editor, text);
@@ -221,24 +221,24 @@ export const withInlines = (
 export const withMentions = (editor: RaraEditorType) => {
   const { isInline, isVoid } = editor;
 
-  editor.isInline = (element: any) => {
+  editor.isInline = (element: CustomElement) => {
     return element.type === 'mention' ? true : isInline(element);
   };
 
-  editor.isVoid = (element: any) => {
+  editor.isVoid = (element: CustomElement) => {
     return element.type === 'mention' ? true : isVoid(element);
   };
-  editor.isInline = (element: any) => {
+  editor.isInline = (element: CustomElement) => {
     return element.type === 'mentionContact' ? true : isInline(element);
   };
 
-  editor.isVoid = (element: any) => {
+  editor.isVoid = (element: CustomElement) => {
     return element.type === 'mentionContact' ? true : isVoid(element);
   };
   return editor;
 };
 
-export const isUrl = (url: any) => {
+export const isUrl = (url: string) => {
   //TODO: Done workaround only, later should   be changed
   return url.includes('http');
 };
