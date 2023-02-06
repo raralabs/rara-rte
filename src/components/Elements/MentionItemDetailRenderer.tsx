@@ -4,7 +4,7 @@ import { MentionElement } from '../../types';
 import './styles.css';
 import Icons from '../../assets/icons';
 
-const MentionContact = ({
+const MentionItemDetailRenderer = ({
   attributes,
   children,
   element,
@@ -24,9 +24,9 @@ const MentionContact = ({
       {children}
       {mentionContactItemRenderer != null ? (
         mentionContactItemRenderer({
-          id: el.id,
+          id: el.id!,
           label: el.label ?? el.id,
-          metaData: el.metaData,
+          metaData: el.metaData!,
         })
       ) : (
         <>
@@ -45,9 +45,9 @@ const MentionContact = ({
         <div>
           {mentionContactDetailRenderer != null ? (
             mentionContactDetailRenderer({
-              id: el.id,
+              id: el.id!,
               label: el.label ?? el.id,
-              metaData: el.metaData,
+              metaData: el.metaData!,
             })
           ) : (
             <div className="mentionDetailPopOverItem">
@@ -61,4 +61,4 @@ const MentionContact = ({
   );
 };
 
-export default MentionContact;
+export default MentionItemDetailRenderer;

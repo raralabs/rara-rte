@@ -4,7 +4,7 @@ import { CustomElement, MentionItemProps } from '../../types';
 import CheckListItemElement from './Checklist';
 import LinkElement from './Links';
 import Mention from './Mention';
-import MentionContact from './MentionContact';
+import MentionItemDetailRenderer from './MentionItemDetailRenderer';
 
 export interface ElementProps {
   attributes: Record<string,string|boolean>;
@@ -120,7 +120,7 @@ const Element = ({
       );
     case 'mentionContact':
       return (
-        <MentionContact
+        <MentionItemDetailRenderer
           children={children}
           element={element}
           attributes={attributes}
