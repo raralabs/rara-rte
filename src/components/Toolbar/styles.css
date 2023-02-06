@@ -1,48 +1,94 @@
-.rte-marker-list{
-    display: flex;
-    gap: 8px;
+.rte-marker-list {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .rte-marker-list .rte-marker-item:not(:first-child) {
-    /* border-left:1px solid red; */
+  /* border-left:1px solid red; */
 }
 
-
-.rte-toolbar-btn{
-    height: 20px;
-    width: 20px;
+.rte-toolbar-btn {
+  height: 20px;
+  width: 20px;
 }
 
-.rte-marker-item svg{
-    filter: invert(58%) sepia(6%) saturate(0%) hue-rotate(196deg) brightness(103%) contrast(86%);
+.rte-marker-item svg {
+  filter: invert(58%) sepia(6%) saturate(0%) hue-rotate(196deg) brightness(103%)
+    contrast(86%);
 }
-.rte-marker-item.active svg{
-    filter: invert(40%) sepia(58%) saturate(2609%) hue-rotate(320deg) brightness(96%) contrast(94%);
+.rte-marker-item.active svg {
+  filter: invert(40%) sepia(58%) saturate(2609%) hue-rotate(320deg)
+    brightness(96%) contrast(94%);
 }
 
-.rte-toolbar{
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; 
-    display: flex;
-    gap: 8px;
-    flex-wrap: nowrap;
-    height: 20px;
-    align-items: center;
+.rte-toolbar {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none;
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  height: 20px;
+  align-items: center;
 }
 
 .parent-heading-picker {
-    position: relative;
+  position: relative;
 }
-
-.heading-picker-main {}
 
 .heading-picker-content {
-    display: none;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 100;
+  background-color: #fff;
+  box-shadow: rgb(9 30 66 / 25%) 0px 4px 8px -2px,
+    rgb(9 30 66 / 31%) 0px 0px 1px;
+  gap: 8px;
+  width: 170px;
+  left: -50;
+  top: 20;
+  border-radius: 8px;
+  padding: 8px 4px;
 }
 
+.list-picker-content {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 100;
+  background-color: white;
+  box-shadow: rgb(9 30 66 / 25%) 0px 4px 8px -2px,
+    rgb(9 30 66 / 31%) 0px 0px 1px;
+  gap: 8px;
+  width: 200px;
+  left: -50;
+  top: 20;
+  padding: 8px 4px;
+  border-radius: 4px;
+}
 
-.parent-heading-picker:hover .heading-picker-content{
-    display: flex;
-    flex-direction: column;
+.align-picker-content {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 100;
+  background-color: white;
+  box-shadow: rgb(9 30 66 / 25%) 0px 4px 8px -2px,
+    rgb(9 30 66 / 31%) 0px 0px 1px;
+  gap: 8px;
+  width: 200px;
+  left: -50;
+  top: 20;
+  padding: 8px 4px;
+  border-radius: 4px;
+}
+
+.picker-items {
+  cursor: pointer;
+  padding: 0px 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

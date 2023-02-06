@@ -19,7 +19,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<any> = args => <div>
+const Template: Story<{}> = args => <div>
   <RaraEditorExample {...args} />
   {/* <RaraEditor {...args} readOnly onCheckboxChange={(checked,value)=>{
     console.log("Checkbox changed trigger",checked,value);

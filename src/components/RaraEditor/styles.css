@@ -1,47 +1,102 @@
 :root {
-    --rte-primary: #EF476F;
-    --white: #ffffff;
+  --rte-primary: #ef476f;
+  --white: #ffffff;
 }
 
 .rte-editor {
-    border: 1px solid #959595;
-    padding: 8px 8px 20px 8px;
-    border-radius: 10px;
+  border: 1px solid #959595;
+  padding: 12px;
+  border-radius: 4px;
+  width: 100%;
 }
 
 .rte-editor.read-only {
-    border: none;
-    padding: 0px;
-    border-radius: 0px;
+  border: none;
+  padding: 0px;
+  border-radius: 0px;
 }
 
 .rte-editor-body {
-    padding-top: 20px;
+  padding-top: 20px;
+  max-width: 100%;
 }
 
 .rte-editor-body.read-only {
-    padding: 0px;
+  padding: 0px;
 }
 
 blockquote {
-    border-left: 2px solid #0071f3;
-    padding-left: 24px;
-    line-height: 1.6;
-    margin: 24px 0;
+  border-left: 2px solid #0071f3;
+  padding-left: 24px;
+  line-height: 1.6;
+  margin: 24px 0;
 }
 
 .rte-pre {
-    background-color: #959595;
-    font-family: 'Courier New', Courier, monospace;
-    margin: 2px 0px;
-    width: fit-content;
-
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  background-color: #e0e0e0;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 8px;
 }
 
 .rte-pre span {
-    color: black !important;
+  color: black !important;
 }
 
 .rte-paragraph {
-    margin: 4px 0px;
+  margin: 4px 0px;
+}
+
+.mentionPopOver {
+  top: -9999px;
+  left: -9999px;
+  position: absolute;
+  z-index: 1;
+  background: white;
+  max-height: 400px;
+  overflow-y: scroll;
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
+}
+
+.mentionPopOver .mentionPopOverItem {
+  display: flex;
+  gap: 4px;
+  padding: 4px 2px;
+  align-items: center;
+}
+
+.mentionPopOver .mentionPoPoverAvatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+  font-weight: bolder;
+  text-transform: capitalize;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

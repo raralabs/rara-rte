@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { ElementProps } from './Element';
-import {  MentionItemProps } from '../../types';
+import { MentionElement } from '../../types';
 import './styles.css';
+import Icons from '../../assets/icons';
 
-const Mention = ({
+const MentionItemDetailRenderer = ({
   attributes,
   children,
   element,
-  mentionItemRenderer,
-  mentionDetailRenderer,
+  mentionContactItemRenderer,
+  mentionContactDetailRenderer,
 }: ElementProps) => {
-  var el = element as MentionItemProps;
+  var el = element as MentionElement;
 
   return (
     <div
@@ -19,14 +20,13 @@ const Mention = ({
       // data-cy={`mention-${element.character?.replace(' ', '-')}`}
 
       className="rte-mentionWrapper"
-      style={{ padding: 0, margin: 0 }}
     >
       {children}
-      {mentionItemRenderer != null ? (
-        mentionItemRenderer({
-          id: el?.id as string,
+      {mentionContactItemRenderer != null ? (
+        mentionContactItemRenderer({
+          id: el.id!,
           label: el.label ?? el.id,
-          metaData: el.metaData,
+          metaData: el.metaData!,
         })
       ) : (
         <>
@@ -43,17 +43,14 @@ const Mention = ({
       )}
       <div className="mentionDetailPopOver" data-cy="mentions-portal">
         <div>
-          {mentionDetailRenderer != null ? (
-            mentionDetailRenderer({
-              id: el.id,
+          {mentionContactDetailRenderer != null ? (
+            mentionContactDetailRenderer({
+              id: el.id!,
               label: el.label ?? el.id,
-              metaData: el.metaData,
+              metaData: el.metaData!,
             })
           ) : (
             <div className="mentionDetailPopOverItem">
-              <span className="mentionDetailPopOverAvatar">
-                {(typeof el.label === 'string') && el?.label?.charAt(0)}
-              </span>
               <span> {el.label}</span>
             </div>
           )}
@@ -63,4 +60,4 @@ const Mention = ({
   );
 };
 
-export default Mention;
+export default MentionItemDetailRenderer;

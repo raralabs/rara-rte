@@ -1,271 +1,274 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Editable, withReact, ReactEditor, Slate, RenderElementProps } from 'slate-react'
+import * as React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-    createEditor,
-
-    Editor,
-    Transforms,
-    Range,
-
-} from 'slate'
+  Editable,
+  withReact,
+  ReactEditor,
+  Slate,
+  RenderElementProps,
+  RenderLeafProps,
+} from 'slate-react';
+import { createEditor, Editor, Range } from 'slate';
 
 import { withHistory } from 'slate-history';
-import { CustomElement, CustomTextElement, RaraEditorType, RaraEditorProps, MentionItemProps } from '../../types';
+import {
+  CustomElement,
+  CustomTextElement,
+  RaraEditorType,
+  RaraEditorProps,
+  MentionItemProps,
+} from '../../types';
 import { Toolbar } from '../Toolbar';
-import { insertMention, withInlines, withMentions } from '../../lib/functions';
+import {
+  insertMention,
+  withInlines,
+  withMentions,
+  insertMentionContact,
+} from '../../lib/functions';
 import { Element, ElementProps, Leaf, LeafProps } from '../Elements';
-
 
 import './styles.css';
 import { Portal } from '../../lib/Portal';
 import withHtml from '../../lib/handlers/withHTML';
+import { HoveringToolbar } from '../Toolbar/HoveringToolbar';
+
+import { editerHooks, mention } from '../../utils/serializer';
+import Icons from '../../assets/icons';
 
 // const LIST_TYPES = ['numbered-list', 'bulleted-list']
 // const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 
-
 declare module 'slate' {
-    interface CustomTypes {
-        Editor: RaraEditorType
-        Element: CustomElement
-        Text: CustomTextElement
-    }
+  interface CustomTypes {
+    Editor: RaraEditorType;
+    Element: CustomElement;
+    Text: CustomTextElement;
+  }
 }
-
 
 const RaraEditor = (props: RaraEditorProps) => {
-    const { readOnly = false, onCheckboxChange, onChange, isMentionLoading, mentionOptionRenderer, onMentionQuery,mentionItemRenderer,placeholder } = props;
+  const {
+    readOnly = false,
+    onCheckboxChange,
+    onChange,
+    mentionOptionRenderer,
+    mentionContactOptionRenderer,
+    onMentionQuery = [],
+    onMentionContactQuery = [],
+    mentionItemRenderer,
+    placeholder,
+    mentionContactItemRenderer,
+    mentionContactDetailRenderer,
+    mentionDetailRenderer,
+    styles,
+  } = props;
 
-    const ref =useRef<HTMLInputElement>(null)
-    // useRef<HTMLDivElement>()// useRef<React.LegacyRef<HTMLDivElement>>
+  const ref = useRef<HTMLInputElement>(null);
+  const [target, setTarget] = useState<Range | null>();
+  const [index, setIndex] = useState(0);
+  const [search, setSearch] = useState('');
+  const [mentionIndicator, setMentionIndicator] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<MentionItemProps[]>([]);
 
-    // const [ref,setRef]=useState<HTMLDivElement>(null);
-    const [target, setTarget] = useState<Range | null>()
-    const [index, setIndex] = useState(0)
-    // const [search, setSearch] = useState('')
-    const [searchResults, setSearchResults] = useState<MentionItemProps[]>([]);
-    const [isSearching, setIsSearching] = useState(true);
+  const editor = useMemo(
+    () =>
+      withHtml(
+        withMentions(withInlines(withHistory(withReact(createEditor()))))
+      ),
+    []
+  );
+  const { onDOMBeforeInput, onKeyDown, decorate, initialValue } = editerHooks({
+    index,
+    target,
+    searchResults,
+    setIndex,
+    insertMention,
+    insertMentionContact,
+    setTarget,
+    setSearchResults,
+    editor,
+    search,
+    mentionIndicator,
+    ...props,
+  });
 
-    const renderElement = useCallback((props: ElementProps) => <Element {...props}
+  const renderElement = useCallback(
+    (props: ElementProps) => (
+      <Element
+        {...props}
         onCheckboxChange={onCheckboxChange}
-        isMentionLoading={isMentionLoading}
-        onMentionQuery={onMentionQuery}
+        isMentionLoading={false}
+        // onMentionQuery={onMentionQuery}
         mentionItemRenderer={mentionItemRenderer}
+        mentionDetailRenderer={mentionDetailRenderer}
+        mentionContactItemRenderer={mentionContactItemRenderer}
+        mentionContactDetailRenderer={mentionContactDetailRenderer}
+      />
+    ),
+    []
+  );
+  const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, []);
 
+  useEffect(() => {
+    if (target && searchResults.length > 0) {
+      const el = ref.current;
+      if (el) {
+        const domRange = ReactEditor.toDOMRange(editor, target);
+        const rect = domRange.getBoundingClientRect();
+        el.style.top = `${rect.top + window.pageYOffset + 24}px`;
+        el.style.left = `${rect.left + window.pageXOffset}px`;
+      }
+    }
+  }, [editor, index, JSON.stringify(searchResults), target]);
 
-    />, [])
-    const renderLeaf = useCallback((props: LeafProps) => <Leaf {...props} />, [])
+  return (
+    <div className={`rte-editor ${readOnly ? 'read-only' : ''}`} style={styles}>
+      <Slate
+        onChange={async change => {
+          //TO check if the values are changed or not
+          const isAstChange = editor.operations.some(
+            op => 'set_selection' !== op.type
+          );
+          const { selection } = editor;
 
-    const initialValue = useMemo(
-        () => {
-            try {
-                let v=props.value;
-                if(["[]","[ ]","",undefined,null].includes(v)){
-                    v=undefined;
-                }
-                const valueArray = JSON.parse(v ?? '[{"type":"paragraph","children":[{"text":""}]}]');
-                return valueArray;
-            } catch (e) {
-                console.error("Unparsable value provided",props.value);
-                return [
-                    {
-                        type: 'paragraph',
-                        children: [{ text: '' }],
-                    },
-                ]
+          if (selection && Range.isCollapsed(selection)) {
+            const [start] = Range.edges(selection);
+            const wordBefore = Editor.before(editor, start, { unit: 'word' });
+            const before = wordBefore && Editor.before(editor, wordBefore);
+            const beforeRange = before && Editor.range(editor, before, start);
+            const beforeText =
+              beforeRange && Editor.string(editor, beforeRange);
+            const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/);
+            const after = Editor.after(editor, start);
+            const afterRange = Editor.range(editor, start, after);
+            const afterText = Editor.string(editor, afterRange);
+            const afterMatch = afterText.match(/^(\s|$)/);
+
+            if (beforeMatch && afterMatch) {
+              setMentionIndicator(mention?.USER_MENTION);
+              setTarget(beforeRange);
+              if (onMentionQuery) {
+                const filterOption = onMentionQuery?.filter(e =>
+                  String(e?.label)?.includes(beforeMatch[1])
+                );
+                setSearchResults(filterOption);
+              }
+
+              // setSearch(beforeMatch[1])
+              setIndex(0);
+              return;
             }
-        }
-        ,
-        []
-    )
+          }
 
-    const editor = useMemo(() => withHtml(withMentions(withInlines(withHistory(withReact(createEditor()))))), [])
+          if (selection && Range.isCollapsed(selection)) {
+            const [start] = Range.edges(selection);
+            const wordBefore = Editor.before(editor, start, { unit: 'word' });
+            const before = wordBefore && Editor.before(editor, wordBefore);
+            const beforeRange = before && Editor.range(editor, before, start);
+            const beforeText =
+              beforeRange && Editor.string(editor, beforeRange);
+            const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/);
+            const after = Editor.after(editor, start);
+            const afterRange = Editor.range(editor, start, after);
+            const afterText = Editor.string(editor, afterRange);
+            const afterMatch = afterText.match(/^(\s|$)/);
+            if (beforeMatch && afterMatch) {
+              setMentionIndicator(mention?.CONTACT_MENTION);
+              setTarget(beforeRange);
+              if (onMentionContactQuery) {
+                const filterOption = onMentionContactQuery?.filter(e =>
+                  String(e?.label)?.includes(beforeMatch[1])
+                );
+                setSearchResults(filterOption);
+              }
 
-    // const chars = CHARACTERS.filter((c: string) =>
-    //     c.toLowerCase().startsWith(search.toLowerCase())
-    // ).slice(0, 10)
-    // console.log("filtered chars", chars, target);
-
-    const onKeyDown = useCallback(
-        (event: any) => {
-            if (target) {
-                switch (event.key) {
-                    case 'ArrowDown':
-                        event.preventDefault()
-                        const prevIndex = index >= searchResults.length - 1 ? 0 : index + 1
-                        setIndex(prevIndex)
-                        break
-                    case 'ArrowUp':
-                        event.preventDefault()
-                        const nextIndex = index <= 0 ? searchResults.length - 1 : index - 1
-                        setIndex(nextIndex)
-                        break
-                    case 'Tab':
-                    case 'Enter':
-                        event.preventDefault()
-                        Transforms.select(editor, target)
-                        insertMention(editor, searchResults[index]);
-                        setTarget(null)
-                        setSearchResults([]);
-                        break
-                    case 'Escape':
-                        event.preventDefault()
-                        setTarget(null)
-                        setSearchResults([])
-                        setIsSearching(false);
-                        break
-                }
+              // setSearch(beforeMatch[1])
+              setIndex(0);
+              return;
             }
-        },
-        [index, JSON.stringify(searchResults), target]
-    )
-
-    useEffect(() => {
-        if (target && searchResults.length > 0) {
-            const el = ref.current
-            if (el) {
-                const domRange = ReactEditor.toDOMRange(editor, target)
-                const rect = domRange.getBoundingClientRect();
-                el.style.top = `${rect.top + window.pageYOffset + 24}px`
-                el.style.left = `${rect.left + window.pageXOffset}px`
-            }
-        }
-    }, [editor, index, JSON.stringify(searchResults), target])
-
-    return <div className={`rte-editor ${readOnly?'read-only':''}`}>
-        <Slate
-
-            onChange={async (change) => {
-                //TO check if the values are changed or not
-                const isAstChange = editor.operations.some(
-                    op => 'set_selection' !== op.type
-                )
-                const { selection } = editor
-
-                if (selection && Range.isCollapsed(selection)) {
-                    const [start] = Range.edges(selection)
-                    const wordBefore = Editor.before(editor, start, { unit: 'word' })
-                    const before = wordBefore && Editor.before(editor, wordBefore)
-                    const beforeRange = before && Editor.range(editor, before, start)
-                    const beforeText = beforeRange && Editor.string(editor, beforeRange)
-                    const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/)
-                    const after = Editor.after(editor, start)
-                    const afterRange = Editor.range(editor, start, after)
-                    const afterText = Editor.string(editor, afterRange)
-                    const afterMatch = afterText.match(/^(\s|$)/)
-                    console.log("BMA",beforeMatch,afterMatch);
-
-                    if (beforeMatch && afterMatch) {
-                        console.log("Matching");
-                        setTarget(beforeRange)
-                        setIsSearching(true);
-                        if (onMentionQuery) {
-                            let results = await onMentionQuery(beforeMatch[1]);
-                            console.log("GOT result", results);
-                            setSearchResults(results);
-                            
-                        }
-                        setIsSearching(false);
-
-                        // setSearch(beforeMatch[1])
-                        setIndex(0)
-                        return
-                    }else if(searchResults.length>0){
-                        setSearchResults([]);
-                        setIsSearching(false);
-                    }
-                }
-
-                setTarget(null)
-
-                if (isAstChange) {
-                    // Save the value to Local Storage.
-                    onChange && onChange(JSON.stringify(change));
-                }
-            }}
-            editor={editor} value={initialValue} >
-            {!readOnly && <Toolbar
-                items={
-                    [
-                        // <BlockButton key={'numbered'} format="numbered-list" label="format_list_numbered" />,
-                        // <BlockButton key={'bulleted'} format="bulleted-list" label="format_list_bulleted" />,
-                        // <BlockButton key={'left'} format="left" label="format_align_left" />,
-                        // <BlockButton key={'center'} format="center" label="format_align_center" />,
-                        // <BlockButton key={'right'} format="right" label="format_align_right" />,
-                        // <BlockButton key={'justify'} format="justify" label="format_align_justify" />
-                    ]}
-            />
-            }
-            {target && (searchResults.length > 0 || isSearching) && (
-                <Portal>
-                    {isSearching ? <div style={{
-                        top: '-9999px',
-                        left: '-9999px',
-                        position: 'absolute',
-                        zIndex: 1,
-                        padding: '3px',
-                        background: 'white',
-                        borderRadius: '4px',
-                        boxShadow: '0 1px 5px rgba(0,0,0,.2)',
-                    }}>
-                        Loading...
-                    </div> :
-                        <div
-                            ref={ref}
-                            style={{
-                                top: '-9999px',
-                                left: '-9999px',
-                                position: 'absolute',
-                                zIndex: 1,
-                                padding: '3px',
-                                background: 'white',
-                                borderRadius: '4px',
-                                boxShadow: '0 1px 5px rgba(0,0,0,.2)',
-                            }}
-                            data-cy="mentions-portal"
-                        >
-                            {searchResults.map((searchResultItem, i) => (
-                                <div
-                                    key={"searchResultItem" + i}
-                                    style={{
-                                        padding: '1px 3px',
-                                        borderRadius: '3px',
-                                        background: i === index ? '#B4D5FF' : 'transparent',
-                                    }}
-                                >
-                                    {mentionOptionRenderer != null ?
-                                        mentionOptionRenderer(searchResultItem) :
-                                        searchResultItem.label}
-                                </div>
-                            ))}
+          }
+          setTarget(null);
+          if (isAstChange) {
+            // Save the value to Local Storage.
+            onChange && onChange(JSON.stringify(change));
+          }
+        }}
+        editor={editor}
+        value={initialValue}
+      >
+        {!readOnly && (
+          <div style={{ display: 'flex' }}>
+            <Toolbar onSearch={setSearch} items={[]} />
+          </div>
+        )}
+        <Editable
+          decorate={decorate}
+          spellCheck
+          autoFocus
+          renderElement={(p: RenderElementProps) => {
+            return renderElement(p);
+          }}
+          className={`rte-editor-body ${readOnly ? 'read-only' : ''}`}
+          renderLeaf={renderLeaf}
+          placeholder={placeholder ?? (readOnly ? placeholder : 'Placeholder')}
+          readOnly={readOnly}
+          onKeyDown={onKeyDown}
+          onDOMBeforeInput={(event: InputEvent) => {
+            onDOMBeforeInput(event, editor);
+          }}
+        />
+        {target && (
+          <Portal>
+            <div ref={ref} className="mentionPopOver" data-cy="mentions-portal">
+              {searchResults?.map((searchResultItem, i) => (
+                <div
+                  style={{
+                    background: i === index ? '#B4D5FF' : 'transparent',
+                  }}
+                  key={'searchResultItem' + i}
+                >
+                  {mention?.CONTACT_MENTION === mentionIndicator ? (
+                    <>
+                      {mentionContactOptionRenderer != null ? (
+                        mentionContactOptionRenderer(searchResultItem)
+                      ) : (
+                        <div className="mentionPopOverItem">
+                          <span>{Icons.CELL_PHONE}</span>
+                          <span> {searchResultItem.label}</span>{' '}
                         </div>
-                    }
-                </Portal>
-            )}
-            <Editable
-                renderElement={(p: RenderElementProps) => {
-                    return renderElement(p);
-                }}
-                
-                className={`rte-editor-body ${readOnly?'read-only':''}`}
-                renderLeaf={renderLeaf}
-                placeholder={placeholder??(readOnly?placeholder:"Placeholder")}
-                readOnly={readOnly}
-                onKeyDown={onKeyDown}
-            // onKeyDown={(e) => {
-
-            //     onKeyDown(e, editor, target);
-            // }}
-            />
-        </Slate>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {mentionOptionRenderer != null ? (
+                        mentionOptionRenderer(searchResultItem)
+                      ) : (
+                        <div className="mentionPopOverItem">
+                          <span
+                            style={{
+                              backgroundColor:
+                                i % 2 === 0 ? '#7eaaed' : '#5ec4db',
+                            }}
+                            className="mentionPoPoverAvatar"
+                          >
+                            {String(searchResultItem?.label)?.charAt(0)}
+                          </span>
+                          <span> {searchResultItem.label}</span>{' '}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Portal>
+        )}
+        <HoveringToolbar />
+      </Slate>
     </div>
+  );
+};
 
-
-}
-
-
-
-RaraEditor.displayName = "RaraEditor";
+RaraEditor.displayName = 'RaraEditor';
 
 export default RaraEditor;
-
