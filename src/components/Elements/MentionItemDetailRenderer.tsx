@@ -51,7 +51,6 @@ const MentionItemDetailRenderer = ({
             })
           ) : (
             <div className="mentionDetailPopOverItem">
-              <span>{Icons.CELL_PHONE}</span>
               <span> {el.label}</span>
             </div>
           )}
