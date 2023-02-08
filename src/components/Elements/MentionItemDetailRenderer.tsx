@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ElementProps } from './Element';
 import { MentionElement } from '../../types';
 import './styles.css';
-import Icons from '../../assets/icons';
+// import Icons from '../../assets/icons';
 
 const MentionItemDetailRenderer = ({
   attributes,

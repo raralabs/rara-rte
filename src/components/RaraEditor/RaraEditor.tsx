@@ -26,7 +26,7 @@ import {
   withMentions,
   insertMentionContact,
 } from '../../lib/functions';
-import { ElementProps, Leaf, LeafProps } from '../Elements';
+import {  Leaf } from '../Elements';
 
 import './styles.css';
 import { Portal } from '../../lib/Portal';
@@ -68,7 +68,7 @@ const RaraEditor = (props: RaraEditorProps) => {
   const ref = React.useRef<HTMLInputElement>(null);
   const [target, setTarget] = React.useState<Range | null>();
   const [index, setIndex] = React.useState(0);
-  const [search, setSearch] = React.useState('');
+  const [search] = React.useState('');
   const [mentionIndicator, setMentionIndicator] = React.useState<string | null>(
     null
   );
@@ -99,7 +99,7 @@ const RaraEditor = (props: RaraEditorProps) => {
   });
 
   const renderElement = React.useCallback(
-    (props: ElementProps) => (
+    (props: any) => (
       <Element
         {...props}
         onCheckboxChange={onCheckboxChange}
@@ -207,7 +207,7 @@ const RaraEditor = (props: RaraEditorProps) => {
       >
         {!readOnly && (
           <div style={{ display: 'flex' }}>
-            <Toolbar onSearch={setSearch} items={[]} />
+            <Toolbar   />
           </div>
         )}
         <Editable

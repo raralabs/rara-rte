@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { useEffect, useRef, Ref } from 'react';
 import { Editor, Transforms, Text, Range, NodeEntry, Node } from 'slate';
 import { useFocused, useSlate } from 'slate-react';

@@ -8,7 +8,7 @@ import {
   unwrapLink,
 } from '../../lib/functions';
 import { ColorPicker } from '../ColorPicker';
-import Search from '../Elements/search';
+// import Search from '../Elements/search';
 import ContextProvider from './context/useLayout';
 import { Divider } from './Divider';
 import { Headings } from './Headings';
@@ -16,11 +16,11 @@ import { ListsMarkers } from './Lists';
 import { MarkerItem, Markers } from './Markers';
 import { TextAlignMarkers } from './TextAlignMarkers';
 
-interface ToolbarProps {
-  items: any[];
-  onSearch?: (e: string) => void;
-}
-export const Toolbar = ({ onSearch }: ToolbarProps) => {
+// interface ToolbarProps {
+//   items: any[];
+//   onSearch?: (e: string) => void;
+// }
+export const Toolbar = () => {
   const editor = useSlate();
   // console.log(editor);
   return (
