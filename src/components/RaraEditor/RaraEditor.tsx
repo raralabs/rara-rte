@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+// import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Editable,
   withReact,
@@ -25,7 +26,7 @@ import {
   withMentions,
   insertMentionContact,
 } from '../../lib/functions';
-import { Element, ElementProps, Leaf, LeafProps } from '../Elements';
+import { ElementProps, Leaf, LeafProps } from '../Elements';
 
 import './styles.css';
 import { Portal } from '../../lib/Portal';
@@ -34,6 +35,7 @@ import { HoveringToolbar } from '../Toolbar/HoveringToolbar';
 
 import { editerHooks, mention } from '../../utils/serializer';
 import Icons from '../../assets/icons';
+import Element from '../Elements/Element';
 
 // const LIST_TYPES = ['numbered-list', 'bulleted-list']
 // const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -63,14 +65,18 @@ const RaraEditor = (props: RaraEditorProps) => {
     styles,
   } = props;
 
-  const ref = useRef<HTMLInputElement>(null);
-  const [target, setTarget] = useState<Range | null>();
-  const [index, setIndex] = useState(0);
-  const [search, setSearch] = useState('');
-  const [mentionIndicator, setMentionIndicator] = useState<string | null>(null);
-  const [searchResults, setSearchResults] = useState<MentionItemProps[]>([]);
+  const ref = React.useRef<HTMLInputElement>(null);
+  const [target, setTarget] = React.useState<Range | null>();
+  const [index, setIndex] = React.useState(0);
+  const [search, setSearch] = React.useState('');
+  const [mentionIndicator, setMentionIndicator] = React.useState<string | null>(
+    null
+  );
+  const [searchResults, setSearchResults] = React.useState<MentionItemProps[]>(
+    []
+  );
 
-  const editor = useMemo(
+  const editor = React.useMemo(
     () =>
       withHtml(
         withMentions(withInlines(withHistory(withReact(createEditor()))))
@@ -92,7 +98,7 @@ const RaraEditor = (props: RaraEditorProps) => {
     ...props,
   });
 
-  const renderElement = useCallback(
+  const renderElement = React.useCallback(
     (props: ElementProps) => (
       <Element
         {...props}
@@ -107,9 +113,12 @@ const RaraEditor = (props: RaraEditorProps) => {
     ),
     []
   );
-  const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, []);
+  const renderLeaf = React.useCallback(
+    (props: RenderLeafProps) => <Leaf {...props} />,
+    []
+  );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (target && searchResults.length > 0) {
       const el = ref.current;
       if (el) {
@@ -124,10 +133,10 @@ const RaraEditor = (props: RaraEditorProps) => {
   return (
     <div className={`rte-editor ${readOnly ? 'read-only' : ''}`} style={styles}>
       <Slate
-        onChange={async change => {
+        onChange={async (change) => {
           //TO check if the values are changed or not
           const isAstChange = editor.operations.some(
-            op => 'set_selection' !== op.type
+            (op) => 'set_selection' !== op.type
           );
           const { selection } = editor;
 
@@ -148,7 +157,7 @@ const RaraEditor = (props: RaraEditorProps) => {
               setMentionIndicator(mention?.USER_MENTION);
               setTarget(beforeRange);
               if (onMentionQuery) {
-                const filterOption = onMentionQuery?.filter(e =>
+                const filterOption = onMentionQuery?.filter((e) =>
                   String(e?.label)?.includes(beforeMatch[1])
                 );
                 setSearchResults(filterOption);
@@ -176,7 +185,7 @@ const RaraEditor = (props: RaraEditorProps) => {
               setMentionIndicator(mention?.CONTACT_MENTION);
               setTarget(beforeRange);
               if (onMentionContactQuery) {
-                const filterOption = onMentionContactQuery?.filter(e =>
+                const filterOption = onMentionContactQuery?.filter((e) =>
                   String(e?.label)?.includes(beforeMatch[1])
                 );
                 setSearchResults(filterOption);

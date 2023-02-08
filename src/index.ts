@@ -1,8 +1,9 @@
 // import React, { FC, HTMLAttributes, ReactChild } from 'react';
 
-import  {RaraEditor} from './components/RaraEditor';
-import {MentionItemProps} from './types/index'
-import { serializeSlateData } from './utils/serializer';
+export * from './components/RaraEditor';
+export * from './types';
+export * from './utils/serializer';
+
 // export interface Props extends HTMLAttributes<HTMLDivElement> {
 //   /** custom content, defaults to 'the snozzberries taste like snozzberries' */
 //   children?: ReactChild;
@@ -16,4 +17,4 @@ import { serializeSlateData } from './utils/serializer';
 // export const Thing: FC<Props> = ({ children }) => {
 //   return <div>{children || `the snozzberries taste like snozzberries`}</div>;
 // };
-export  {RaraEditor,MentionItemProps,serializeSlateData};
+// export { RaraEditor, CodeElement, serializeSlateData };
