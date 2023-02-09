@@ -191,7 +191,6 @@ export const useEditerHooks = ({
     }
   }, [initialValue, value]);
 
-  //------------------------------------------------------------------------------------
   const onKeyDown = useCallback(
     (event: { key: string; preventDefault: () => void }) => {
       if (target) {
