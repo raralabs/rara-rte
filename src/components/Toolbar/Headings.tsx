@@ -57,7 +57,6 @@ export const Headings = (props: HeadingsProps) => {
   const { state, updateState, slug } = useToolbar()!;
 
   const [isHeaderActive, setIsHeaderActive] = React.useState<boolean>(false);
-  const {} = props;
   const editor = useSlate();
   return (
     <div id="headingSelectorPortal" className="parent-heading-picker">
