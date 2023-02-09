@@ -26,14 +26,14 @@ import {
   withMentions,
   insertMentionContact,
 } from '../../lib/functions';
-import {  Leaf } from '../Elements';
+import { Leaf } from '../Elements';
 
 import './styles.css';
 import { Portal } from '../../lib/Portal';
 import withHtml from '../../lib/handlers/withHTML';
 import { HoveringToolbar } from '../Toolbar/HoveringToolbar';
 
-import { editerHooks, mention } from '../../utils/serializer';
+import { useEditerHooks, mention } from '../../utils/serializer';
 import Icons from '../../assets/icons';
 import Element from '../Elements/Element';
 
@@ -63,9 +63,11 @@ const RaraEditor = (props: RaraEditorProps) => {
     mentionContactDetailRenderer,
     mentionDetailRenderer,
     styles,
+    value,
   } = props;
 
   const ref = React.useRef<HTMLInputElement>(null);
+
   const [target, setTarget] = React.useState<Range | null>();
   const [index, setIndex] = React.useState(0);
   const [search] = React.useState('');
@@ -83,20 +85,23 @@ const RaraEditor = (props: RaraEditorProps) => {
       ),
     []
   );
-  const { onDOMBeforeInput, onKeyDown, decorate, initialValue } = editerHooks({
-    index,
-    target,
-    searchResults,
-    setIndex,
-    insertMention,
-    insertMentionContact,
-    setTarget,
-    setSearchResults,
-    editor,
-    search,
-    mentionIndicator,
-    ...props,
-  });
+  const { onDOMBeforeInput, onKeyDown, decorate, finalData, setFinalData } =
+    useEditerHooks({
+      index,
+      target,
+      searchResults,
+      setIndex,
+      insertMention,
+      insertMentionContact,
+      setTarget,
+      setSearchResults,
+      editor,
+      search,
+      mentionIndicator,
+      value,
+
+      ...props,
+    });
 
   const renderElement = React.useCallback(
     (props: any) => (
@@ -111,7 +116,13 @@ const RaraEditor = (props: RaraEditorProps) => {
         mentionContactDetailRenderer={mentionContactDetailRenderer}
       />
     ),
-    []
+    [
+      mentionContactDetailRenderer,
+      mentionContactItemRenderer,
+      mentionDetailRenderer,
+      mentionItemRenderer,
+      onCheckboxChange,
+    ]
   );
   const renderLeaf = React.useCallback(
     (props: RenderLeafProps) => <Leaf {...props} />,
@@ -128,11 +139,12 @@ const RaraEditor = (props: RaraEditorProps) => {
         el.style.left = `${rect.left + window.pageXOffset}px`;
       }
     }
-  }, [editor, index, JSON.stringify(searchResults), target]);
+  }, [editor, index, searchResults.length, target]);
 
   return (
     <div className={`rte-editor ${readOnly ? 'read-only' : ''}`} style={styles}>
       <Slate
+        key={JSON.stringify(finalData)}
         onChange={async (change) => {
           //TO check if the values are changed or not
           const isAstChange = editor.operations.some(
@@ -199,15 +211,16 @@ const RaraEditor = (props: RaraEditorProps) => {
           setTarget(null);
           if (isAstChange) {
             // Save the value to Local Storage.
+            setFinalData(change);
             onChange && onChange(JSON.stringify(change));
           }
         }}
         editor={editor}
-        value={initialValue}
+        value={finalData}
       >
         {!readOnly && (
           <div style={{ display: 'flex' }}>
-            <Toolbar   />
+            <Toolbar />
           </div>
         )}
         <Editable

@@ -1,6 +1,21 @@
 // Import the `Node` helper interface from Slate.
-import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
-import { BaseRange, Descendant, Location, Node, NodeEntry, Text, Transforms } from 'slate';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import {
+  BaseRange,
+  Descendant,
+  Location,
+  Node,
+  NodeEntry,
+  Text,
+  Transforms,
+} from 'slate';
 import { jsx } from 'slate-hyperscript';
 import { toggleFormat } from '../components/Toolbar/HoveringToolbar';
 import { MentionItemProps, RaraEditorType } from '../types';
@@ -26,7 +41,7 @@ export const deserializeSlateData = (string: string) => {
   });
 };
 
-const ELEMENT_TAGS: { [index: string]: (el:HTMLElement) => {} } = {
+const ELEMENT_TAGS: { [index: string]: (el: HTMLElement) => {} } = {
   A: (el: HTMLElement) => ({ type: 'link', url: el.getAttribute('href') }),
   BLOCKQUOTE: () => ({ type: 'quote' }),
   H1: () => ({ type: 'heading-one' }),
@@ -44,7 +59,7 @@ const ELEMENT_TAGS: { [index: string]: (el:HTMLElement) => {} } = {
 };
 
 // COMPAT: `B` is omitted here because Google Docs uses `<b>` in weird ways.
-const TEXT_TAGS: { [index: string]: (el:HTMLElement) => {} } = {
+const TEXT_TAGS: { [index: string]: (el: HTMLElement) => {} } = {
   CODE: () => ({ code: true }),
   DEL: () => ({ strikethrough: true }),
   EM: () => ({ italic: true }),
@@ -73,8 +88,8 @@ export const deserializeHTMLData = (el: HTMLElement) => {
   ) {
     parent = el.childNodes[0] as HTMLElement;
   }
-  let children: (React.ReactNode|Descendant)[] = Array.from(parent.childNodes)
-    .map(e => deserializeHTMLData(e as HTMLElement))
+  let children: (React.ReactNode | Descendant)[] = Array.from(parent.childNodes)
+    .map((e) => deserializeHTMLData(e as HTMLElement))
     .flat();
 
   if (children.length === 0) {
@@ -92,13 +107,13 @@ export const deserializeHTMLData = (el: HTMLElement) => {
 
   if (TEXT_TAGS[nodeName]) {
     const attrs = TEXT_TAGS[nodeName](el);
-    return children.map(child => jsx('text', attrs, child));
+    return children.map((child) => jsx('text', attrs, child));
   }
 
   return children;
 };
 
-export const onDOMBeforeInput = (event: InputEvent, editor:RaraEditorType) => {
+export const onDOMBeforeInput = (event: InputEvent, editor: RaraEditorType) => {
   switch (event.inputType) {
     case 'formatBold':
       event.preventDefault();
@@ -116,7 +131,7 @@ interface Range extends BaseRange {
 }
 interface IediterHooks {
   index: number;
-  target:Location|BaseRange | null | undefined;
+  target: Location | BaseRange | null | undefined;
   searchResults: MentionItemProps[];
   setIndex: (e: number) => void;
   insertMention: (editor: RaraEditorType, item: MentionItemProps) => void;
@@ -128,14 +143,14 @@ interface IediterHooks {
   setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
   editor: RaraEditorType;
   search: string;
-  value?:string
-  mentionIndicator:string|null
+  value?: string;
+  mentionIndicator: string | null;
 }
 export const mention = {
   USER_MENTION: 'USER_MENTION',
   CONTACT_MENTION: 'CONTACT_MENTION',
 };
-export const editerHooks = ({
+export const useEditerHooks = ({
   index,
   target,
   searchResults,
@@ -151,7 +166,7 @@ export const editerHooks = ({
 }: IediterHooks) => {
   const initialValue = useMemo(() => {
     try {
-      let v: string|undefined = value;
+      let v: string | undefined = value;
       if (['[]', '[ ]', '', undefined, null].includes(v)) {
         v = undefined;
       }
@@ -168,10 +183,17 @@ export const editerHooks = ({
         },
       ];
     }
-  }, []);
+  }, [value]);
+  const [finalData, setFinalData] = useState(initialValue);
+  useEffect(() => {
+    if (value) {
+      setFinalData(initialValue);
+    }
+  }, [initialValue, value]);
 
+  //------------------------------------------------------------------------------------
   const onKeyDown = useCallback(
-    (event: { key: string; preventDefault: () => void; }) => {
+    (event: { key: string; preventDefault: () => void }) => {
       if (target) {
         switch (event.key) {
           case 'ArrowDown':
@@ -248,7 +270,14 @@ export const editerHooks = ({
     },
     [search]
   );
-  return { onDOMBeforeInput, onKeyDown, decorate, initialValue };
+  return {
+    onDOMBeforeInput,
+    onKeyDown,
+    decorate,
+    initialValue,
+    finalData,
+    setFinalData,
+  };
 };
 
 export const colors = [
