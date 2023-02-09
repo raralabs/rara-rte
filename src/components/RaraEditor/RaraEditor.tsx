@@ -142,7 +142,11 @@ const RaraEditor = (props: RaraEditorProps) => {
   }, [editor, index, searchResults.length, target]);
 
   return (
-    <div className={`rte-editor ${readOnly ? 'read-only' : ''}`} style={styles}>
+    <div
+      id="rte-editor"
+      className={`rte-editor ${readOnly ? 'read-only' : ''}`}
+      style={styles}
+    >
       <Slate
         key={JSON.stringify(finalData)}
         onChange={async (change) => {

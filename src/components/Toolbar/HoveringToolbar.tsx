@@ -6,6 +6,7 @@ import { RaraEditorType } from '../../types';
 import { MarkerItem, Markers } from './Markers';
 import { isBlockActive, toggleBlock } from '../../lib/functions';
 import Icons from '../../assets/icons';
+import { Portal } from '../../lib/Portal';
 
 export const toggleFormat = (editor: RaraEditorType, format: string) => {
   const isActive = isFormatActive(editor, format);
@@ -46,32 +47,37 @@ export const HoveringToolbar = () => {
       el.removeAttribute('style');
       return;
     }
-    const domSelection = window?.getSelection && window?.getSelection();
-    const domRange: any = domSelection?.getRangeAt(0);
+
+    const domSelection = window.getSelection();
+    const domRange = domSelection?.getRangeAt(0);
     const rect = domRange?.getBoundingClientRect();
     el.style.opacity = '1';
-    el.style.top = `${rect?.top + window?.pageYOffset - el?.offsetHeight}px`;
-    el.style.left = `${rect?.left - el.offsetWidth}px`;
+    el.style.top = `${rect?.top + window?.pageYOffset - el.offsetHeight}px`;
+    el.style.left = `${
+      rect?.left + window?.pageXOffset - el?.offsetWidth / 2 + rect?.width / 2
+    }px`;
   });
 
   return (
     // <Portal>
 
-    <div className="rte-hovewring-toolbar" ref={ref as Ref<HTMLDivElement>}>
-      <div style={{ display: 'flex', gap: '4px' }}>
-        <Markers />
-        <MarkerItem
-          key="code"
-          icon={Icons.CODE}
-          name="Code"
-          active={isBlockActive(editor, 'code')}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            toggleBlock(editor, 'code');
-          }}
-        />
+    <Portal>
+      <div className="rte-hovewring-toolbar" ref={ref as Ref<HTMLDivElement>}>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <Markers />
+          <MarkerItem
+            key="code"
+            icon={Icons.CODE}
+            name="Code"
+            active={isBlockActive(editor, 'code')}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              toggleBlock(editor, 'code');
+            }}
+          />
+        </div>
       </div>
-    </div>
+    </Portal>
     // </Portal>
   );
 };
