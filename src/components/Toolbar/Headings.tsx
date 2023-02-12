@@ -5,7 +5,6 @@ import { isBlockActive, toggleBlock } from '../../lib/functions';
 import { useToolbar } from './context/useLayout';
 import { MarkerItem } from './Markers';
 import './styles.css';
-interface HeadingsProps {}
 
 const HEADINGS_LIST: {
   [index: string]: {
@@ -53,7 +52,7 @@ const HEADINGS_LIST: {
   },
 };
 
-export const Headings = (props: HeadingsProps) => {
+export const Headings = () => {
   const { state, updateState, slug } = useToolbar()!;
 
   const [isHeaderActive, setIsHeaderActive] = React.useState<boolean>(false);
