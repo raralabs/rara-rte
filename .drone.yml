@@ -39,11 +39,11 @@ name: Pull image and deploy
     
 server:
   host:
-    from_secret: internal_hostname
+    from_secret: intellix_hostname
   user:
-    from_secret: internal_host_user
+    from_secret: intellix_host_user
   ssh_key:
-    from_secret: internal_ssh_key
+    from_secret: intellix_ssh_key
 
 steps:
 - name: Deploy from main
