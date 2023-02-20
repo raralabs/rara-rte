@@ -77,7 +77,8 @@ const RaraEditor = (props: RaraEditorProps) => {
   const [searchResults, setSearchResults] = React.useState<MentionItemProps[]>(
     []
   );
-
+    window.addEventListener('scroll',() => setTarget(null)
+    )
   const editor = React.useMemo(
     () =>
       withHtml(
@@ -223,7 +224,7 @@ const RaraEditor = (props: RaraEditorProps) => {
         value={finalData}
       >
         {!readOnly && (
-          <div style={{ display: 'flex' }}>
+          <div style={{marginBottom:'16px'}}>
             <Toolbar />
           </div>
         )}

@@ -205,7 +205,7 @@ const RaraEditorExample = () => {
           };
         })}
         mentionContactOptionRenderer={(mentionOptionItem: MentionItemProps) => {
-          // console.log(mentionOptionItem.metaData?.index)
+          console.log(mentionOptionItem.metaData?.index)
           return (
             <div
               style={{
@@ -336,7 +336,6 @@ const RaraEditorExample = () => {
           };
         })}
         mentionOptionRenderer={(mentionOptionItem: MentionItemProps) => {
-          // console.log(mentionOptionItem.metaData?.index)
           return (
             <div
               style={{

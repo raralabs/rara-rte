@@ -1,0 +1,66 @@
+kind: pipeline
+name: Build and Push
+type: docker
+  
+platform:
+  arch: amd64
+  os: linux
+
+steps:
+- name: build from main
+  image: docker:dind
+  volumes:
+  - name: docker_sock
+    path: /var/run/docker.sock
+  environment:
+    github_username:
+      from_secret: GITHUB_USERNAME
+    github_token:
+      from_secret: GITHUB_TOKEN
+  commands: 
+  - docker compose -f docker-compose.staging.yaml build
+  - docker login ghcr.io -u $github_username -p $github_token
+  - docker compose -f docker-compose.staging.yaml push || true
+  when:
+    branch:
+    - main
+    event: 
+    - push
+
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
+
+---
+kind: pipeline
+type: ssh
+name: Pull image and deploy
+    
+server:
+  host:
+    from_secret: intellix_hostname
+  user:
+    from_secret: intellix_host_user
+  ssh_key:
+    from_secret: intellix_ssh_key
+
+steps:
+- name: Deploy from main
+  environment:
+    github_username:
+      from_secret: GITHUB_USERNAME
+    github_token:
+      from_secret: GITHUB_TOKEN
+  commands:
+  - docker login ghcr.io -u $github_username -p $github_token
+  - docker compose -f docker-compose.staging.yaml pull
+  - docker compose --project-name rara-rte-staging -f docker-compose.staging.yaml up --no-build --force-recreate -d
+  - echo Storybook deployed successfully
+  when:
+    branch:
+    - main
+    event:
+    - push
+depends_on:
+- Build and Push

@@ -28,8 +28,8 @@
   user-select: none;
   display: flex;
   gap: 8px;
-  flex-wrap: nowrap;
-  height: 20px;
+  flex-wrap: wrap;
+  /* height: 20px; */
   align-items: center;
 }
 

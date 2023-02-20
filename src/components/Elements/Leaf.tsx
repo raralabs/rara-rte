@@ -20,6 +20,8 @@ import * as React from 'react';
 //   element?:any
 //   text?:CustomTextElement
 // }//need to extend the leaf props to RenderLeafProps
+
+////need to fix leafProps to any
 const Leaf = ({ attributes, children, leaf }:any) => {
   if (leaf?.bold) {
     children = <strong>{children}</strong>;
