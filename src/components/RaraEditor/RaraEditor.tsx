@@ -9,7 +9,7 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import { createEditor, Editor, Range } from 'slate';
+import { createEditor, Editor, Range, Transforms } from 'slate';
 
 import { withHistory } from 'slate-history';
 import {
@@ -74,11 +74,11 @@ const RaraEditor = (props: RaraEditorProps) => {
   const [mentionIndicator, setMentionIndicator] = React.useState<string | null>(
     null
   );
+
   const [searchResults, setSearchResults] = React.useState<MentionItemProps[]>(
     []
   );
-    window.addEventListener('scroll',() => setTarget(null)
-    )
+  window.addEventListener('scroll', () => setTarget(null));
   const editor = React.useMemo(
     () =>
       withHtml(
@@ -86,23 +86,29 @@ const RaraEditor = (props: RaraEditorProps) => {
       ),
     []
   );
-  const { onDOMBeforeInput, onKeyDown, decorate, finalData, setFinalData } =
-    useEditerHooks({
-      index,
-      target,
-      searchResults,
-      setIndex,
-      insertMention,
-      insertMentionContact,
-      setTarget,
-      setSearchResults,
-      editor,
-      search,
-      mentionIndicator,
-      value,
-
-      ...props,
-    });
+  const {
+    onDOMBeforeInput,
+    onKeyDown,
+    decorate,
+    finalData,
+    setFinalData,
+    setMentionContacts,
+    setMentionUsers,
+  } = useEditerHooks({
+    index,
+    target,
+    searchResults,
+    setIndex,
+    insertMention,
+    insertMentionContact,
+    setTarget,
+    setSearchResults,
+    editor,
+    search,
+    mentionIndicator,
+    value,
+    ...props,
+  });
 
   const renderElement = React.useCallback(
     (props: any) => (
@@ -150,10 +156,10 @@ const RaraEditor = (props: RaraEditorProps) => {
     >
       <Slate
         key={JSON.stringify(finalData)}
-        onChange={async (change) => {
+        onChange={async change => {
           //TO check if the values are changed or not
           const isAstChange = editor.operations.some(
-            (op) => 'set_selection' !== op.type
+            op => 'set_selection' !== op.type
           );
           const { selection } = editor;
 
@@ -174,7 +180,7 @@ const RaraEditor = (props: RaraEditorProps) => {
               setMentionIndicator(mention?.USER_MENTION);
               setTarget(beforeRange);
               if (onMentionQuery) {
-                const filterOption = onMentionQuery?.filter((e) =>
+                const filterOption = onMentionQuery?.filter(e =>
                   String(e?.label)?.includes(beforeMatch[1])
                 );
                 setSearchResults(filterOption);
@@ -202,7 +208,7 @@ const RaraEditor = (props: RaraEditorProps) => {
               setMentionIndicator(mention?.CONTACT_MENTION);
               setTarget(beforeRange);
               if (onMentionContactQuery) {
-                const filterOption = onMentionContactQuery?.filter((e) =>
+                const filterOption = onMentionContactQuery?.filter(e =>
                   String(e?.label)?.includes(beforeMatch[1])
                 );
                 setSearchResults(filterOption);
@@ -218,13 +224,49 @@ const RaraEditor = (props: RaraEditorProps) => {
             // Save the value to Local Storage.
             setFinalData(change);
             onChange && onChange(JSON.stringify(change));
+            //managing mention  data
+            const edtr = editor.operations;
+            const [mentionUser] = edtr.filter(
+              e => e.type === 'insert_node' && e?.node?.type === 'mention'
+            );
+            const [removeMentionUser] = edtr.filter(
+              e => e.type === 'remove_node' && e?.node?.type === 'mention'
+            );
+            const [mentionContact] = edtr.filter(
+              e =>
+                e.type === 'insert_node' && e?.node?.type === 'mentionContact'
+            );
+            const [removeMentionContact] = edtr.filter(
+              e =>
+                e.type === 'remove_node' && e?.node?.type === 'mentionContact'
+            );
+            if (mentionUser) {
+              setMentionUsers(pre => [
+                ...new Set([...pre, mentionUser?.node?.id]),
+              ]);
+            }
+            if (removeMentionUser) {
+              setMentionUsers(pre =>
+                pre?.filter(e => e !== removeMentionUser?.node?.id)
+              );
+            }
+            if (mentionContact) {
+              setMentionContacts(pre => [
+                ...new Set([...pre, mentionContact?.node?.id]),
+              ]);
+            }
+            if (removeMentionContact) {
+              setMentionContacts(pre =>
+                pre?.filter(e => e !== removeMentionContact?.node?.id)
+              );
+            }
           }
         }}
         editor={editor}
         value={finalData}
       >
         {!readOnly && (
-          <div style={{marginBottom:'16px'}}>
+          <div style={{ marginBottom: '16px' }}>
             <Toolbar />
           </div>
         )}

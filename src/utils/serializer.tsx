@@ -1,24 +1,9 @@
 // Import the `Node` helper interface from Slate.
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {
-  BaseRange,
-  Descendant,
-  Location,
-  Node,
-  NodeEntry,
-  Text,
-  Transforms,
-} from 'slate';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Descendant, Node, NodeEntry, Text, Transforms } from 'slate';
 import { jsx } from 'slate-hyperscript';
 import { toggleFormat } from '../components/Toolbar/HoveringToolbar';
-import { MentionItemProps, RaraEditorType } from '../types';
+import { IediterHooks, Range, RaraEditorType } from '../types';
 
 // Define a serializing function that takes a value and returns a string.
 export const serializeSlateData = (value: Descendant[]) => {
@@ -89,7 +74,7 @@ export const deserializeHTMLData = (el: HTMLElement) => {
     parent = el.childNodes[0] as HTMLElement;
   }
   let children: (React.ReactNode | Descendant)[] = Array.from(parent.childNodes)
-    .map((e) => deserializeHTMLData(e as HTMLElement))
+    .map(e => deserializeHTMLData(e as HTMLElement))
     .flat();
 
   if (children.length === 0) {
@@ -107,7 +92,7 @@ export const deserializeHTMLData = (el: HTMLElement) => {
 
   if (TEXT_TAGS[nodeName]) {
     const attrs = TEXT_TAGS[nodeName](el);
-    return children.map((child) => jsx('text', attrs, child));
+    return children.map(child => jsx('text', attrs, child));
   }
 
   return children;
@@ -126,26 +111,7 @@ export const onDOMBeforeInput = (event: InputEvent, editor: RaraEditorType) => {
       return toggleFormat(editor, 'underlined');
   }
 };
-interface Range extends BaseRange {
-  highlight: boolean;
-}
-interface IediterHooks {
-  index: number;
-  target: Location | BaseRange | null | undefined;
-  searchResults: MentionItemProps[];
-  setIndex: (e: number) => void;
-  insertMention: (editor: RaraEditorType, item: MentionItemProps) => void;
-  insertMentionContact: (
-    editor: RaraEditorType,
-    item: MentionItemProps
-  ) => void;
-  setTarget: Dispatch<SetStateAction<BaseRange | null | undefined>>;
-  setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
-  editor: RaraEditorType;
-  search: string;
-  value?: string;
-  mentionIndicator: string | null;
-}
+
 export const mention = {
   USER_MENTION: 'USER_MENTION',
   CONTACT_MENTION: 'CONTACT_MENTION',
@@ -163,6 +129,8 @@ export const useEditerHooks = ({
   search,
   mentionIndicator,
   value,
+  onMentionContact,
+  onMentionUser,
 }: IediterHooks) => {
   const initialValue = useMemo(() => {
     try {
@@ -185,12 +153,17 @@ export const useEditerHooks = ({
     }
   }, [value]);
   const [finalData, setFinalData] = useState(initialValue);
+  const [mentionUsers, setMentionUsers] = React.useState<any>([]);
+  const [mentionContacts, setMentionContacts] = React.useState<any>([]);
   useEffect(() => {
     if (value) {
       setFinalData(initialValue);
     }
+    onMentionContact && onMentionContact(mentionContacts);
+    onMentionUser && onMentionUser(mentionUsers);
   }, [initialValue, value]);
 
+  //on keyboard key press function
   const onKeyDown = useCallback(
     (event: { key: string; preventDefault: () => void }) => {
       if (target) {
@@ -276,6 +249,8 @@ export const useEditerHooks = ({
     initialValue,
     finalData,
     setFinalData,
+    setMentionUsers,
+    setMentionContacts,
   };
 };
 

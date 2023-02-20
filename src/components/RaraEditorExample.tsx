@@ -171,6 +171,8 @@ const RaraEditorExample = () => {
       }}
     >
       <RaraEditor
+        onMentionContact={e => console.log('Contact Mentions', e)}
+        onMentionUser={e => console.log('User Mentions', e)}
         value={editorData}
         onCheckboxChange={(checked, value) => {
           console.log('Checkbox Toggled', checked, value);
@@ -179,9 +181,9 @@ const RaraEditorExample = () => {
           console.log('Mentioned Item Changed', mentiondItems);
         }}
         onChange={val => {
-          console.log('VALUE', val);
-          console.log('DESERIALIZED', JSON.parse(val));
-          console.log('SERIALIZED', serializeSlateData(JSON.parse(val)));
+          // console.log('VALUE', val);
+          // console.log('DESERIALIZED', JSON.parse(val));
+          // console.log('SERIALIZED', serializeSlateData(JSON.parse(val)));
           setEditorData(val);
         }}
         onMentionQuery={CHARACTERS?.map((i, index) => {
@@ -205,14 +207,16 @@ const RaraEditorExample = () => {
           };
         })}
         mentionContactOptionRenderer={(mentionOptionItem: MentionItemProps) => {
-          console.log(mentionOptionItem.metaData?.index)
+          console.log(mentionOptionItem.metaData?.index);
           return (
             <div
               style={{
                 // fontSize: 20,
                 fontWeight: 'bold',
                 color:
-                  mentionOptionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
+                  (mentionOptionItem.metaData?.index as number) % 2 == 0
+                    ? 'red'
+                    : 'green',
               }}
             >
               {mentionOptionItem.label}
@@ -227,7 +231,9 @@ const RaraEditorExample = () => {
                 // fontSize: 20,
                 fontWeight: 'bold',
                 color:
-                  mentionOptionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
+                  (mentionOptionItem.metaData?.index as number) % 2 == 0
+                    ? 'red'
+                    : 'green',
               }}
             >
               {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
@@ -291,7 +297,10 @@ const RaraEditorExample = () => {
             <p
               style={{
                 margin: 0,
-                color: mentionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
+                color:
+                  (mentionItem.metaData?.index as number) % 2 == 0
+                    ? 'red'
+                    : 'green',
               }}
             >
               <img
@@ -319,9 +328,9 @@ const RaraEditorExample = () => {
           console.log('Mentioned Item Changed', mentiondItems);
         }}
         onChange={val => {
-          console.log('VALUE', val);
-          console.log('DESERIALIZED', JSON.parse(val));
-          console.log('SERIALIZED', serializeSlateData(JSON.parse(val)));
+          // console.log('VALUE', val);
+          // console.log('DESERIALIZED', JSON.parse(val));
+          // console.log('SERIALIZED', serializeSlateData(JSON.parse(val)));
           setEditorData(val);
         }}
         isMentionLoading={true}
@@ -342,7 +351,9 @@ const RaraEditorExample = () => {
                 fontSize: 20,
                 fontWeight: 'bold',
                 color:
-                  mentionOptionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
+                  (mentionOptionItem.metaData?.index as number) % 2 == 0
+                    ? 'red'
+                    : 'green',
               }}
             >
               {mentionOptionItem.label} {mentionOptionItem.metaData?.index}
@@ -354,7 +365,10 @@ const RaraEditorExample = () => {
             <p
               style={{
                 margin: 0,
-                color: mentionItem.metaData?.index as number % 2 == 0 ? 'red' : 'green',
+                color:
+                  (mentionItem.metaData?.index as number) % 2 == 0
+                    ? 'red'
+                    : 'green',
                 // display:'flex',
                 // gap:10,
                 // fontSize:'inherit'

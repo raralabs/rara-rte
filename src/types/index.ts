@@ -1,7 +1,7 @@
 // NODE TYPES
 
-import { ReactNode } from 'react';
-import { BaseEditor } from 'slate';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
+import { BaseEditor, BaseRange } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { ReactEditor } from 'slate-react';
 
@@ -28,7 +28,7 @@ export type CodeElement = {
 };
 export type BlockQuoteElement = {
   align?: string;
-  type?: 'block-quote'|string;
+  type?: 'block-quote' | string;
   children?: CustomTextElement[];
 };
 export type CustomElement =
@@ -86,10 +86,10 @@ export type HeadingElement = {
 
 export type MentionElement = {
   align?: string;
-  type?: 'mention'|'mentionContact';
-  id?: number|string;
+  type?: 'mention' | 'mentionContact';
+  id?: number | string;
   label: string;
-  metaData?: Record<string,string|number>;
+  metaData?: Record<string, string | number>;
   children: CustomTextElement[];
 };
 
@@ -124,12 +124,37 @@ export type RaraEditorProps = {
     mentionOptionItem: MentionItemProps
   ) => ReactNode;
   styles?: React.CSSProperties;
+  onMentionContact?: (e: number[]) => void;
+  onMentionUser?: (e: string[]) => void;
 };
 
 export type MentionItemProps = {
-  label: string|number ;
-  id: string|number;
-  metaData: Record<string|number,number|string>;
+  label: string | number;
+  id: string | number;
+  metaData: Record<string | number, number | string>;
 };
 
 export type RaraEditorType = BaseEditor & ReactEditor & HistoryEditor;
+
+export interface Range extends BaseRange {
+  highlight: boolean;
+}
+export interface IediterHooks {
+  index: number;
+  target: Location | BaseRange | null | undefined;
+  searchResults: MentionItemProps[];
+  setIndex: (e: number) => void;
+  insertMention: (editor: RaraEditorType, item: MentionItemProps) => void;
+  insertMentionContact: (
+    editor: RaraEditorType,
+    item: MentionItemProps
+  ) => void;
+  setTarget: Dispatch<SetStateAction<BaseRange | null | undefined>>;
+  setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
+  editor: RaraEditorType;
+  search: string;
+  value?: string;
+  mentionIndicator: string | null;
+  onMentionContact?: (e: number[]) => void;
+  onMentionUser?: (e: string[]) => void;
+}
