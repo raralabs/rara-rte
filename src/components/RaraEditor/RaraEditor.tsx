@@ -9,7 +9,8 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import { createEditor, Editor, Range, Transforms } from 'slate';
+import { createEditor, Editor, Range } from 'slate';
+import { useId } from 'react';
 
 import { withHistory } from 'slate-history';
 import {
@@ -33,7 +34,7 @@ import { Portal } from '../../lib/Portal';
 import withHtml from '../../lib/handlers/withHTML';
 import { HoveringToolbar } from '../Toolbar/HoveringToolbar';
 
-import { useEditerHooks, mention } from '../../utils/serializer';
+import { useEditerHooks, mention, removeById } from '../../utils/serializer';
 import Icons from '../../assets/icons';
 import Element from '../Elements/Element';
 
@@ -241,24 +242,20 @@ const RaraEditor = (props: RaraEditorProps) => {
                 e.type === 'remove_node' && e?.node?.type === 'mentionContact'
             );
             if (mentionUser) {
-              setMentionUsers(pre => [
-                ...new Set([...pre, mentionUser?.node?.id]),
-              ]);
+              setMentionUsers(pre => [...pre, mentionUser?.node?.id]);
             }
             if (removeMentionUser) {
-              setMentionUsers(pre =>
-                pre?.filter(e => e !== removeMentionUser?.node?.id)
-              );
-            }
-            if (mentionContact) {
-              setMentionContacts(pre => [
-                ...new Set([...pre, mentionContact?.node?.id]),
+              setMentionUsers(pre => [
+                ...removeById(pre, removeMentionUser?.node?.id),
               ]);
             }
+            if (mentionContact) {
+              setMentionContacts(pre => [...pre, mentionContact?.node?.id]);
+            }
             if (removeMentionContact) {
-              setMentionContacts(pre =>
-                pre?.filter(e => e !== removeMentionContact?.node?.id)
-              );
+              setMentionContacts(pre => [
+                ...removeById(pre, removeMentionContact?.node?.id),
+              ]);
             }
           }
         }}

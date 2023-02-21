@@ -155,12 +155,18 @@ export const useEditerHooks = ({
   const [finalData, setFinalData] = useState(initialValue);
   const [mentionUsers, setMentionUsers] = React.useState<any>([]);
   const [mentionContacts, setMentionContacts] = React.useState<any>([]);
+
+  console.log(
+    { mentionUsers, mentionContacts },
+    '<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>'
+  );
+
   useEffect(() => {
     if (value) {
       setFinalData(initialValue);
     }
-    onMentionContact && onMentionContact(mentionContacts);
-    onMentionUser && onMentionUser(mentionUsers);
+    onMentionContact && onMentionContact([...new Set(mentionContacts)]);
+    onMentionUser && onMentionUser([...new Set(mentionUsers)]);
   }, [initialValue, value]);
 
   //on keyboard key press function
@@ -253,6 +259,16 @@ export const useEditerHooks = ({
     setMentionContacts,
   };
 };
+
+export function* removeById(objects: string[], idToRemove: string | null) {
+  for (const object of objects) {
+    if (object !== idToRemove) {
+      yield object;
+    } else {
+      idToRemove = null; // Remove only one object with the given ID
+    }
+  }
+}
 
 export const colors = [
   '#000000',
