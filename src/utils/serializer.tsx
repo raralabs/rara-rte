@@ -156,11 +156,6 @@ export const useEditerHooks = ({
   const [mentionUsers, setMentionUsers] = React.useState<any>([]);
   const [mentionContacts, setMentionContacts] = React.useState<any>([]);
 
-  console.log(
-    { mentionUsers, mentionContacts },
-    '<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>'
-  );
-
   useEffect(() => {
     if (value) {
       setFinalData(initialValue);
