@@ -1547,6 +1547,11 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@juggle/resize-observer@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
+  integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
+
 "@mdx-js/mdx@^1.6.22":
   version "1.6.22"
   resolved "https://registry.npmjs.org/@mdx-js/mdx/-/mdx-1.6.22.tgz"
@@ -12144,11 +12149,12 @@ slate-hyperscript@^0.77.0:
   dependencies:
     is-plain-object "^5.0.0"
 
-slate-react@^0.81.0:
-  version "0.81.0"
-  resolved "https://registry.npmjs.org/slate-react/-/slate-react-0.81.0.tgz"
-  integrity sha512-bwryad4EvOmc7EFKb8aGg9DWNDh3KvToaggGieIgGTTbHJYHc9ADFC3A87Ittlpd5XUVopR0MpChQ3g3ODyvqw==
+slate-react@^0.91.2:
+  version "0.91.2"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.91.2.tgz#7bec89b497b939a9d17292d6183f88a7ca3916ea"
+  integrity sha512-D+rm72Q2b81aqlw/+2Kcu8p3fmsKF2v8i134bu1oGfJWy6XTSTVyEXSca0+V5CHdxWgOMu02iXNjnVI2qmIsYw==
   dependencies:
+    "@juggle/resize-observer" "^3.4.0"
     "@types/is-hotkey" "^0.1.1"
     "@types/lodash" "^4.14.149"
     direction "^1.0.3"
@@ -12158,10 +12164,10 @@ slate-react@^0.81.0:
     scroll-into-view-if-needed "^2.2.20"
     tiny-invariant "1.0.6"
 
-slate@^0.81.0:
-  version "0.81.0"
-  resolved "https://registry.npmjs.org/slate/-/slate-0.81.0.tgz"
-  integrity sha512-VKHeZ/PMeYorIeRiJWYT78kd5MkLdfKiVpPrUfdj6ZMLYYfIhnb8zIZdP5Jp9GaFYM3g+oZw+Pm9HCJstfQJ9A==
+slate@^0.91.1:
+  version "0.91.1"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.91.1.tgz#1891e03dc7e3f585a23fb20149e2c7a4614b0ddc"
+  integrity sha512-t8R6y2CjVD/NNo3h6fyM9tOH2mwJVETzSq7cNBfhAHwTRsKQ0fF0nxErxwWURiRFr1ZMOCk7rJXfgLxI95ZNFA==
   dependencies:
     immer "^9.0.6"
     is-plain-object "^5.0.0"

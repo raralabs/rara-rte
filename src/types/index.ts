@@ -10,6 +10,7 @@ export type ParagraphElement = {
   align?: string;
   color?: string;
   children: CustomTextElement[];
+  id?:string|number
 };
 export type CustomTextElement = {
   text?: string;
@@ -19,17 +20,20 @@ export type CustomTextElement = {
   underline?: boolean;
   type?: string;
   children?: any[];
+  id?:string|number
 };
 
 export type CodeElement = {
   align?: string;
   type?: 'code';
   children?: CustomTextElement[];
+  id?:string|number
 };
 export type BlockQuoteElement = {
   align?: string;
   type?: 'block-quote' | string;
   children?: CustomTextElement[];
+  id?:string|number
 };
 export type CustomElement =
   | BlockQuoteElement
@@ -61,12 +65,16 @@ export type ColoredElement = {
   type: 'color';
   color?: string;
   children: any[];
+  id?:string|number
+
 };
 export type ChecklistElement = {
   align?: string;
   type: 'check-list-item';
   checked: boolean;
   children: CustomTextElement[];
+  id?:string|number
+
 };
 export type HeadingElement = {
   align?: string;
@@ -82,6 +90,8 @@ export type HeadingElement = {
     | 'numbered-list'
     | 'mentionContact';
   children: CustomTextElement[];
+  id?:string|number
+
 };
 
 export type MentionElement = {
@@ -98,6 +108,8 @@ export type LinkElement = {
   type: 'link';
   url?: string;
   children: CustomTextElement[];
+  id?:string|number
+
 };
 
 export type RaraEditorProps = {
@@ -157,4 +169,6 @@ export interface IediterHooks {
   mentionIndicator: string | null;
   onMentionContact?: (e: number[]) => void;
   onMentionUser?: (e: string[]) => void;
+  
+
 }

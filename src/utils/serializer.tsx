@@ -155,13 +155,14 @@ export const useEditerHooks = ({
   const [finalData, setFinalData] = useState(initialValue);
   const [mentionUsers, setMentionUsers] = React.useState<any>([]);
   const [mentionContacts, setMentionContacts] = React.useState<any>([]);
+  
 
   useEffect(() => {
     if (value) {
       setFinalData(initialValue);
     }
-    onMentionContact && onMentionContact([...new Set(mentionContacts)]);
-    onMentionUser && onMentionUser([...new Set(mentionUsers)]);
+    onMentionContact && onMentionContact([...new Set(mentionContacts)] as number[]);
+    onMentionUser && onMentionUser([...new Set(mentionUsers)] as string[]);
   }, [initialValue, value]);
 
   //on keyboard key press function
@@ -182,7 +183,7 @@ export const useEditerHooks = ({
           case 'Tab':
           case 'Enter':
             event.preventDefault();
-            Transforms.select(editor, target);
+            Transforms.select(editor, target as any);
 
             if (mentionIndicator === mention.CONTACT_MENTION) {
               insertMentionContact(editor, searchResults[index]);
@@ -255,7 +256,7 @@ export const useEditerHooks = ({
   };
 };
 
-export function* removeById(objects: string[], idToRemove: string | null) {
+export function* removeById(objects: string[] | number [], idToRemove: string |number | null) {
   for (const object of objects) {
     if (object !== idToRemove) {
       yield object;
