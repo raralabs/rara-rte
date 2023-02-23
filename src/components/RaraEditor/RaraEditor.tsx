@@ -13,6 +13,7 @@ import {
   BaseInsertNodeOperation,
   BaseOperation,
   createEditor,
+  Descendant,
   Editor,
   Range,
   RemoveNodeOperation,
@@ -116,7 +117,6 @@ const RaraEditor = (props: RaraEditorProps) => {
     value,
     ...props,
   });
-  console.log({ finalData });
 
   const renderElement = React.useCallback(
     (props: any) => (
@@ -165,6 +165,7 @@ const RaraEditor = (props: RaraEditorProps) => {
       <Slate
         key={JSON.stringify(finalData)}
         onChange={async change => {
+          
           //TO check if the values are changed or not
           const isAstChange = editor.operations.some(
             op => 'set_selection' !== op.type
@@ -230,8 +231,13 @@ const RaraEditor = (props: RaraEditorProps) => {
           setTarget(null);
           if (isAstChange) {
             // Save the value to Local Storage.
-            setFinalData(change);
-            onChange && onChange(JSON.stringify(change));
+            setFinalData(change as unknown as string);
+            if(JSON.stringify(change) === '[{"type":"paragraph","children":[{"text":""}]}]')
+            {     onChange && onChange('');
+          } else {
+              onChange && onChange(JSON.stringify(change));
+            }
+            
             //managing mention  data
 
             const edtr = editor.operations;
@@ -275,7 +281,7 @@ const RaraEditor = (props: RaraEditorProps) => {
           }
         }}
         editor={editor}
-        value={finalData}
+        value={finalData as Descendant[]}
       >
         {!readOnly && (
           <div style={{ marginBottom: '16px' }}>
