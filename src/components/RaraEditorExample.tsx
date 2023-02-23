@@ -181,7 +181,7 @@ const RaraEditorExample = () => {
           console.log('Mentioned Item Changed', mentiondItems);
         }}
         onChange={val => {
-          // console.log('VALUE', val);
+          console.log('VALUE', val);
           // console.log('DESERIALIZED', JSON.parse(val));
           // console.log('SERIALIZED', serializeSlateData(JSON.parse(val)));
           setEditorData(val);

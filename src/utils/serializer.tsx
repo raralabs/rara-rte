@@ -134,20 +134,15 @@ export const useEditerHooks = ({
 }: IediterHooks) => {
   const initialValue = useMemo(() => {
     try {
-      let v: string | undefined = value;
-      if (['[]', '[ ]', '', undefined, null].includes(v)) {
-        v = undefined;
-      }
-      const valueArray = JSON.parse(
-        v ?? '[{"type":"paragraph","children":[{"text":""}]}]'
-      );
-      return valueArray;
+      let v: string | undefined = value ?? '';
+      v = JSON.parse(v);
+      return v;
     } catch (e) {
       // console.error('Unparsable value provided', props?.value);
       return [
         {
           type: 'paragraph',
-          children: [{ text: '' }],
+          children: [{ text: value ?? '' }],
         },
       ];
     }
@@ -155,13 +150,13 @@ export const useEditerHooks = ({
   const [finalData, setFinalData] = useState(initialValue);
   const [mentionUsers, setMentionUsers] = React.useState<any>([]);
   const [mentionContacts, setMentionContacts] = React.useState<any>([]);
-  
 
   useEffect(() => {
     if (value) {
       setFinalData(initialValue);
     }
-    onMentionContact && onMentionContact([...new Set(mentionContacts)] as number[]);
+    onMentionContact &&
+      onMentionContact([...new Set(mentionContacts)] as number[]);
     onMentionUser && onMentionUser([...new Set(mentionUsers)] as string[]);
   }, [initialValue, value]);
 
@@ -256,7 +251,10 @@ export const useEditerHooks = ({
   };
 };
 
-export function* removeById(objects: string[] | number [], idToRemove: string |number | null) {
+export function* removeById(
+  objects: string[] | number[],
+  idToRemove: string | number | null
+) {
   for (const object of objects) {
     if (object !== idToRemove) {
       yield object;
