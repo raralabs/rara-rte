@@ -9,7 +9,14 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import { BaseInsertNodeOperation, BaseOperation, createEditor, Editor, Range, RemoveNodeOperation } from 'slate';
+import {
+  BaseInsertNodeOperation,
+  BaseOperation,
+  createEditor,
+  Editor,
+  Range,
+  RemoveNodeOperation,
+} from 'slate';
 
 import { withHistory } from 'slate-history';
 import {
@@ -36,7 +43,6 @@ import { HoveringToolbar } from '../Toolbar/HoveringToolbar';
 import { useEditerHooks, mention, removeById } from '../../utils/serializer';
 import Icons from '../../assets/icons';
 import Element from '../Elements/Element';
-
 
 // const LIST_TYPES = ['numbered-list', 'bulleted-list']
 // const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
@@ -110,6 +116,7 @@ const RaraEditor = (props: RaraEditorProps) => {
     value,
     ...props,
   });
+  console.log({ finalData });
 
   const renderElement = React.useCallback(
     (props: any) => (
@@ -227,27 +234,23 @@ const RaraEditor = (props: RaraEditorProps) => {
             onChange && onChange(JSON.stringify(change));
             //managing mention  data
 
-
-            
-
             const edtr = editor.operations;
 
-       console.log({edtr});
-       
-            
             const mentionUser = edtr.find(
-              (e:BaseOperation):e is BaseInsertNodeOperation =>  e.type === 'insert_node' && e?.node?.type === 'mention'
+              (e: BaseOperation): e is BaseInsertNodeOperation =>
+                e.type === 'insert_node' && e?.node?.type === 'mention'
             );
-            
+
             const removeMentionUser = edtr.find(
-              (e:BaseOperation):e is RemoveNodeOperation => e.type === 'remove_node' && e?.node?.type === 'mention'
+              (e: BaseOperation): e is RemoveNodeOperation =>
+                e.type === 'remove_node' && e?.node?.type === 'mention'
             );
             const mentionContact = edtr.find(
-              (e:BaseOperation):e is BaseInsertNodeOperation =>
+              (e: BaseOperation): e is BaseInsertNodeOperation =>
                 e.type === 'insert_node' && e?.node?.type === 'mentionContact'
             );
             const removeMentionContact = edtr.find(
-              (e:BaseOperation):e is RemoveNodeOperation =>
+              (e: BaseOperation): e is RemoveNodeOperation =>
                 e.type === 'remove_node' && e?.node?.type === 'mentionContact'
             );
             if (mentionUser) {
@@ -259,7 +262,10 @@ const RaraEditor = (props: RaraEditorProps) => {
               ]);
             }
             if (mentionContact) {
-              setMentionContacts((pre: any) => [...pre, mentionContact?.node?.id]);
+              setMentionContacts((pre: any) => [
+                ...pre,
+                mentionContact?.node?.id,
+              ]);
             }
             if (removeMentionContact) {
               setMentionContacts((pre: string[] | number[]) => [
