@@ -159,7 +159,7 @@ const CONTACT = [
 ];
 const RaraEditorExample = () => {
   const [editorData, setEditorData] = useState(
-    '[{"type":"paragraph","children":[{"text":""}]}]'
+    ''
   );
 
   return (

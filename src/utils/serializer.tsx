@@ -132,6 +132,7 @@ export const useEditerHooks = ({
   onMentionContact,
   onMentionUser,
 }: IediterHooks) => {
+  
   const initialValue = useMemo(() => {
     try {
       let v: string | undefined = value ?? '';
@@ -147,18 +148,18 @@ export const useEditerHooks = ({
       ];
     }
   }, [value]);
-  const [finalData, setFinalData] = useState(initialValue);
+  const [finalData, setFinalData] = useState(initialValue!);
   const [mentionUsers, setMentionUsers] = React.useState<any>([]);
   const [mentionContacts, setMentionContacts] = React.useState<any>([]);
 
   useEffect(() => {
-    if (value) {
-      setFinalData(initialValue);
-    }
+  
+      setFinalData(initialValue!);
+ 
     onMentionContact &&
       onMentionContact([...new Set(mentionContacts)] as number[]);
     onMentionUser && onMentionUser([...new Set(mentionUsers)] as string[]);
-  }, [initialValue, value]);
+  }, [initialValue]);
 
   //on keyboard key press function
   const onKeyDown = useCallback(
