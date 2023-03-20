@@ -76,7 +76,7 @@ platform:
 
 steps:
   - name: build from main
-    image: docker:dind
+    image: node:16
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
