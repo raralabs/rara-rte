@@ -76,6 +76,7 @@ const RaraEditor = (props: RaraEditorProps) => {
 
   } = props;
 
+  
   const ref = React.useRef<HTMLInputElement>(null);
 
   const [target, setTarget] = React.useState<Range | null>();
@@ -96,6 +97,7 @@ const RaraEditor = (props: RaraEditorProps) => {
       ),
     []
   );
+  
   const {
     onDOMBeforeInput,
     onKeyDown,
