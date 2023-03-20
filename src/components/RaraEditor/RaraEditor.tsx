@@ -72,6 +72,8 @@ const RaraEditor = (props: RaraEditorProps) => {
     mentionDetailRenderer,
     styles,
     value,
+    autoFocus=false,
+
   } = props;
 
   const ref = React.useRef<HTMLInputElement>(null);
@@ -291,7 +293,7 @@ const RaraEditor = (props: RaraEditorProps) => {
         <Editable
           decorate={decorate}
           spellCheck
-          autoFocus
+          autoFocus={autoFocus}
           renderElement={(p: RenderElementProps) => {
             return renderElement(p);
           }}
