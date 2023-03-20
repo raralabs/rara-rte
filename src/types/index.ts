@@ -138,6 +138,7 @@ export type RaraEditorProps = {
   styles?: React.CSSProperties;
   onMentionContact?: (e: number[]) => void;
   onMentionUser?: (e: string[]) => void;
+  autoFocus?:boolean
 };
 
 export type MentionItemProps = {
