@@ -47,7 +47,7 @@
     rgb(9 30 66 / 31%) 0px 0px 1px;
   gap: 8px;
   width: 200px;
-  left: -100px;
+  left: -130px;
   top: 20;
   border-radius: 8px;
   padding: 8px 4px;
@@ -63,7 +63,8 @@
     rgb(9 30 66 / 31%) 0px 0px 1px;
   gap: 8px;
   width: 200px;
-  left: -120px;
+  left: -180px;
+
   top: 20;
   padding: 8px 4px;
   border-radius: 4px;
@@ -79,7 +80,7 @@
     rgb(9 30 66 / 31%) 0px 0px 1px;
   gap: 8px;
   width: 200px;
-  left: -100px;
+  left: -150px;
   top: 20;
   padding: 8px 4px;
   border-radius: 4px;
@@ -91,4 +92,16 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+@media (max-Width: 374px) {
+  .list-picker-content{
+
+    left:0px
+  }
+  
+}
+@media (max-width:335px) {
+  .align-picker-content {
+    left: 0px;
+  }
 }
