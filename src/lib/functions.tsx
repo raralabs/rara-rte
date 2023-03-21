@@ -31,10 +31,13 @@ export const insertMention = (
     metaData: item.metaData,
     children: [{ text: '' }],
   };
+setTimeout(() => {
 
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
   const last = target.anchor.path[target.anchor.path.length - 1] + 2; //TODO: 2 because insert didn't update yet, i.e. it happens too fast
+  console.log({last},target.anchor.path);
+  
   const newLast = [...target.anchor.path];
   newLast[target.anchor.path.length - 1] = last;
 
@@ -49,6 +52,7 @@ export const insertMention = (
       offset: 0
     })
   });
+},100)
 };
 export const insertMentionContact = (
   editor: RaraEditorType,
