@@ -52,7 +52,7 @@ setTimeout(() => {
       offset: 0
     })
   });
-},100)
+},20)
 };
 export const insertMentionContact = (
   editor: RaraEditorType,
@@ -67,6 +67,8 @@ export const insertMentionContact = (
     metaData: item.metaData,
     children: [{ text: '' }],
   };
+setTimeout(() => {
+
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
   const last = target.anchor.path[target.anchor.path.length - 1] + 2; //TODO: 2 because insert didn't update yet, i.e. it happens too fast
@@ -84,6 +86,8 @@ export const insertMentionContact = (
       offset: 0
     })
   });
+},20)
+
 };
 
 export const isMarkActive = (
