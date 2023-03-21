@@ -47,7 +47,7 @@
     rgb(9 30 66 / 31%) 0px 0px 1px;
   gap: 8px;
   width: 200px;
-  left: -130px;
+  left: -160px;
   top: 20;
   border-radius: 8px;
   padding: 8px 4px;
@@ -93,15 +93,29 @@
   flex-direction: row;
   justify-content: space-between;
 }
-@media (max-Width: 374px) {
+@media (max-Width: 375px) {
   .list-picker-content{
 
-    left:0px
+    left:-10px
   }
+  
   
 }
 @media (max-width:335px) {
   .align-picker-content {
     left: 0px;
+  }
+}
+@media (max-width:285px) {
+  .align-picker-content {
+    left: -30px;
+  }
+  .list-picker-content {
+
+    left:-60px
+  }
+  .heading-picker-content {
+    left:0px
+
   }
 }
