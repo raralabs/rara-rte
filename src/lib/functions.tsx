@@ -1,5 +1,5 @@
 import { ReactEditor } from 'slate-react';
-import { BaseEditor, Range } from 'slate';
+import { BaseEditor, BaseRange, Range } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { Editor, Transforms, Element as SlateElement } from 'slate';
 import {
@@ -21,7 +21,8 @@ export interface IFormat extends Omit<CustomTextElement, "text">{
 
 export const insertMention = (
   editor: RaraEditorType,
-  item: MentionItemProps
+  item: MentionItemProps,
+  target:BaseRange
 ) => {
   const mention: MentionElement = {
     type: 'mention',
@@ -30,12 +31,34 @@ export const insertMention = (
     metaData: item.metaData,
     children: [{ text: '' }],
   };
+setTimeout(() => {
+
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
+  const last = target.anchor.path[target.anchor.path.length - 1] + 2; //TODO: 2 because insert didn't update yet, i.e. it happens too fast
+  console.log({last},target.anchor.path);
+  
+  const newLast = [...target.anchor.path];
+  newLast[target.anchor.path.length - 1] = last;
+
+  Transforms.select(editor, {
+    anchor: Editor.end(editor, {
+      path: [...newLast],
+      offset: 0
+    }),
+
+    focus: Editor.end(editor, {
+      path: [...newLast],
+      offset: 0
+    })
+  });
+},100)
 };
 export const insertMentionContact = (
   editor: RaraEditorType,
-  item: MentionItemProps
+  item: MentionItemProps,
+  target:BaseRange
+
 ) => {
   const mention: MentionElement = {
     type: 'mentionContact',
@@ -46,6 +69,21 @@ export const insertMentionContact = (
   };
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
+  const last = target.anchor.path[target.anchor.path.length - 1] + 2; //TODO: 2 because insert didn't update yet, i.e. it happens too fast
+  const newLast = [...target.anchor.path];
+  newLast[target.anchor.path.length - 1] = last;
+
+  Transforms.select(editor, {
+    anchor: Editor.end(editor, {
+      path: [...newLast],
+      offset: 0
+    }),
+
+    focus: Editor.end(editor, {
+      path: [...newLast],
+      offset: 0
+    })
+  });
 };
 
 export const isMarkActive = (

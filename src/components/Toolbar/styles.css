@@ -47,7 +47,7 @@
     rgb(9 30 66 / 31%) 0px 0px 1px;
   gap: 8px;
   width: 200px;
-  left: -50;
+  left: -100px;
   top: 20;
   border-radius: 8px;
   padding: 8px 4px;
@@ -63,7 +63,7 @@
     rgb(9 30 66 / 31%) 0px 0px 1px;
   gap: 8px;
   width: 200px;
-  left: -50;
+  left: -120px;
   top: 20;
   padding: 8px 4px;
   border-radius: 4px;
@@ -79,7 +79,7 @@
     rgb(9 30 66 / 31%) 0px 0px 1px;
   gap: 8px;
   width: 200px;
-  left: -50;
+  left: -100px;
   top: 20;
   padding: 8px 4px;
   border-radius: 4px;

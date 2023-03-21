@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { MentionItemProps } from '../types';
-import { serializeSlateData } from '../utils/serializer';
 // Import the Slate editor factory.
 import RaraEditor from './RaraEditor/RaraEditor';
 

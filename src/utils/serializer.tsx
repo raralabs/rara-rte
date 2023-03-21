@@ -1,6 +1,6 @@
 // Import the `Node` helper interface from Slate.
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Descendant, Node, NodeEntry, Text, Transforms } from 'slate';
+import { BaseRange, Descendant, Node, NodeEntry, Text, Transforms } from 'slate';
 import { jsx } from 'slate-hyperscript';
 import { toggleFormat } from '../components/Toolbar/HoveringToolbar';
 import { IediterHooks, Range, RaraEditorType } from '../types';
@@ -165,6 +165,7 @@ export const useEditerHooks = ({
   const onKeyDown = useCallback(
     (event: { key: string; preventDefault: () => void }) => {
       if (target) {
+        
         switch (event.key) {
           case 'ArrowDown':
             event.preventDefault();
@@ -180,11 +181,13 @@ export const useEditerHooks = ({
           case 'Enter':
             event.preventDefault();
             Transforms.select(editor, target as any);
-
+          
             if (mentionIndicator === mention.CONTACT_MENTION) {
-              insertMentionContact(editor, searchResults[index]);
+              insertMentionContact(editor, searchResults[index],target as BaseRange);
+
             } else {
-              insertMention(editor, searchResults[index]);
+              insertMention(editor, searchResults[index],target as BaseRange);
+              
             }
             setTarget(null);
             setSearchResults([]);

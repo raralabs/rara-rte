@@ -138,6 +138,7 @@ export type RaraEditorProps = {
   styles?: React.CSSProperties;
   onMentionContact?: (e: number[]) => void;
   onMentionUser?: (e: string[]) => void;
+  autoFocus?:boolean
 };
 
 export type MentionItemProps = {
@@ -145,6 +146,14 @@ export type MentionItemProps = {
   id: string | number;
   metaData: Record<string | number, number | string>;
 };
+
+declare module 'slate' {
+  interface BaseEditor {
+      type?:string;
+      id?:string
+  }}
+
+
 
 export type RaraEditorType = BaseEditor & ReactEditor & HistoryEditor;
 
@@ -156,10 +165,11 @@ export interface IediterHooks {
   target: Location | BaseRange | null | undefined;
   searchResults: MentionItemProps[];
   setIndex: (e: number) => void;
-  insertMention: (editor: RaraEditorType, item: MentionItemProps) => void;
+  insertMention: (editor: RaraEditorType, item: MentionItemProps,target:BaseRange) => void;
   insertMentionContact: (
     editor: RaraEditorType,
-    item: MentionItemProps
+    item: MentionItemProps,
+    target:BaseRange
   ) => void;
   setTarget: Dispatch<SetStateAction<BaseRange | null | undefined>>;
   setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
