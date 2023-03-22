@@ -17,6 +17,7 @@ import {
   Editor,
   Range,
   RemoveNodeOperation,
+  Transforms,
 } from 'slate';
 
 import { withHistory } from 'slate-history';
@@ -245,7 +246,8 @@ const RaraEditor = (props: RaraEditorProps) => {
             //managing mention  data
 
             const edtr = editor.operations;
-
+            console.log({edtr});
+            
             const mentionUser = edtr.find(
               (e: BaseOperation): e is BaseInsertNodeOperation =>
                 e.type === 'insert_node' && e?.node?.type === 'mention'
@@ -253,7 +255,7 @@ const RaraEditor = (props: RaraEditorProps) => {
 
             const removeMentionUser = edtr.find(
               (e: BaseOperation): e is RemoveNodeOperation =>
-                e.type === 'remove_node' && e?.node?.type === 'mention'
+                e.type === 'remove_node' && e?.node?.type === 'mention',
             );
             const mentionContact = edtr.find(
               (e: BaseOperation): e is BaseInsertNodeOperation =>
@@ -267,8 +269,25 @@ const RaraEditor = (props: RaraEditorProps) => {
               setMentionUsers((pre: any) => [...pre, mentionUser?.node?.id]);
             }
             if (removeMentionUser) {
+              // console.log({removeMentionUser});
+              let last
+              let newLast
               setMentionUsers((pre: string[] | number[]) => [
                 ...removeById(pre, removeMentionUser?.node?.id!),
+               last =  removeMentionUser.path[removeMentionUser.path.length -1] - 1,
+                newLast = [...removeMentionUser.path],
+               newLast[removeMentionUser.path.length - 1] = last,
+                Transforms.select(editor, {
+                  anchor: Editor.end(editor, {
+                    path: [...newLast],
+                    offset: 0
+                  }),
+              
+                  focus: Editor.end(editor, {
+                    path: [...newLast],
+                    offset: 0
+                  })
+                }),
               ]);
             }
             if (mentionContact) {
@@ -278,8 +297,24 @@ const RaraEditor = (props: RaraEditorProps) => {
               ]);
             }
             if (removeMentionContact) {
+              let last
+              let newLast
               setMentionContacts((pre: string[] | number[]) => [
                 ...removeById(pre, removeMentionContact?.node?.id!),
+                last =  removeMentionContact.path[removeMentionContact.path.length -1] - 1,
+                newLast = [...removeMentionContact.path],
+               newLast[removeMentionContact.path.length - 1] = last,
+                Transforms.select(editor, {
+                  anchor: Editor.end(editor, {
+                    path: [...newLast],
+                    offset: 0
+                  }),
+              
+                  focus: Editor.end(editor, {
+                    path: [...newLast],
+                    offset: 0
+                  })
+                }),
               ]);
             }
           }
