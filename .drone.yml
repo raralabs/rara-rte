@@ -23,7 +23,7 @@ steps:
   - docker compose -f docker-compose.staging.yaml push || true
   when:
     branch:
-    - main
+    - dev
     event:
     - push
 
@@ -33,6 +33,7 @@ volumes:
       path: /var/run/docker.sock
 
 ---
+
 kind: pipeline
 type: ssh
 name: Pull image and deploy
@@ -59,7 +60,7 @@ steps:
   - echo Storybook deployed successfully
   when:
     branch:
-    - main
+    - dev
     event:
     - push
 depends_on:
@@ -77,9 +78,6 @@ platform:
 steps:
   - name: build from main
     image: node:16
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
     environment:
       github_username:
         from_secret: GITHUB_USERNAME
