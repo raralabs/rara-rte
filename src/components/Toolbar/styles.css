@@ -93,7 +93,7 @@
   flex-direction: row;
   justify-content: space-between;
 }
-@media (max-Width: 375px) {
+@media (max-Width: 377px) {
   .list-picker-content{
 
     left:-10px

@@ -50,7 +50,7 @@ export const TextAlignMarkers = ({}: TextAlignMarkerProps) => {
           onMouseDown={e => {
             e.preventDefault();
           }}
-          icon={Icons.ALIGNMENT}
+          icon={Icons.ALIGN_LEFT}
           active={isActive || state?.alignSelector}
           name="Heading"
         />
