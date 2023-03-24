@@ -32,6 +32,8 @@ export const insertMention = async(
     children: [{ text: '' }],
   };
 // setTimeout(() => {
+  console.log({editor});
+  Transforms.insertText(editor," ")
 
    Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
