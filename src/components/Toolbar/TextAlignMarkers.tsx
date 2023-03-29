@@ -5,6 +5,7 @@ import { isBlockActive, toggleBlock } from '../../lib/functions';
 import { useToolbar } from './context/useLayout';
 import { MarkerItem } from './Markers';
 
+
 interface TextAlignMarkerProps {}
 
 export const TextAlignMarkers = ({}: TextAlignMarkerProps) => {
