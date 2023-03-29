@@ -32,13 +32,11 @@ export const insertMention = async(
     children: [{ text: '' }],
   };
 // setTimeout(() => {
-  console.log({editor});
   Transforms.insertText(editor," ")
 
    Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
   const last = target.anchor.path[target.anchor.path.length - 1] + 2; //TODO: 2 because insert didn't update yet, i.e. it happens too fast
-  console.log({last},target.anchor.path);
   
   const newLast = [...target.anchor.path];
   newLast[target.anchor.path.length - 1] = last;
