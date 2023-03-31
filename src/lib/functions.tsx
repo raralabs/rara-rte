@@ -19,7 +19,7 @@ export interface IFormat extends Omit<CustomTextElement, "text">{
   align?:string
 }
 
-export const insertMention = (
+export const insertMention = async(
   editor: RaraEditorType,
   item: MentionItemProps,
   target:BaseRange
@@ -31,12 +31,12 @@ export const insertMention = (
     metaData: item.metaData,
     children: [{ text: '' }],
   };
-setTimeout(() => {
+// setTimeout(() => {
+  Transforms.insertText(editor," ")
 
-  Transforms.insertNodes(editor, mention);
+   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
   const last = target.anchor.path[target.anchor.path.length - 1] + 2; //TODO: 2 because insert didn't update yet, i.e. it happens too fast
-  console.log({last},target.anchor.path);
   
   const newLast = [...target.anchor.path];
   newLast[target.anchor.path.length - 1] = last;
@@ -52,7 +52,10 @@ setTimeout(() => {
       offset: 0
     })
   });
-},20)
+   Transforms.insertText(editor," ")
+
+// },20)
+
 };
 export const insertMentionContact = (
   editor: RaraEditorType,
@@ -67,7 +70,6 @@ export const insertMentionContact = (
     metaData: item.metaData,
     children: [{ text: '' }],
   };
-setTimeout(() => {
 
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
@@ -86,7 +88,7 @@ setTimeout(() => {
       offset: 0
     })
   });
-},20)
+  Transforms.insertText(editor," ")
 
 };
 

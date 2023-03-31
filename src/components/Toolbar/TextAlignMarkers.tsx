@@ -5,6 +5,7 @@ import { isBlockActive, toggleBlock } from '../../lib/functions';
 import { useToolbar } from './context/useLayout';
 import { MarkerItem } from './Markers';
 
+
 interface TextAlignMarkerProps {}
 
 export const TextAlignMarkers = ({}: TextAlignMarkerProps) => {
@@ -50,7 +51,7 @@ export const TextAlignMarkers = ({}: TextAlignMarkerProps) => {
           onMouseDown={e => {
             e.preventDefault();
           }}
-          icon={Icons.ALIGNMENT}
+          icon={Icons.ALIGN_LEFT}
           active={isActive || state?.alignSelector}
           name="Heading"
         />

@@ -11,6 +11,7 @@ export type ParagraphElement = {
   color?: string;
   children: CustomTextElement[];
   id?:string|number
+  text?:string
 };
 export type CustomTextElement = {
   text?: string;
@@ -28,12 +29,15 @@ export type CodeElement = {
   type?: 'code';
   children?: CustomTextElement[];
   id?:string|number
+  text?:string
+
 };
 export type BlockQuoteElement = {
   align?: string;
   type?: 'block-quote' | string;
   children?: CustomTextElement[];
   id?:string|number
+  text?:string
 };
 export type CustomElement =
   | BlockQuoteElement
@@ -66,6 +70,7 @@ export type ColoredElement = {
   color?: string;
   children: any[];
   id?:string|number
+  text?:string
 
 };
 export type ChecklistElement = {
@@ -74,6 +79,7 @@ export type ChecklistElement = {
   checked: boolean;
   children: CustomTextElement[];
   id?:string|number
+  text?:string
 
 };
 export type HeadingElement = {
@@ -91,6 +97,7 @@ export type HeadingElement = {
     | 'mentionContact';
   children: CustomTextElement[];
   id?:string|number
+  text?:string
 
 };
 
@@ -101,6 +108,8 @@ export type MentionElement = {
   label: string;
   metaData?: Record<string, string | number>;
   children: CustomTextElement[];
+  text?:string
+
 };
 
 export type LinkElement = {
@@ -109,6 +118,7 @@ export type LinkElement = {
   url?: string;
   children: CustomTextElement[];
   id?:string|number
+  text?:string
 
 };
 
@@ -151,6 +161,7 @@ declare module 'slate' {
   interface BaseEditor {
       type?:string;
       id?:string
+      text?:string
   }}
 
 

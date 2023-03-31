@@ -60,3 +60,6 @@ Demo Link: https://codesandbox.io/s/example-rara-rte-dumskc
 | mentionItemRenderer  | `((mentionOptionItem: MentionItemProps) => ReactNode)`  |  - |
 | mentionOptionRenderer  | `((mentionOptionItem: MentionItemProps) => ReactNode)`  |  - |
 
+
+# License
+RTE is [MIT Licensed](./LICENSE)

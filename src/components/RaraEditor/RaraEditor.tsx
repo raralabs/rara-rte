@@ -17,6 +17,7 @@ import {
   Editor,
   Range,
   RemoveNodeOperation,
+  SelectionOperation,
   Transforms,
 } from 'slate';
 
@@ -246,49 +247,58 @@ const RaraEditor = (props: RaraEditorProps) => {
             //managing mention  data
 
             const edtr = editor.operations;
-            console.log({edtr});
             
             const mentionUser = edtr.find(
               (e: BaseOperation): e is BaseInsertNodeOperation =>
                 e.type === 'insert_node' && e?.node?.type === 'mention'
             );
 
-            const removeMentionUser = edtr.find(
+            const removeMentionUser = edtr.filter(
               (e: BaseOperation): e is RemoveNodeOperation =>
-                e.type === 'remove_node' && e?.node?.type === 'mention',
+                e.type === 'remove_node' && (e?.node?.type === 'mention' || e?.node?.text === ""),
             );
             const mentionContact = edtr.find(
               (e: BaseOperation): e is BaseInsertNodeOperation =>
                 e.type === 'insert_node' && e?.node?.type === 'mentionContact'
             );
-            const removeMentionContact = edtr.find(
+            const removeMentionContact = edtr.filter(
               (e: BaseOperation): e is RemoveNodeOperation =>
-                e.type === 'remove_node' && e?.node?.type === 'mentionContact'
+                e.type === 'remove_node' && (e?.node?.type === 'mentionContact' || e?.node?.text === "")
             );
             if (mentionUser) {
               setMentionUsers((pre: any) => [...pre, mentionUser?.node?.id]);
             }
-            if (removeMentionUser) {
-              // console.log({removeMentionUser});
+
+            if (removeMentionUser.length > 0) {
+              // console.log({editor,edtr});
               let last
               let newLast
-              setMentionUsers((pre: string[] | number[]) => [
-                ...removeById(pre, removeMentionUser?.node?.id!),
-               last =  removeMentionUser.path[removeMentionUser.path.length -1] - 1,
-                newLast = [...removeMentionUser.path],
-               newLast[removeMentionUser.path.length - 1] = last,
-                Transforms.select(editor, {
-                  anchor: Editor.end(editor, {
-                    path: [...newLast],
-                    offset: 0
-                  }),
+              const setSelection = edtr.filter((e:BaseOperation):e is SelectionOperation => e.type === 'set_selection')
               
-                  focus: Editor.end(editor, {
-                    path: [...newLast],
-                    offset: 0
-                  })
+              for(let i=0; i<removeMentionUser.length ; i++)
+              {
+                setMentionUsers((pre: string[]) => [
+                  ...removeById(pre, removeMentionUser[i].node.id!),
+                ]);
+              }
+             
+              last =  removeMentionUser[0].path[removeMentionUser[0].path.length -1] - 1  ,
+              newLast = [...removeMentionUser[0].path],
+             newLast[removeMentionUser[0].path.length - 1] = last,
+              Transforms.select(editor, {
+                anchor: Editor.end(editor, {
+                  path: setSelection ? setSelection[0]?.newProperties?.anchor ?setSelection[0]?.newProperties?.anchor.path :setSelection[0]?.newProperties?.focus?.path! : [...newLast],
+                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
                 }),
-              ]);
+            
+                focus: Editor.end(editor, {
+                  path: setSelection ? setSelection[0]?.newProperties?.anchor ?setSelection[0]?.newProperties?.anchor.path :setSelection[0]?.newProperties?.focus?.path! : [...newLast],
+
+
+                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+                })
+              });
+              
             }
             if (mentionContact) {
               setMentionContacts((pre: any) => [
@@ -296,26 +306,34 @@ const RaraEditor = (props: RaraEditorProps) => {
                 mentionContact?.node?.id,
               ]);
             }
-            if (removeMentionContact) {
+
+            if (removeMentionContact.length > 0) {
+              
               let last
               let newLast
-              setMentionContacts((pre: string[] | number[]) => [
-                ...removeById(pre, removeMentionContact?.node?.id!),
-                last =  removeMentionContact.path[removeMentionContact.path.length -1] - 1,
-                newLast = [...removeMentionContact.path],
-               newLast[removeMentionContact.path.length - 1] = last,
-                Transforms.select(editor, {
-                  anchor: Editor.end(editor, {
-                    path: [...newLast],
-                    offset: 0
-                  }),
-              
-                  focus: Editor.end(editor, {
-                    path: [...newLast],
-                    offset: 0
-                  })
+              for(let i=0; i<removeMentionContact.length ; i++){
+                
+                setMentionContacts((pre: string[]) => [
+                  ...removeById(pre, removeMentionContact[i].node.id!),
+           
+                ]);
+              }
+              last =  removeMentionContact[0].path[removeMentionContact[0].path.length -1] - 1,
+              newLast = [...removeMentionContact[0].path],
+             newLast[removeMentionContact[0].path.length - 1] = last,
+              Transforms.select(editor, {
+                anchor: Editor.end(editor, {
+                  path: [...newLast],
+                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+
                 }),
-              ]);
+            
+                focus: Editor.end(editor, {
+                  path: [...newLast],
+                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+
+                })
+              });
             }
           }
         }}
