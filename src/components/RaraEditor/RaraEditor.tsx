@@ -146,7 +146,7 @@ const RaraEditor = (props: RaraEditorProps) => {
     ]
   );
   const renderLeaf = React.useCallback(
-    (props: RenderLeafProps) => <Leaf {...props} />,
+    (props: RenderLeafProps) => <Leaf {...props} editor={editor}/>,
     []
   );
 
@@ -243,7 +243,6 @@ const RaraEditor = (props: RaraEditorProps) => {
           } else {
               onChange && onChange(JSON.stringify(change));
             }
-            
             //managing mention  data
 
             const edtr = editor.operations;
@@ -255,7 +254,7 @@ const RaraEditor = (props: RaraEditorProps) => {
 
             const removeMentionUser = edtr.filter(
               (e: BaseOperation): e is RemoveNodeOperation =>
-                e.type === 'remove_node' && (e?.node?.type === 'mention' || e?.node?.text === ""),
+                e.type === 'remove_node' && (e?.node?.type === 'mention' ||(e?.node?.type === 'mention' && e?.node?.text === "")),
             );
             const mentionContact = edtr.find(
               (e: BaseOperation): e is BaseInsertNodeOperation =>
@@ -263,7 +262,7 @@ const RaraEditor = (props: RaraEditorProps) => {
             );
             const removeMentionContact = edtr.filter(
               (e: BaseOperation): e is RemoveNodeOperation =>
-                e.type === 'remove_node' && (e?.node?.type === 'mentionContact' || e?.node?.text === "")
+                e.type === 'remove_node' && (e?.node?.type === 'mentionContact' || (e?.node?.type === 'mentionContact' && e?.node?.text === ""))
             );
             if (mentionUser) {
               setMentionUsers((pre: any) => [...pre, mentionUser?.node?.id]);
