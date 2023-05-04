@@ -10,8 +10,8 @@
  - [x] Code
  - [x] Checklist
  - [x] Copy from html
- - [ ] Text Align
- - [ ] Mention
+ - [x] Text Align
+ - [x] Mention
  - [ ] Ordered List
  - [ ] Unordered List
  - [ ] Nested List

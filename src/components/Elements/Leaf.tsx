@@ -1,30 +1,16 @@
 import * as React from 'react';
-// import { CustomTextElement } from '../../types';
-// import { ElementProps } from './Element';
+import { RenderLeafProps } from 'slate-react';
+import { RaraEditorType } from '../../types';
 
-// declare module 'slate-react' {
-//   interface ColumnMeta<TData extends RowData, TValue> {
-//     column?: ColumnDef<TData, TValue>;
-//     isNumeric?: boolean;
-//     width?: number | string;
-//     Footer?: {
-//       colspan?: number;
-//       display?: 'none';
-//     };
-//   }
-// }
-// interface LeafProps {
-//   attributes?: ElementProps
-//   children?: React.ReactNode;
-//   leaf?:CustomTextElement
-//   element?:any
-//   text?:CustomTextElement
-// }//need to extend the leaf props to RenderLeafProps
+interface LeafProps extends RenderLeafProps {
+  editor:RaraEditorType
+}
 
-////need to fix leafProps to any
-const Leaf = ({ attributes, children, leaf }:any) => {
+const Leaf = ({ attributes, children, leaf  }:LeafProps) => {
+
+
   if (leaf?.bold) {
-    children = <strong>{children}</strong>;
+    children = <strong>{children}</strong>; 
   }
   if (leaf?.code) {
     children = <code>{children}</code>;
@@ -48,7 +34,7 @@ const Leaf = ({ attributes, children, leaf }:any) => {
         {children}
       </span>
     );
-  }
+}
   // if (leaf.placeholder) {
   //     return (
   //         <>
