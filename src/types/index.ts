@@ -21,7 +21,11 @@ export type CustomTextElement = {
   underline?: boolean;
   type?: string;
   children?: any[];
-  id?:string|number
+  id?:string|number;
+  code?:boolean;
+  color?:string;
+  highlight?:boolean
+  editor?:RaraEditorType
 };
 
 export type CodeElement = {
