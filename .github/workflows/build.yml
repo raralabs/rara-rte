@@ -1,9 +1,7 @@
 name: Build from the main for Code coverage
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 
 jobs:
