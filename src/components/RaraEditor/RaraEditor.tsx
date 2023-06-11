@@ -8,6 +8,7 @@ import {
   Slate,
   RenderElementProps,
   RenderLeafProps,
+  useFocused,
 } from 'slate-react';
 import {
   BaseInsertNodeOperation,
@@ -87,7 +88,31 @@ const RaraEditor = (props: RaraEditorProps) => {
   const [mentionIndicator, setMentionIndicator] = React.useState<string | null>(
     null
   );
-
+  const [toolBarFocus, setToolBarFocus] = React.useState(false);
+  React.useEffect(() => {
+    function handleBlur() {
+      setToolBarFocus(false);
+    }
+  
+    function handleFocus() {
+      setToolBarFocus(true);
+    }
+  
+    const slateInputElement = document.getElementsByClassName("rte-editor-body")[0];
+  
+    if (slateInputElement) {
+      slateInputElement.addEventListener("focus", handleFocus);
+      slateInputElement.addEventListener("blur", handleBlur);
+    }
+  
+    return () => {
+      if (slateInputElement) {
+        slateInputElement.removeEventListener("focus", handleFocus);
+        slateInputElement.removeEventListener("blur", handleBlur);
+      }
+    };
+  }, []);
+  
   const [searchResults, setSearchResults] = React.useState<MentionItemProps[]>(
     []
   );
@@ -165,7 +190,7 @@ const RaraEditor = (props: RaraEditorProps) => {
   return (
     <div
       id="rte-editor"
-      className={`rte-editor ${readOnly ? 'read-only' : ''}`}
+      className={`rte-editor ${readOnly ? 'read-only' : ''} ${toolBarFocus ? '' :'focus'}`}
       style={styles}
     >
       <Slate
@@ -244,7 +269,7 @@ const RaraEditor = (props: RaraEditorProps) => {
               onChange && onChange(JSON.stringify(change));
             }
             //managing mention  data
-
+            
             const edtr = editor.operations;
             
             const mentionUser = edtr.find(
@@ -339,7 +364,7 @@ const RaraEditor = (props: RaraEditorProps) => {
         editor={editor}
         value={finalData as Descendant[]}
       >
-        {!readOnly && (
+        {(!readOnly && toolBarFocus ) && (
           <div style={{ marginBottom: '16px' }}>
             <Toolbar />
           </div>

@@ -16,6 +16,9 @@
   padding: 0px;
   border-radius: 0px;
 }
+.rte-editor.focus {
+  min-height: 30px;
+}
 
 .rte-editor-body {
   max-width: 100%;
