@@ -10,8 +10,8 @@ export type ParagraphElement = {
   align?: string;
   color?: string;
   children: CustomTextElement[];
-  id?:string|number
-  text?:string
+  id?: string | number
+  text?: string
 };
 export type CustomTextElement = {
   text?: string;
@@ -21,27 +21,27 @@ export type CustomTextElement = {
   underline?: boolean;
   type?: string;
   children?: any[];
-  id?:string|number;
-  code?:boolean;
-  color?:string;
-  highlight?:boolean
-  editor?:RaraEditorType
+  id?: string | number;
+  code?: boolean;
+  color?: string;
+  highlight?: boolean
+  editor?: RaraEditorType
 };
 
 export type CodeElement = {
   align?: string;
   type?: 'code';
   children?: CustomTextElement[];
-  id?:string|number
-  text?:string
+  id?: string | number
+  text?: string
 
 };
 export type BlockQuoteElement = {
   align?: string;
   type?: 'block-quote' | string;
   children?: CustomTextElement[];
-  id?:string|number
-  text?:string
+  id?: string | number
+  text?: string
 };
 export type CustomElement =
   | BlockQuoteElement
@@ -67,14 +67,27 @@ export type ElementType =
   | 'link'
   | 'mention'
   | undefined;
+export type ElementIgnorType =
+  | 'color'
+  | 'block-quote'
+  | 'code'
+  | 'heading'
+  | 'alignMarker'
+  | 'listMarker'
+  | 'check-list-item'
+  | 'paragraph'
+  | 'link'
+  | 'mention'
+  | 'all'
+  | undefined;
 
 export type ColoredElement = {
   align?: string;
   type: 'color';
   color?: string;
   children: any[];
-  id?:string|number
-  text?:string
+  id?: string | number
+  text?: string
 
 };
 export type ChecklistElement = {
@@ -82,26 +95,26 @@ export type ChecklistElement = {
   type: 'check-list-item';
   checked: boolean;
   children: CustomTextElement[];
-  id?:string|number
-  text?:string
+  id?: string | number
+  text?: string
 
 };
 export type HeadingElement = {
   align?: string;
   type?:
-    | 'heading-one'
-    | 'heading-two'
-    | 'heading-three'
-    | 'heading-four'
-    | 'heading-five'
-    | 'heading-six'
-    | 'bulleted-list'
-    | 'list-item'
-    | 'numbered-list'
-    | 'mentionContact';
+  | 'heading-one'
+  | 'heading-two'
+  | 'heading-three'
+  | 'heading-four'
+  | 'heading-five'
+  | 'heading-six'
+  | 'bulleted-list'
+  | 'list-item'
+  | 'numbered-list'
+  | 'mentionContact';
   children: CustomTextElement[];
-  id?:string|number
-  text?:string
+  id?: string | number
+  text?: string
 
 };
 
@@ -112,7 +125,7 @@ export type MentionElement = {
   label: string;
   metaData?: Record<string, string | number>;
   children: CustomTextElement[];
-  text?:string
+  text?: string
 
 };
 
@@ -121,8 +134,8 @@ export type LinkElement = {
   type: 'link';
   url?: string;
   children: CustomTextElement[];
-  id?:string|number
-  text?:string
+  id?: string | number
+  text?: string
 
 };
 
@@ -134,6 +147,7 @@ export type RaraEditorProps = {
   onCheckboxChange?: (checked: boolean, value: string) => void;
   onMentionListChange?: (mentionedItems: MentionItemProps[]) => void;
   // onMentionQuery?: (query: string) => Promise<MentionItemProps[]>;
+  toolbarIgnorList?: ElementIgnorType[]
   onMentionQuery?: MentionItemProps[];
   onMentionContactQuery?: MentionItemProps[];
   isMentionLoading?: boolean;
@@ -152,7 +166,7 @@ export type RaraEditorProps = {
   styles?: React.CSSProperties;
   onMentionContact?: (e: number[]) => void;
   onMentionUser?: (e: string[]) => void;
-  autoFocus?:boolean
+  autoFocus?: boolean
 };
 
 export type MentionItemProps = {
@@ -163,10 +177,11 @@ export type MentionItemProps = {
 
 declare module 'slate' {
   interface BaseEditor {
-      type?:string;
-      id?:string
-      text?:string
-  }}
+    type?: string;
+    id?: string
+    text?: string
+  }
+}
 
 
 
@@ -180,11 +195,11 @@ export interface IediterHooks {
   target: Location | BaseRange | null | undefined;
   searchResults: MentionItemProps[];
   setIndex: (e: number) => void;
-  insertMention: (editor: RaraEditorType, item: MentionItemProps,target:BaseRange) => void;
+  insertMention: (editor: RaraEditorType, item: MentionItemProps, target: BaseRange) => void;
   insertMentionContact: (
     editor: RaraEditorType,
     item: MentionItemProps,
-    target:BaseRange
+    target: BaseRange
   ) => void;
   setTarget: Dispatch<SetStateAction<BaseRange | null | undefined>>;
   setSearchResults: Dispatch<SetStateAction<MentionItemProps[]>>;
@@ -194,6 +209,6 @@ export interface IediterHooks {
   mentionIndicator: string | null;
   onMentionContact?: (e: number[]) => void;
   onMentionUser?: (e: string[]) => void;
-  
+
 
 }
