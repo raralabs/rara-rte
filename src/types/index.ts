@@ -167,6 +167,7 @@ export type RaraEditorProps = {
   onMentionContact?: (e: number[]) => void;
   onMentionUser?: (e: string[]) => void;
   autoFocus?: boolean
+  hideOnBlur?:boolean
 };
 
 export type MentionItemProps = {

@@ -75,12 +75,13 @@ const RaraEditor = (props: RaraEditorProps) => {
     styles,
     value,
     autoFocus = false,
-    toolbarIgnorList
+    toolbarIgnorList,
+      hideOnBlur = false
   } = props;
 
 
   const ref = React.useRef<HTMLInputElement>(null);
-
+  const [blur, setBlur] = React.useState(!autoFocus)
   const [target, setTarget] = React.useState<Range | null>();
   const [index, setIndex] = React.useState(0);
   const [search] = React.useState('');
@@ -99,6 +100,7 @@ const RaraEditor = (props: RaraEditorProps) => {
       ),
     []
   );
+
 
   const {
     onDOMBeforeInput,
@@ -149,6 +151,13 @@ const RaraEditor = (props: RaraEditorProps) => {
     (props: RenderLeafProps) => <Leaf {...props} editor={editor} />,
     []
   );
+  React.useEffect(() => {
+    if(!autoFocus && !hideOnBlur){
+
+    setBlur(false)
+    }
+
+  },[autoFocus])
 
   React.useEffect(() => {
     if (target && searchResults.length > 0) {
@@ -169,6 +178,7 @@ const RaraEditor = (props: RaraEditorProps) => {
       style={styles}
     >
       <Slate
+
         key={JSON.stringify(finalData)}
         onChange={async change => {
 
@@ -339,7 +349,7 @@ const RaraEditor = (props: RaraEditorProps) => {
         editor={editor}
         value={finalData as Descendant[]}
       >
-        {(!readOnly && !toolbarIgnorList?.includes('all')) && (
+        {(!readOnly && !toolbarIgnorList?.includes('all') && !blur ) && (
           <div style={{ marginBottom: '16px' }}>
             <Toolbar ignorList={toolbarIgnorList} />
           </div>
@@ -347,6 +357,20 @@ const RaraEditor = (props: RaraEditorProps) => {
         <Editable
           decorate={decorate}
           spellCheck
+          onFocus={() => {
+          if(hideOnBlur) {
+
+            setBlur(false)
+          }
+          }}
+          onBlur={() => {
+            if(hideOnBlur)
+            {
+
+            setBlur(true)
+            }
+
+          }}
           autoFocus={autoFocus}
           renderElement={(p: RenderElementProps) => {
             return renderElement(p);
