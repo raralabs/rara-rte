@@ -15,22 +15,27 @@ import { Headings } from './Headings';
 import { ListsMarkers } from './Lists';
 import { MarkerItem, Markers } from './Markers';
 import { TextAlignMarkers } from './TextAlignMarkers';
+import { ElementIgnorType } from '../../types';
 
 // interface ToolbarProps {
 //   items: any[];
 //   onSearch?: (e: string) => void;
 // }
-export const Toolbar = () => {
+export const Toolbar = ({ ignorList }: { ignorList?: ElementIgnorType[] }) => {
   const editor = useSlate();
   // console.log(editor);
   return (
     <ContextProvider>
       <div className="rte-toolbar">
-        <ColorPicker />
-        <Divider />
+        {!ignorList?.includes('color') &&
+          <>
+            <ColorPicker />
+            <Divider />
+          </>}
+
         <Markers />
         <Divider />
-        <MarkerItem
+        {!ignorList?.includes('block-quote') && <><MarkerItem
           key={'block-quote'}
           icon={Icons.QUOTE}
           name="Block Quot"
@@ -40,13 +45,16 @@ export const Toolbar = () => {
           }}
           active={isBlockActive(editor, 'block-quote')}
         />
-        <Divider />
-        <Headings />
-        <Divider />
-        <TextAlignMarkers />
-        <ListsMarkers />
-        <Divider />
-        <MarkerItem
+          <Divider />
+        </>}
+        {!ignorList?.includes('heading') && <><Headings />
+          <Divider />
+        </>}
+        {!ignorList?.includes('alignMarker') && <TextAlignMarkers />}
+        {!ignorList?.includes('listMarker') && <><ListsMarkers />
+          <Divider />
+        </>}
+        {!ignorList?.includes('code') && <> <MarkerItem
           key={'code'}
           icon={Icons.CODE}
           name="Code"
@@ -56,8 +64,9 @@ export const Toolbar = () => {
             toggleBlock(editor, 'code');
           }}
         />
-        <Divider />
-        <MarkerItem
+          <Divider />
+        </>}
+        {!ignorList?.includes('check-list-item') && <><MarkerItem
           key={'check-list-item'}
           icon={Icons.CLIST}
           name="Checklist"
@@ -67,8 +76,9 @@ export const Toolbar = () => {
             toggleBlock(editor, 'check-list-item');
           }}
         />
-        <Divider />
-        <MarkerItem
+          <Divider />
+        </>}
+        {ignorList?.includes('link') && <> <MarkerItem
           icon={Icons.LINK}
           key="link"
           name="Link"
@@ -84,9 +94,10 @@ export const Toolbar = () => {
             }
           }}
         />
-        <Divider />
+          <Divider />
+        </>}
         {/* <Search onChange={onSearch} /> */}
       </div>
-    </ContextProvider>
+    </ContextProvider >
   );
 };

@@ -74,13 +74,14 @@ const RaraEditor = (props: RaraEditorProps) => {
     mentionDetailRenderer,
     styles,
     value,
-    autoFocus=false,
-
+    autoFocus = false,
+    toolbarIgnorList,
+      hideOnBlur = false
   } = props;
 
-  
-  const ref = React.useRef<HTMLInputElement>(null);
 
+  const ref = React.useRef<HTMLInputElement>(null);
+  const [blur, setBlur] = React.useState(!autoFocus)
   const [target, setTarget] = React.useState<Range | null>();
   const [index, setIndex] = React.useState(0);
   const [search] = React.useState('');
@@ -99,7 +100,8 @@ const RaraEditor = (props: RaraEditorProps) => {
       ),
     []
   );
-  
+
+
   const {
     onDOMBeforeInput,
     onKeyDown,
@@ -146,9 +148,16 @@ const RaraEditor = (props: RaraEditorProps) => {
     ]
   );
   const renderLeaf = React.useCallback(
-    (props: RenderLeafProps) => <Leaf {...props} editor={editor}/>,
+    (props: RenderLeafProps) => <Leaf {...props} editor={editor} />,
     []
   );
+  React.useEffect(() => {
+    if(!autoFocus && !hideOnBlur){
+
+    setBlur(false)
+    }
+
+  },[autoFocus])
 
   React.useEffect(() => {
     if (target && searchResults.length > 0) {
@@ -169,9 +178,10 @@ const RaraEditor = (props: RaraEditorProps) => {
       style={styles}
     >
       <Slate
+
         key={JSON.stringify(finalData)}
         onChange={async change => {
-          
+
           //TO check if the values are changed or not
           const isAstChange = editor.operations.some(
             op => 'set_selection' !== op.type
@@ -234,19 +244,20 @@ const RaraEditor = (props: RaraEditorProps) => {
               return;
             }
           }
+
           setTarget(null);
           if (isAstChange) {
             // Save the value to Local Storage.
             setFinalData(change as unknown as string);
-            if(JSON.stringify(change) === '[{"type":"paragraph","children":[{"text":""}]}]')
-            {     onChange && onChange('');
-          } else {
+            if (JSON.stringify(change) === '[{"type":"paragraph","children":[{"text":""}]}]') {
+              onChange && onChange('');
+            } else {
               onChange && onChange(JSON.stringify(change));
             }
             //managing mention  data
 
             const edtr = editor.operations;
-            
+
             const mentionUser = edtr.find(
               (e: BaseOperation): e is BaseInsertNodeOperation =>
                 e.type === 'insert_node' && e?.node?.type === 'mention'
@@ -254,7 +265,7 @@ const RaraEditor = (props: RaraEditorProps) => {
 
             const removeMentionUser = edtr.filter(
               (e: BaseOperation): e is RemoveNodeOperation =>
-                e.type === 'remove_node' && (e?.node?.type === 'mention' ||(e?.node?.type === 'mention' && e?.node?.text === "")),
+                e.type === 'remove_node' && (e?.node?.type === 'mention' || (e?.node?.type === 'mention' && e?.node?.text === "")),
             );
             const mentionContact = edtr.find(
               (e: BaseOperation): e is BaseInsertNodeOperation =>
@@ -272,32 +283,31 @@ const RaraEditor = (props: RaraEditorProps) => {
               // console.log({editor,edtr});
               let last
               let newLast
-              const setSelection = edtr.filter((e:BaseOperation):e is SelectionOperation => e.type === 'set_selection')
-              
-              for(let i=0; i<removeMentionUser.length ; i++)
-              {
+              const setSelection = edtr.filter((e: BaseOperation): e is SelectionOperation => e.type === 'set_selection')
+
+              for (let i = 0; i < removeMentionUser.length; i++) {
                 setMentionUsers((pre: string[]) => [
                   ...removeById(pre, removeMentionUser[i].node.id!),
                 ]);
               }
-             
-              last =  removeMentionUser[0].path[removeMentionUser[0].path.length -1] - 1  ,
-              newLast = [...removeMentionUser[0].path],
-             newLast[removeMentionUser[0].path.length - 1] = last,
-              Transforms.select(editor, {
-                anchor: Editor.end(editor, {
-                  path: setSelection ? setSelection[0]?.newProperties?.anchor ?setSelection[0]?.newProperties?.anchor.path :setSelection[0]?.newProperties?.focus?.path! : [...newLast],
-                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
-                }),
-            
-                focus: Editor.end(editor, {
-                  path: setSelection ? setSelection[0]?.newProperties?.anchor ?setSelection[0]?.newProperties?.anchor.path :setSelection[0]?.newProperties?.focus?.path! : [...newLast],
+
+              last = removeMentionUser[0].path[removeMentionUser[0].path.length - 1] - 1,
+                newLast = [...removeMentionUser[0].path],
+                newLast[removeMentionUser[0].path.length - 1] = last,
+                Transforms.select(editor, {
+                  anchor: Editor.end(editor, {
+                    path: setSelection ? setSelection[0]?.newProperties?.anchor ? setSelection[0]?.newProperties?.anchor.path : setSelection[0]?.newProperties?.focus?.path! : [...newLast],
+                    offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+                  }),
+
+                  focus: Editor.end(editor, {
+                    path: setSelection ? setSelection[0]?.newProperties?.anchor ? setSelection[0]?.newProperties?.anchor.path : setSelection[0]?.newProperties?.focus?.path! : [...newLast],
 
 
-                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
-                })
-              });
-              
+                    offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+                  })
+                });
+
             }
             if (mentionContact) {
               setMentionContacts((pre: any) => [
@@ -307,46 +317,60 @@ const RaraEditor = (props: RaraEditorProps) => {
             }
 
             if (removeMentionContact.length > 0) {
-              
+
               let last
               let newLast
-              for(let i=0; i<removeMentionContact.length ; i++){
-                
+              for (let i = 0; i < removeMentionContact.length; i++) {
+
                 setMentionContacts((pre: string[]) => [
                   ...removeById(pre, removeMentionContact[i].node.id!),
-           
+
                 ]);
               }
-              last =  removeMentionContact[0].path[removeMentionContact[0].path.length -1] - 1,
-              newLast = [...removeMentionContact[0].path],
-             newLast[removeMentionContact[0].path.length - 1] = last,
-              Transforms.select(editor, {
-                anchor: Editor.end(editor, {
-                  path: [...newLast],
-                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+              last = removeMentionContact[0].path[removeMentionContact[0].path.length - 1] - 1,
+                newLast = [...removeMentionContact[0].path],
+                newLast[removeMentionContact[0].path.length - 1] = last,
+                Transforms.select(editor, {
+                  anchor: Editor.end(editor, {
+                    path: [...newLast],
+                    offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
 
-                }),
-            
-                focus: Editor.end(editor, {
-                  path: [...newLast],
-                  offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+                  }),
 
-                })
-              });
+                  focus: Editor.end(editor, {
+                    path: [...newLast],
+                    offset: edtr[0].type === "remove_text" ? edtr[0].offset : 0
+
+                  })
+                });
             }
           }
         }}
         editor={editor}
         value={finalData as Descendant[]}
       >
-        {!readOnly && (
+        {(!readOnly && !toolbarIgnorList?.includes('all') && !blur ) && (
           <div style={{ marginBottom: '16px' }}>
-            <Toolbar />
+            <Toolbar ignorList={toolbarIgnorList} />
           </div>
         )}
         <Editable
           decorate={decorate}
           spellCheck
+          onFocus={() => {
+          if(hideOnBlur) {
+
+            setBlur(false)
+          }
+          }}
+          onBlur={() => {
+            if(hideOnBlur)
+            {
+
+            setBlur(true)
+            }
+
+          }}
           autoFocus={autoFocus}
           renderElement={(p: RenderElementProps) => {
             return renderElement(p);
